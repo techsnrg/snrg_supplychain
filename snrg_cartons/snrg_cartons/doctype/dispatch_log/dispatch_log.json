@@ -22,11 +22,10 @@
   "total_cartons",
   "total_pieces",
   "total_gross_weight",
+  "create_delivery_note",
   "linked_documents_section",
   "status",
-  "delivery_note",
-  "sales_invoice",
-  "create_delivery_note"
+  "delivery_note"
  ],
  "fields": [
   {
@@ -136,6 +135,12 @@
    "read_only": 0
   },
   {
+   "default": 0,
+   "fieldname": "create_delivery_note",
+   "fieldtype": "Check",
+   "label": "Create Delivery Note on Submit"
+  },
+  {
    "fieldname": "linked_documents_section",
    "fieldtype": "Section Break",
    "label": "Linked documents"
@@ -156,19 +161,6 @@
    "label": "Delivery note",
    "options": "Delivery Note",
    "read_only": 0
-  },
-  {
-   "fieldname": "sales_invoice",
-   "fieldtype": "Link",
-   "label": "Sales invoice",
-   "options": "Sales Invoice",
-   "read_only": 0
-  },
-  {
-   "default": "0",
-   "fieldname": "create_delivery_note",
-   "fieldtype": "Check",
-   "label": "Create Delivery Note on Submit?"
   }
  ],
  "index_web_pages_for_search": 1,

@@ -6,10 +6,10 @@ class DispatchLog(Document):
 	def on_submit(self):
 		self.validate_carton_status()
 		self.calculate_totals()
-		
+
 		if self.create_delivery_note:
-			self.create_delivery_note_doc()
-			
+			self.make_delivery_note()
+
 		self.update_carton_box_logs()
 		self.db_set('status', 'Submitted')
 
@@ -34,18 +34,17 @@ class DispatchLog(Document):
 		self.db_set('total_pieces', total_pieces)
 		self.db_set('total_gross_weight', total_gross_weight)
 
-	def create_delivery_note_doc(self):
+	def make_delivery_note(self):
 		dn = frappe.new_doc("Delivery Note")
 		dn.customer = self.customer
 		dn.posting_date = self.dispatch_date
 		dn.set_posting_time = 1
 		dn.company = frappe.db.get_value("Sales Order", self.sales_order, "company")
 
-		# Collect all items from all cartons
 		for row in self.cartons:
 			cbl = frappe.get_doc("Carton Box Log", row.carton_id)
 			for item in (cbl.items or []):
-				dn_item = {
+				dn.append("items", {
 					"item_code": item.item_code,
 					"item_name": item.item_name,
 					"qty": item.qty,
@@ -53,39 +52,35 @@ class DispatchLog(Document):
 					"stock_uom": item.uom,
 					"conversion_factor": 1,
 					"warehouse": cbl.warehouse,
-				}
-				dn.append("items", dn_item)
+				})
 
 		dn.flags.ignore_permissions = True
 		dn.insert(ignore_permissions=True)
 
-		# Allow negative stock temporarily for this transaction if needed
 		frappe.flags.allow_negative_stock = True
 		dn.submit()
 		frappe.flags.allow_negative_stock = False
-		
+
 		self.db_set("delivery_note", dn.name)
 
 	def update_carton_box_logs(self):
-		dn_name = frappe.db.get_value("Dispatch Log", self.name, "delivery_note")
+		dn_name = frappe.db.get_value("Dispatch Log", self.name, "delivery_note") or ""
 
 		for row in self.cartons:
 			frappe.db.set_value("Carton Box Log", row.carton_id, {
 				"status": "Dispatched",
 				"dispatch_log": self.name,
-				"delivery_note": dn_name or "",
+				"delivery_note": dn_name,
 				"customer": self.customer,
 				"dispatched_date": self.dispatch_date
 			})
 
 	def on_cancel(self):
-		# Revert carton statuses
 		for row in self.cartons:
 			frappe.db.set_value("Carton Box Log", row.carton_id, {
 				"status": "Available",
 				"dispatch_log": "",
 				"delivery_note": "",
-				"sales_invoice": "",
 				"customer": "",
 				"dispatched_date": None
 			})

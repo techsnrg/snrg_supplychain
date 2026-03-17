@@ -55,8 +55,12 @@ class DispatchLog(Document):
 				dn.append("items", dn_item)
 
 		dn.flags.ignore_permissions = True
-		dn.insert()
+		dn.insert(ignore_permissions=True)
+
+		# Allow negative stock temporarily for this transaction
+		frappe.flags.allow_negative_stock = True
 		dn.submit()
+		frappe.flags.allow_negative_stock = False
 		self.db_set("delivery_note", dn.name)
 
 	def create_sales_invoice(self):

@@ -7,10 +7,10 @@
 	.sticker-container {
 		width: 4in;
 		height: 3in;
-		padding: 4px 6px;
+		padding: 3px 5px;
 		box-sizing: border-box;
 		font-family: 'Arial', 'Helvetica', sans-serif;
-		font-size: 8pt;
+		font-size: 7.5pt;
 		color: #1a1a2e;
 		border: 1.5px solid #1a1a2e;
 		position: relative;
@@ -18,16 +18,16 @@
 		page-break-after: always;
 	}
 
-	/* Header with logo and company name */
+	/* Header */
 	.sticker-header {
 		background: #1a1a2e;
 		color: #fff;
 		text-align: center;
 		padding: 3px 6px;
-		margin: -4px -6px 4px -6px;
-		font-size: 9pt;
+		margin: -3px -5px 3px -5px;
+		font-size: 8.5pt;
 		font-weight: 800;
-		letter-spacing: 1px;
+		letter-spacing: 0.8px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -35,41 +35,42 @@
 	}
 
 	.sticker-header img.logo {
-		height: 20px;
+		height: 18px;
 		width: auto;
-		filter: brightness(0) invert(1);
 	}
 
 	/* Carton ID - LARGE */
 	.carton-id-section {
 		text-align: center;
-		padding: 2px 0;
+		padding: 1px 0;
 	}
 
 	.carton-id {
-		font-size: 22pt;
+		font-size: 24pt;
 		font-weight: 900;
 		letter-spacing: 2px;
-		line-height: 1.1;
+		line-height: 1;
 	}
 
 	/* Barcode */
 	.barcode-section {
 		text-align: center;
-		margin: 1px 0;
+		margin: 0;
+		line-height: 0;
 	}
 
-	.barcode-section svg {
-		height: 28px;
+	.barcode-section img {
+		height: 22px;
 		width: auto;
-		max-width: 100%;
+		max-width: 90%;
 	}
 
-	/* Grid rows */
+	/* Info grid */
 	.info-grid {
 		display: table;
 		width: 100%;
 		border-collapse: collapse;
+		margin-top: 2px;
 	}
 
 	.info-row {
@@ -79,61 +80,50 @@
 	.info-cell {
 		display: table-cell;
 		border: 1px solid #1a1a2e;
-		padding: 2px 4px;
-		font-size: 7.5pt;
+		padding: 1px 3px;
+		font-size: 7pt;
 		vertical-align: middle;
 	}
 
 	.info-label {
 		font-weight: 700;
-		font-size: 6.5pt;
+		font-size: 6pt;
 		color: #555;
 		text-transform: uppercase;
 	}
 
 	.info-value {
 		font-weight: 700;
-		font-size: 8pt;
+		font-size: 7.5pt;
 	}
 
-	/* Single SKU: large item display */
+	/* Single SKU: large item */
 	.single-sku-item {
 		text-align: center;
-		border: 1px solid #1a1a2e;
-		padding: 3px 4px;
+		border: 1.5px solid #1a1a2e;
+		padding: 2px 4px;
 		margin: 2px 0;
 	}
 
 	.single-sku-item .item-code {
-		font-size: 14pt;
+		font-size: 16pt;
 		font-weight: 900;
 		letter-spacing: 1px;
+		line-height: 1.1;
 	}
 
 	.single-sku-item .item-name {
-		font-size: 9pt;
+		font-size: 8pt;
 		font-weight: 600;
 		color: #444;
 	}
 
 	.single-sku-qty {
-		text-align: center;
-		font-size: 12pt;
+		font-size: 11pt;
 		font-weight: 900;
 	}
 
-	/* Multi SKU: compact table */
-	.contents-header {
-		font-weight: 800;
-		font-size: 7pt;
-		text-align: center;
-		text-transform: uppercase;
-		border: 1px solid #1a1a2e;
-		background: #f0f0f5;
-		padding: 1px;
-		letter-spacing: 0.5px;
-	}
-
+	/* Multi SKU table */
 	.contents-table {
 		width: 100%;
 		border-collapse: collapse;
@@ -143,16 +133,16 @@
 	.contents-table th {
 		background: #1a1a2e;
 		color: #fff;
-		font-size: 6.5pt;
-		padding: 2px 3px;
+		font-size: 6pt;
+		padding: 1.5px 3px;
 		text-align: left;
 		font-weight: 700;
 	}
 
 	.contents-table td {
-		border: 1px solid #ccc;
+		border: 1px solid #999;
 		font-size: 7pt;
-		padding: 1.5px 3px;
+		padding: 1px 3px;
 		font-weight: 600;
 	}
 
@@ -166,7 +156,7 @@
 		display: table;
 		width: 100%;
 		border-collapse: collapse;
-		margin-top: 2px;
+		margin-top: 1px;
 	}
 
 	.bottom-row {
@@ -176,35 +166,41 @@
 	.bottom-cell {
 		display: table-cell;
 		border: 1px solid #1a1a2e;
-		padding: 2px 4px;
-		font-size: 7pt;
+		padding: 1px 3px;
+		font-size: 6.5pt;
 		width: 50%;
+		white-space: nowrap;
 	}
 
-	.bottom-cell .bl {
-		font-size: 6pt;
+	.bl {
+		font-size: 5.5pt;
 		color: #555;
 		font-weight: 700;
 		text-transform: uppercase;
 	}
 
-	.bottom-cell .bv {
+	.bv {
 		font-weight: 800;
-		font-size: 7.5pt;
+		font-size: 7pt;
 	}
 
-	/* Print-specific */
 	@media print {
 		.sticker-container { border: none; }
 	}
 </style>
 
 {% set item_count = doc.items | length %}
+{# Generate barcode data URI using Python #}
+{% set barcode_svg = "" %}
+{% try %}
+{% set barcode_svg = frappe.utils.get_barcode(doc.name, barcode_type="CODE128") %}
+{% except %}
+{% endtry %}
 
 <div class="sticker-container">
 	<!-- HEADER -->
 	<div class="sticker-header">
-		<img class="logo" src="/files/WhatsApp Image 2025-11-27 at 16.04.30.jpeg" alt="">
+		<img class="logo" src="/files/WhatsApp Image 2025-11-27 at 16.04.30.jpeg" alt="" onerror="this.style.display='none'">
 		<span>SNRG ELECTRICALS INDIA PVT. LTD.</span>
 	</div>
 
@@ -215,11 +211,15 @@
 
 	<!-- BARCODE -->
 	<div class="barcode-section">
-		<svg id="barcode-{{ doc.name | replace('-', '') }}"></svg>
+		{% if barcode_svg %}
+			<img src="data:image/svg+xml;base64,{{ barcode_svg }}" alt="{{ doc.name }}">
+		{% else %}
+			<svg id="barcode-{{ doc.name | replace('-', '') }}"></svg>
+		{% endif %}
 	</div>
 
 	{% if item_count == 1 %}
-	<!-- ==================== SINGLE SKU LAYOUT ==================== -->
+	<!-- ==================== SINGLE SKU ==================== -->
 	{% set item = doc.items[0] %}
 
 	<div class="single-sku-item">
@@ -229,17 +229,17 @@
 
 	<div class="info-grid">
 		<div class="info-row">
-			<div class="info-cell" style="width:33%">
+			<div class="info-cell" style="width:40%">
 				<div class="info-label">Total Qty</div>
 				<div class="single-sku-qty">{{ item.qty | int }} {{ item.uom }}</div>
 			</div>
-			<div class="info-cell" style="width:33%">
-				<div class="info-label">Unit Wt.</div>
-				<div class="info-value">{{ item.item_weight_kg or 0 }} kg</div>
+			<div class="info-cell" style="width:30%">
+				<div class="info-label">Net Wt.</div>
+				<div class="info-value">{{ doc.net_weight_kg or 0 }} kg</div>
 			</div>
-			<div class="info-cell" style="width:34%">
-				<div class="info-label">Total Wt.</div>
-				<div class="info-value">{{ (item.qty * (item.item_weight_kg or 0)) | round(2) }} kg</div>
+			<div class="info-cell" style="width:30%">
+				<div class="info-label">Gross Wt.</div>
+				<div class="info-value">{{ doc.gross_weight_kg or 0 }} kg</div>
 			</div>
 		</div>
 	</div>
@@ -247,44 +247,30 @@
 	<div class="bottom-grid">
 		<div class="bottom-row">
 			<div class="bottom-cell">
-				<span class="bl">Box Type</span>
-				<span class="bv">{{ doc.box_type }}</span>
-			</div>
-			<div class="bottom-cell">
-				<span class="bl">Dims</span>
-				<span class="bv">{{ doc.dimensions or '' }}</span>
-			</div>
-		</div>
-		<div class="bottom-row">
-			<div class="bottom-cell">
-				<span class="bl">Net</span>
-				<span class="bv">{{ doc.net_weight_kg }} kg</span>
+				<span class="bl">Box </span><span class="bv">{{ doc.box_type }}</span>
 				&nbsp;
-				<span class="bl">Gross</span>
-				<span class="bv">{{ doc.gross_weight_kg }} kg</span>
+				<span class="bl">Dims </span><span class="bv">{{ doc.dimensions or '' }}</span>
 			</div>
 			<div class="bottom-cell">
-				<span class="bl">Packed</span>
-				<span class="bv">{{ doc.packed_date }}</span>
+				<span class="bl">Packed </span><span class="bv">{{ frappe.utils.formatdate(doc.packed_date, "dd-MM-yyyy") if doc.packed_date else '' }}</span>
 			</div>
 		</div>
 		<div class="bottom-row">
-			<div class="bottom-cell" colspan="2" style="width:100%">
-				<span class="bl">Warehouse</span>
-				<span class="bv">{{ doc.warehouse }}</span>
+			<div class="bottom-cell" style="width:100%" colspan="2">
+				<span class="bl">Warehouse </span><span class="bv">{{ doc.warehouse or '' }}</span>
 			</div>
 		</div>
 	</div>
 
 	{% else %}
-	<!-- ==================== MULTI SKU LAYOUT ==================== -->
+	<!-- ==================== MULTI SKU ==================== -->
 
 	<table class="contents-table">
 		<thead>
 			<tr>
-				<th>Item Code</th>
+				<th style="width:30%">Item Code</th>
 				<th>Item Name</th>
-				<th style="text-align:right">Qty</th>
+				<th style="width:20%; text-align:right">Qty</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -301,28 +287,22 @@
 	<div class="bottom-grid">
 		<div class="bottom-row">
 			<div class="bottom-cell">
-				<span class="bl">Box</span>
-				<span class="bv">{{ doc.box_type }}</span>
+				<span class="bl">Box </span><span class="bv">{{ doc.box_type }}</span>
 				&nbsp;
-				<span class="bl">Dims</span>
-				<span class="bv">{{ doc.dimensions or '' }}</span>
+				<span class="bl">Dims </span><span class="bv">{{ doc.dimensions or '' }}</span>
 			</div>
 			<div class="bottom-cell">
-				<span class="bl">Net</span>
-				<span class="bv">{{ doc.net_weight_kg }} kg</span>
+				<span class="bl">Net </span><span class="bv">{{ doc.net_weight_kg or 0 }} kg</span>
 				&nbsp;
-				<span class="bl">Gross</span>
-				<span class="bv">{{ doc.gross_weight_kg }} kg</span>
+				<span class="bl">Gross </span><span class="bv">{{ doc.gross_weight_kg or 0 }} kg</span>
 			</div>
 		</div>
 		<div class="bottom-row">
 			<div class="bottom-cell">
-				<span class="bl">Packed</span>
-				<span class="bv">{{ doc.packed_date }}</span>
+				<span class="bl">Packed </span><span class="bv">{{ frappe.utils.formatdate(doc.packed_date, "dd-MM-yyyy") if doc.packed_date else '' }}</span>
 			</div>
 			<div class="bottom-cell">
-				<span class="bl">Warehouse</span>
-				<span class="bv">{{ doc.warehouse }}</span>
+				<span class="bl">Warehouse </span><span class="bv">{{ doc.warehouse or '' }}</span>
 			</div>
 		</div>
 	</div>
@@ -330,20 +310,24 @@
 	{% endif %}
 </div>
 
-<!-- JsBarcode for Code 128 -->
+<!-- Fallback: JsBarcode if server-side barcode didn't work -->
+{% if not barcode_svg %}
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 <script>
-	document.addEventListener("DOMContentLoaded", function() {
-		try {
-			JsBarcode("#barcode-{{ doc.name | replace('-', '') }}", "{{ doc.name }}", {
-				format: "CODE128",
-				width: 1.2,
-				height: 28,
-				displayValue: false,
-				margin: 0
-			});
-		} catch(e) {
-			console.log("Barcode generation failed:", e);
+	(function() {
+		function renderBarcode() {
+			try {
+				JsBarcode("#barcode-{{ doc.name | replace('-', '') }}", "{{ doc.name }}", {
+					format: "CODE128",
+					width: 1,
+					height: 22,
+					displayValue: false,
+					margin: 0
+				});
+			} catch(e) { console.log("Barcode error:", e); }
 		}
-	});
+		if (typeof JsBarcode !== 'undefined') renderBarcode();
+		else document.addEventListener("DOMContentLoaded", renderBarcode);
+	})();
 </script>
+{% endif %}

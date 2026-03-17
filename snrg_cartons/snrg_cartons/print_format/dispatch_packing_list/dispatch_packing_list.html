@@ -1,0 +1,474 @@
+<style>
+	.packing-list {
+		font-family: 'Arial', 'Helvetica', sans-serif;
+		color: #1a1a2e;
+		font-size: 9pt;
+		line-height: 1.4;
+	}
+
+	.packing-list .pl-header {
+		border-bottom: 2px solid #1a1a2e;
+		padding-bottom: 8px;
+		margin-bottom: 10px;
+		display: flex;
+		align-items: center;
+		gap: 12px;
+	}
+
+	.packing-list .pl-header img.pl-logo {
+		height: 40px;
+		width: auto;
+	}
+
+	.packing-list .pl-header .company-info {
+		flex: 1;
+	}
+
+	.packing-list .pl-header .company-name {
+		font-size: 14pt;
+		font-weight: 900;
+		letter-spacing: 1px;
+		color: #1a1a2e;
+	}
+
+	.packing-list .pl-title {
+		text-align: center;
+		font-size: 16pt;
+		font-weight: 900;
+		letter-spacing: 2px;
+		color: #1a1a2e;
+		margin: 8px 0;
+		text-transform: uppercase;
+		border-top: 1px solid #ccc;
+		border-bottom: 1px solid #ccc;
+		padding: 4px 0;
+	}
+
+	/* Dispatch info grid */
+	.packing-list .dispatch-info {
+		display: table;
+		width: 100%;
+		margin-bottom: 12px;
+		border-collapse: collapse;
+	}
+
+	.packing-list .dispatch-info .di-row {
+		display: table-row;
+	}
+
+	.packing-list .dispatch-info .di-cell {
+		display: table-cell;
+		padding: 3px 6px;
+		border: 1px solid #ddd;
+		width: 25%;
+	}
+
+	.packing-list .dispatch-info .di-label {
+		font-size: 7pt;
+		color: #777;
+		text-transform: uppercase;
+		font-weight: 700;
+	}
+
+	.packing-list .dispatch-info .di-value {
+		font-size: 9pt;
+		font-weight: 700;
+	}
+
+	/* Carton detail - each carton block */
+	.packing-list .carton-block {
+		margin-bottom: 8px;
+		page-break-inside: avoid;
+	}
+
+	.packing-list .carton-header {
+		background: #1a1a2e;
+		color: #fff;
+		padding: 3px 8px;
+		font-weight: 800;
+		font-size: 9pt;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.packing-list .carton-header .ch-left {
+		font-size: 10pt;
+	}
+
+	.packing-list .carton-header .ch-right {
+		font-size: 7.5pt;
+		font-weight: 600;
+		opacity: 0.85;
+	}
+
+	/* Items table within each carton */
+	.packing-list .carton-items {
+		width: 100%;
+		border-collapse: collapse;
+	}
+
+	.packing-list .carton-items th {
+		background: #f0f0f5;
+		font-size: 7pt;
+		padding: 3px 6px;
+		text-align: left;
+		font-weight: 700;
+		text-transform: uppercase;
+		color: #555;
+		border: 1px solid #ddd;
+	}
+
+	.packing-list .carton-items td {
+		border: 1px solid #ddd;
+		font-size: 8.5pt;
+		padding: 3px 6px;
+		font-weight: 500;
+	}
+
+	.packing-list .carton-items td.num {
+		text-align: right;
+		font-weight: 700;
+	}
+
+	.packing-list .carton-items tr:nth-child(even) {
+		background: #fafafa;
+	}
+
+	.packing-list .carton-footer {
+		display: flex;
+		justify-content: space-between;
+		border: 1px solid #ddd;
+		border-top: none;
+		padding: 2px 6px;
+		font-size: 7.5pt;
+		background: #f8f8fc;
+	}
+
+	.packing-list .carton-footer .cf-item {
+		display: inline-block;
+		margin-right: 12px;
+	}
+
+	.packing-list .carton-footer .cf-label {
+		color: #777;
+		font-weight: 600;
+		text-transform: uppercase;
+		font-size: 6.5pt;
+	}
+
+	.packing-list .carton-footer .cf-value {
+		font-weight: 800;
+	}
+
+	/* Grand totals */
+	.packing-list .grand-totals {
+		margin-top: 12px;
+		border-top: 2px solid #1a1a2e;
+		padding-top: 6px;
+	}
+
+	.packing-list .grand-totals table {
+		width: 100%;
+		border-collapse: collapse;
+	}
+
+	.packing-list .grand-totals th {
+		background: #1a1a2e;
+		color: #fff;
+		padding: 4px 8px;
+		text-align: left;
+		font-size: 8pt;
+		font-weight: 700;
+	}
+
+	.packing-list .grand-totals td {
+		border: 1px solid #ddd;
+		padding: 4px 8px;
+		font-size: 9pt;
+		font-weight: 700;
+	}
+
+	.packing-list .grand-totals td.num {
+		text-align: right;
+		font-weight: 800;
+	}
+
+	/* Items summary table */
+	.packing-list .items-summary {
+		margin-top: 12px;
+	}
+
+	.packing-list .items-summary .is-title {
+		font-size: 9pt;
+		font-weight: 800;
+		text-transform: uppercase;
+		color: #1a1a2e;
+		margin-bottom: 4px;
+		letter-spacing: 0.5px;
+	}
+
+	.packing-list .items-summary table {
+		width: 100%;
+		border-collapse: collapse;
+	}
+
+	.packing-list .items-summary th {
+		background: #f0f0f5;
+		font-size: 7pt;
+		padding: 3px 6px;
+		text-align: left;
+		font-weight: 700;
+		text-transform: uppercase;
+		color: #555;
+		border: 1px solid #ddd;
+	}
+
+	.packing-list .items-summary td {
+		border: 1px solid #ddd;
+		padding: 3px 6px;
+		font-size: 8.5pt;
+	}
+
+	.packing-list .items-summary td.num {
+		text-align: right;
+		font-weight: 700;
+	}
+
+	.packing-list .items-summary .total-row td {
+		font-weight: 800;
+		border-top: 2px solid #1a1a2e;
+		font-size: 9pt;
+	}
+
+	/* Footer / Signatures */
+	.packing-list .pl-footer {
+		margin-top: 30px;
+		display: flex;
+		justify-content: space-between;
+	}
+
+	.packing-list .signature-block {
+		width: 200px;
+		text-align: center;
+	}
+
+	.packing-list .signature-line {
+		border-top: 1px solid #1a1a2e;
+		margin-top: 40px;
+		padding-top: 4px;
+		font-size: 8pt;
+		font-weight: 700;
+	}
+</style>
+
+{#- Fetch full carton details -#}
+{% set carton_details = [] %}
+{% set grand_total_pieces = 0 %}
+{% set grand_total_net = 0.0 %}
+{% set grand_total_gross = 0.0 %}
+{% set item_summary = {} %}
+{% for row in doc.cartons %}
+	{% set cbl = frappe.get_doc("Carton Box Log", row.carton_id) %}
+	{% set carton_pieces = 0 %}
+	{% for item in (cbl.items or []) %}
+		{% set carton_pieces = carton_pieces + (item.qty or 0) %}
+		{% if item.item_code in item_summary %}
+			{% set _ = item_summary.__setitem__(item.item_code, {
+				"item_code": item.item_code,
+				"item_name": item.item_name,
+				"qty": item_summary[item.item_code].qty + (item.qty or 0),
+				"uom": item.uom
+			}) %}
+		{% else %}
+			{% set _ = item_summary.__setitem__(item.item_code, {
+				"item_code": item.item_code,
+				"item_name": item.item_name,
+				"qty": item.qty or 0,
+				"uom": item.uom
+			}) %}
+		{% endif %}
+	{% endfor %}
+	{% set _ = carton_details.append({
+		"name": cbl.name,
+		"box_type": cbl.box_type,
+		"dimensions": cbl.dimensions,
+		"items": cbl.items,
+		"net_weight_kg": cbl.net_weight_kg or 0,
+		"gross_weight_kg": cbl.gross_weight_kg or 0,
+		"packed_date": cbl.packed_date,
+		"pieces": carton_pieces
+	}) %}
+	{% set grand_total_pieces = grand_total_pieces + carton_pieces %}
+	{% set grand_total_net = grand_total_net + (cbl.net_weight_kg or 0) %}
+	{% set grand_total_gross = grand_total_gross + (cbl.gross_weight_kg or 0) %}
+{% endfor %}
+
+<div class="packing-list">
+	<!-- HEADER -->
+	<div class="pl-header">
+		<img class="pl-logo" src="/files/WhatsApp Image 2025-11-27 at 16.04.30.jpeg" alt="" onerror="this.style.display='none'">
+		<div class="company-info">
+			<div class="company-name">SNRG ELECTRICALS INDIA PVT. LTD.</div>
+		</div>
+	</div>
+
+	<div class="pl-title">Packing List</div>
+
+	<!-- DISPATCH INFO -->
+	<div class="dispatch-info">
+		<div class="di-row">
+			<div class="di-cell">
+				<div class="di-label">Dispatch No.</div>
+				<div class="di-value">{{ doc.name }}</div>
+			</div>
+			<div class="di-cell">
+				<div class="di-label">Dispatch Date</div>
+				<div class="di-value">{{ frappe.utils.formatdate(doc.dispatch_date, "dd-MM-yyyy") if doc.dispatch_date else '' }}</div>
+			</div>
+			<div class="di-cell">
+				<div class="di-label">Sales Order</div>
+				<div class="di-value">{{ doc.sales_order or '' }}</div>
+			</div>
+			<div class="di-cell">
+				<div class="di-label">Delivery Note</div>
+				<div class="di-value">{{ doc.delivery_note or '—' }}</div>
+			</div>
+		</div>
+		<div class="di-row">
+			<div class="di-cell" colspan="2" style="width:50%">
+				<div class="di-label">Customer</div>
+				<div class="di-value">{{ doc.customer }}</div>
+			</div>
+			<div class="di-cell">
+				<div class="di-label">Total Cartons</div>
+				<div class="di-value">{{ carton_details | length }}</div>
+			</div>
+			<div class="di-cell">
+				<div class="di-label">Total Pieces</div>
+				<div class="di-value">{{ grand_total_pieces | int }}</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- CARTON-WISE DETAIL -->
+	{% for ctn in carton_details %}
+	<div class="carton-block">
+		<div class="carton-header">
+			<span class="ch-left">📦 {{ ctn.name }}</span>
+			<span class="ch-right">Box Type: {{ ctn.box_type }} &nbsp;|&nbsp; {{ ctn.dimensions or '' }}</span>
+		</div>
+		<table class="carton-items">
+			<thead>
+				<tr>
+					<th style="width:5%">#</th>
+					<th style="width:20%">Item Code</th>
+					<th>Item Name</th>
+					<th style="width:12%; text-align:right">Qty</th>
+					<th style="width:10%">UOM</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for item in (ctn.items or []) %}
+				<tr>
+					<td>{{ loop.index }}</td>
+					<td>{{ item.item_code }}</td>
+					<td>{{ item.item_name or '' }}</td>
+					<td class="num">{{ item.qty | int }}</td>
+					<td>{{ item.uom }}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		<div class="carton-footer">
+			<div>
+				<span class="cf-item">
+					<span class="cf-label">Pieces: </span>
+					<span class="cf-value">{{ ctn.pieces | int }}</span>
+				</span>
+				<span class="cf-item">
+					<span class="cf-label">Net Wt: </span>
+					<span class="cf-value">{{ ctn.net_weight_kg }} kg</span>
+				</span>
+				<span class="cf-item">
+					<span class="cf-label">Gross Wt: </span>
+					<span class="cf-value">{{ ctn.gross_weight_kg }} kg</span>
+				</span>
+			</div>
+			<div>
+				<span class="cf-label">Packed: </span>
+				<span class="cf-value">{{ frappe.utils.formatdate(ctn.packed_date, "dd-MM-yyyy") if ctn.packed_date else '' }}</span>
+			</div>
+		</div>
+	</div>
+	{% endfor %}
+
+	<!-- ITEMS SUMMARY (aggregated across all cartons) -->
+	<div class="items-summary">
+		<div class="is-title">Items Summary (All Cartons)</div>
+		<table>
+			<thead>
+				<tr>
+					<th style="width:5%">#</th>
+					<th style="width:20%">Item Code</th>
+					<th>Item Name</th>
+					<th style="width:15%; text-align:right">Total Qty</th>
+					<th style="width:10%">UOM</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% set total_all = {"qty": 0} %}
+				{% for key, item in item_summary.items() %}
+				<tr>
+					<td>{{ loop.index }}</td>
+					<td>{{ item.item_code }}</td>
+					<td>{{ item.item_name }}</td>
+					<td class="num">{{ item.qty | int }}</td>
+					<td>{{ item.uom }}</td>
+				</tr>
+				{% set _ = total_all.__setitem__("qty", total_all.qty + item.qty) %}
+				{% endfor %}
+				<tr class="total-row">
+					<td colspan="3" style="text-align:right">Grand Total</td>
+					<td class="num">{{ total_all.qty | int }}</td>
+					<td></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<!-- GRAND TOTALS -->
+	<div class="grand-totals">
+		<table>
+			<thead>
+				<tr>
+					<th>Total Cartons</th>
+					<th>Total Pieces</th>
+					<th>Total Net Weight</th>
+					<th>Total Gross Weight</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="num">{{ carton_details | length }}</td>
+					<td class="num">{{ grand_total_pieces | int }}</td>
+					<td class="num">{{ grand_total_net | round(2) }} kg</td>
+					<td class="num">{{ grand_total_gross | round(2) }} kg</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<!-- SIGNATURE / FOOTER -->
+	<div class="pl-footer">
+		<div class="signature-block">
+			<div class="signature-line">Prepared By</div>
+		</div>
+		<div class="signature-block">
+			<div class="signature-line">Checked By</div>
+		</div>
+		<div class="signature-block">
+			<div class="signature-line">Received By (Customer)</div>
+		</div>
+	</div>
+</div>

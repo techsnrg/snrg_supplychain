@@ -37,6 +37,7 @@ class DispatchLog(Document):
 		dn.customer = self.customer
 		dn.posting_date = self.dispatch_date
 		dn.set_posting_time = 1
+		dn.company = frappe.db.get_value("Sales Order", self.sales_order, "company")
 
 		# Collect all items from all cartons
 		for row in self.cartons:

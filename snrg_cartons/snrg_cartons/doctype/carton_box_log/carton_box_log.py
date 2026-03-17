@@ -17,7 +17,7 @@ class CartonBoxLog(Document):
 					item_doc = frappe.get_doc("Item", row.item_code)
 					row.item_name = item_doc.item_name
 					row.uom = getattr(row, "uom", item_doc.stock_uom)
-					row.item_weight_kg = flt(getattr(row, "item_weight_kg", item_doc.net_weight))
+					row.item_weight_kg = flt(getattr(row, "item_weight_kg", item_doc.weight_per_unit))
 				net += flt(row.qty) * flt(row.item_weight_kg)
 				
 		self.net_weight_kg = net

@@ -29,7 +29,7 @@ frappe.ui.form.on('Carton Box Log Item', {
             frappe.db.get_doc('Item', row.item_code).then(item => {
                 frappe.model.set_value(cdt, cdn, 'item_name', item.item_name);
                 frappe.model.set_value(cdt, cdn, 'uom', item.stock_uom);
-                frappe.model.set_value(cdt, cdn, 'item_weight_kg', item.net_weight || 0);
+                frappe.model.set_value(cdt, cdn, 'item_weight_kg', item.weight_per_unit || 0);
                 frm.trigger('calculate_gross_weight');
             });
         }

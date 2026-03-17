@@ -27,7 +27,8 @@
   "create_delivery_note",
   "linked_documents_section",
   "status",
-  "delivery_note"
+  "delivery_note",
+  "amended_from"
  ],
  "fields": [
   {
@@ -113,6 +114,18 @@
    "reqd": 1
   },
   {
+   "fieldname": "items_summary_section",
+   "fieldtype": "Section Break",
+   "label": "Items Summary (from Cartons)"
+  },
+  {
+   "fieldname": "dispatch_items",
+   "fieldtype": "Table",
+   "label": "Items",
+   "options": "Dispatch Log Item",
+   "read_only": 0
+  },
+  {
    "fieldname": "summary_section",
    "fieldtype": "Section Break",
    "label": "Summary"
@@ -163,12 +176,21 @@
    "label": "Delivery note",
    "options": "Delivery Note",
    "read_only": 0
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Dispatch Log",
+   "print_hide": 1,
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-16 12:00:00.000000",
+ "modified": "2026-03-18 00:30:00.000000",
  "modified_by": "Administrator",
  "module": "SNRG Cartons",
  "name": "Dispatch Log",

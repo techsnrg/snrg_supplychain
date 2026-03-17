@@ -62,7 +62,7 @@ class DispatchLog(Document):
 			pass
 
 	def validate_items_against_sales_order(self):
-		"""Check that dispatched items exist in the Sales Order."""
+		"""Block submission if dispatched items don't match the Sales Order."""
 		if not self.sales_order:
 			return
 
@@ -74,23 +74,21 @@ class DispatchLog(Document):
 				so_items[key] = 0
 			so_items[key] += flt(item.qty)
 
-		# Use aggregated items directly from cartons (works pre and post migration)
 		item_map = self.get_aggregated_items()
 
-		warnings = []
+		errors = []
 		for key, item in item_map.items():
 			if key not in so_items:
-				warnings.append(f"Item <b>{key}</b> is not in Sales Order {self.sales_order}")
+				errors.append(f"Item <b>{key}</b> is not in Sales Order {self.sales_order}")
 			elif flt(item["total_qty"]) > so_items[key]:
-				warnings.append(
+				errors.append(
 					f"Item <b>{key}</b>: dispatching {item['total_qty']} but SO has only {so_items[key]}"
 				)
 
-		if warnings:
-			frappe.msgprint(
-				"<br>".join(warnings),
-				title="Sales Order Mismatch",
-				indicator="orange"
+		if errors:
+			frappe.throw(
+				"<br>".join(errors),
+				title="Sales Order Mismatch"
 			)
 
 	def calculate_totals(self):
@@ -108,6 +106,16 @@ class DispatchLog(Document):
 		self.db_set('total_pieces', total_pieces)
 		self.db_set('total_gross_weight', total_gross_weight)
 
+	def get_so_item_map(self):
+		"""Build a map of item_code -> SO Item row name for linking DN to SO."""
+		so_item_map = {}
+		if self.sales_order:
+			so = frappe.get_doc("Sales Order", self.sales_order)
+			for item in so.items:
+				if item.item_code not in so_item_map:
+					so_item_map[item.item_code] = item.name
+		return so_item_map
+
 	def make_delivery_note(self):
 		dn = frappe.new_doc("Delivery Note")
 		dn.customer = self.customer
@@ -115,10 +123,12 @@ class DispatchLog(Document):
 		dn.set_posting_time = 1
 		dn.company = frappe.db.get_value("Sales Order", self.sales_order, "company")
 
+		so_item_map = self.get_so_item_map()
+
 		for row in self.cartons:
 			cbl = frappe.get_doc("Carton Box Log", row.carton_id)
 			for item in (cbl.items or []):
-				dn.append("items", {
+				dn_item = {
 					"item_code": item.item_code,
 					"item_name": item.item_name,
 					"qty": item.qty,
@@ -126,7 +136,13 @@ class DispatchLog(Document):
 					"stock_uom": item.uom,
 					"conversion_factor": 1,
 					"warehouse": cbl.warehouse,
-				})
+				}
+				# Link to Sales Order Item so ERPNext tracks fulfillment
+				if item.item_code in so_item_map:
+					dn_item["against_sales_order"] = self.sales_order
+					dn_item["so_detail"] = so_item_map[item.item_code]
+
+				dn.append("items", dn_item)
 
 		dn.flags.ignore_permissions = True
 		dn.insert(ignore_permissions=True)

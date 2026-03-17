@@ -193,6 +193,5 @@
  "search_fields": "name,sales_order,customer",
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": [],
- "title_field": "name"
+ "states": []
 }

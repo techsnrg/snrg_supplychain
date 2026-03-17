@@ -18,6 +18,8 @@
   "vehicle_number",
   "cartons_section",
   "cartons",
+  "items_summary_section",
+  "dispatch_items",
   "summary_section",
   "total_cartons",
   "total_pieces",

@@ -3,8 +3,12 @@ from frappe.model.document import Document
 from frappe.utils import flt
 
 class DispatchLog(Document):
+	def before_save(self):
+		self.populate_items_summary()
+
 	def on_submit(self):
 		self.validate_carton_status()
+		self.validate_items_against_sales_order()
 		self.calculate_totals()
 
 		if self.create_delivery_note:
@@ -18,6 +22,67 @@ class DispatchLog(Document):
 			status = frappe.db.get_value("Carton Box Log", row.carton_id, "status")
 			if status != "Available":
 				frappe.throw(f"Carton {row.carton_id} is already dispatched or not available.")
+
+	def populate_items_summary(self):
+		"""Aggregate items from all cartons into the dispatch_items child table."""
+		self.dispatch_items = []
+		item_map = {}
+
+		for row in (self.cartons or []):
+			if not row.carton_id:
+				continue
+			cbl = frappe.get_doc("Carton Box Log", row.carton_id)
+			for item in (cbl.items or []):
+				key = item.item_code
+				if key not in item_map:
+					item_map[key] = {
+						"item_code": item.item_code,
+						"item_name": item.item_name,
+						"total_qty": 0,
+						"uom": item.uom,
+						"cartons": []
+					}
+				item_map[key]["total_qty"] += flt(item.qty)
+				if row.carton_id not in item_map[key]["cartons"]:
+					item_map[key]["cartons"].append(row.carton_id)
+
+		for item in item_map.values():
+			self.append("dispatch_items", {
+				"item_code": item["item_code"],
+				"item_name": item["item_name"],
+				"total_qty": item["total_qty"],
+				"uom": item["uom"],
+				"from_cartons": ", ".join(item["cartons"])
+			})
+
+	def validate_items_against_sales_order(self):
+		"""Check that all dispatched items exist in the Sales Order."""
+		if not self.sales_order:
+			return
+
+		so = frappe.get_doc("Sales Order", self.sales_order)
+		so_items = {}
+		for item in so.items:
+			key = item.item_code
+			if key not in so_items:
+				so_items[key] = 0
+			so_items[key] += flt(item.qty)
+
+		warnings = []
+		for row in (self.dispatch_items or []):
+			if row.item_code not in so_items:
+				warnings.append(f"Item <b>{row.item_code}</b> is not in Sales Order {self.sales_order}")
+			elif flt(row.total_qty) > so_items[row.item_code]:
+				warnings.append(
+					f"Item <b>{row.item_code}</b>: dispatching {row.total_qty} but SO has only {so_items[row.item_code]}"
+				)
+
+		if warnings:
+			frappe.msgprint(
+				"<br>".join(warnings),
+				title="Sales Order Mismatch",
+				indicator="orange"
+			)
 
 	def calculate_totals(self):
 		total_cartons = len(self.cartons)

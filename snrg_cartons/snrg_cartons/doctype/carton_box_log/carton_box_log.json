@@ -130,6 +130,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Status",
+   "no_copy": 1,
    "options": "Available\nDispatched",
    "read_only": 0,
    "reqd": 1
@@ -138,6 +139,7 @@
    "fieldname": "dispatch_log",
    "fieldtype": "Link",
    "label": "Dispatch log",
+   "no_copy": 1,
    "options": "Dispatch Log",
    "read_only": 0
   },
@@ -145,6 +147,7 @@
    "fieldname": "delivery_note",
    "fieldtype": "Link",
    "label": "Delivery note",
+   "no_copy": 1,
    "options": "Delivery Note",
    "read_only": 0
   },
@@ -152,6 +155,7 @@
    "fieldname": "sales_invoice",
    "fieldtype": "Link",
    "label": "Sales invoice",
+   "no_copy": 1,
    "options": "Sales Invoice",
    "read_only": 0
   },
@@ -159,6 +163,7 @@
    "fieldname": "customer",
    "fieldtype": "Link",
    "label": "Customer",
+   "no_copy": 1,
    "options": "Customer",
    "read_only": 0
   },
@@ -166,6 +171,7 @@
    "fieldname": "dispatched_date",
    "fieldtype": "Date",
    "label": "Dispatched date",
+   "no_copy": 1,
    "read_only": 0
   }
  ],

@@ -56,7 +56,7 @@
    "in_list_view": 1,
    "label": "Customer",
    "options": "Customer",
-   "read_only": 1,
+   "read_only": 0,
    "reqd": 1
   },
   {
@@ -120,19 +120,19 @@
    "fieldtype": "Int",
    "in_list_view": 1,
    "label": "Total cartons",
-   "read_only": 1
+   "read_only": 0
   },
   {
    "fieldname": "total_pieces",
    "fieldtype": "Float",
    "label": "Total pieces",
-   "read_only": 1
+   "read_only": 0
   },
   {
    "fieldname": "total_gross_weight",
    "fieldtype": "Float",
    "label": "Total gross weight (kg)",
-   "read_only": 1
+   "read_only": 0
   },
   {
    "fieldname": "linked_documents_section",
@@ -146,7 +146,7 @@
    "in_list_view": 1,
    "label": "Status",
    "options": "Draft\nSubmitted\nCancelled",
-   "read_only": 1,
+   "read_only": 0,
    "reqd": 1
   },
   {
@@ -154,14 +154,14 @@
    "fieldtype": "Link",
    "label": "Delivery note",
    "options": "Delivery Note",
-   "read_only": 1
+   "read_only": 0
   },
   {
    "fieldname": "sales_invoice",
    "fieldtype": "Link",
    "label": "Sales invoice",
    "options": "Sales Invoice",
-   "read_only": 1
+   "read_only": 0
   }
  ],
  "index_web_pages_for_search": 1,

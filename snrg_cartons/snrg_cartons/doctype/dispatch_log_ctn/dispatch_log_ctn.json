@@ -24,26 +24,26 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Box type",
-   "read_only": 1
+   "read_only": 0
   },
   {
    "fieldname": "packed_date",
    "fieldtype": "Date",
    "in_list_view": 1,
    "label": "Packed date",
-   "read_only": 1
+   "read_only": 0
   },
   {
    "fieldname": "items_summary",
    "fieldtype": "Small Text",
    "label": "Items summary",
-   "read_only": 1
+   "read_only": 0
   },
   {
    "fieldname": "gross_weight_kg",
    "fieldtype": "Float",
    "label": "Gross weight (kg)",
-   "read_only": 1
+   "read_only": 0
   }
  ],
  "index_web_pages_for_search": 1,

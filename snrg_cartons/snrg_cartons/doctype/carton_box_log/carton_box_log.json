@@ -54,13 +54,13 @@
    "fieldname": "dimensions",
    "fieldtype": "Data",
    "label": "Dimensions",
-   "read_only": 1
+   "read_only": 0
   },
   {
    "fieldname": "empty_weight_kg",
    "fieldtype": "Float",
    "label": "Empty box weight (kg)",
-   "read_only": 1
+   "read_only": 0
   },
   {
    "fieldname": "contents_section",
@@ -83,13 +83,13 @@
    "fieldname": "net_weight_kg",
    "fieldtype": "Float",
    "label": "Net weight (kg)",
-   "read_only": 1
+   "read_only": 0
   },
   {
    "fieldname": "gross_weight_kg",
    "fieldtype": "Float",
    "label": "Gross weight (kg)",
-   "read_only": 1
+   "read_only": 0
   },
   {
    "fieldname": "packing_info_section",
@@ -131,7 +131,7 @@
    "in_list_view": 1,
    "label": "Status",
    "options": "Available\nDispatched",
-   "read_only": 1,
+   "read_only": 0,
    "reqd": 1
   },
   {
@@ -139,34 +139,34 @@
    "fieldtype": "Link",
    "label": "Dispatch log",
    "options": "Dispatch Log",
-   "read_only": 1
+   "read_only": 0
   },
   {
    "fieldname": "delivery_note",
    "fieldtype": "Link",
    "label": "Delivery note",
    "options": "Delivery Note",
-   "read_only": 1
+   "read_only": 0
   },
   {
    "fieldname": "sales_invoice",
    "fieldtype": "Link",
    "label": "Sales invoice",
    "options": "Sales Invoice",
-   "read_only": 1
+   "read_only": 0
   },
   {
    "fieldname": "customer",
    "fieldtype": "Link",
    "label": "Customer",
    "options": "Customer",
-   "read_only": 1
+   "read_only": 0
   },
   {
    "fieldname": "dispatched_date",
    "fieldtype": "Date",
    "label": "Dispatched date",
-   "read_only": 1
+   "read_only": 0
   }
  ],
  "index_web_pages_for_search": 1,

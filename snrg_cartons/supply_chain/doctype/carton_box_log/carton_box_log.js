@@ -49,6 +49,23 @@ frappe.ui.form.on('Carton Box Log Item', {
 
 // ── Add Item Dialog ────────────────────────────────────────────────────────
 
+function reset_and_focus(d) {
+	// Fully reset the Link field so it shows the search dropdown again next time
+	d.set_value('item_code', '');
+	d.set_value('item_name', '');
+	d.set_value('uom', '');
+	d.set_value('item_weight_kg', 0);
+	d.set_value('qty', 1);
+	setTimeout(() => {
+		let $input = d.fields_dict.item_code && d.fields_dict.item_code.$input;
+		if ($input) {
+			$input.val('');
+			$input.trigger('input');   // resets the autocomplete state
+			$input.focus();
+		}
+	}, 80);
+}
+
 function show_add_item_dialog(frm) {
 	let d = new frappe.ui.Dialog({
 		title: __('Add Item to Carton'),
@@ -104,23 +121,30 @@ function show_add_item_dialog(frm) {
 		],
 		primary_action_label: __('Add to Carton'),
 		primary_action: function(values) {
-			if (!values.item_code || !(values.qty > 0)) {
-				frappe.msgprint(__('Please select an item and enter a valid quantity.'));
+			// Validate without opening a blocking modal (so Escape doesn't close this dialog)
+			if (!values.item_code) {
+				frappe.show_alert({ message: __('Please select an Item Code first.'), indicator: 'orange' }, 3);
+				reset_and_focus(d);
+				return;
+			}
+			if (!(values.qty > 0)) {
+				frappe.show_alert({ message: __('Qty must be greater than zero.'), indicator: 'orange' }, 3);
+				d.fields_dict.qty.$input && d.fields_dict.qty.$input.focus();
 				return;
 			}
 
 			// Check if item already exists in the table → increment qty instead
 			let existing = (frm.doc.items || []).find(r => r.item_code === values.item_code);
 			if (existing) {
-				frappe.model.set_value(existing.doctype, existing.name, 'qty',
-					(existing.qty || 0) + values.qty);
+				let new_qty = (existing.qty || 0) + values.qty;
+				frappe.model.set_value(existing.doctype, existing.name, 'qty', new_qty);
 				frm.trigger('calculate_gross_weight');
 				frappe.show_alert({
-					message: __(`${values.item_code} — qty updated to ${(existing.qty || 0) + values.qty}`),
+					message: __(`${values.item_code} — qty updated to ${new_qty}`),
 					indicator: 'blue'
-				});
+				}, 3);
 			} else {
-				let row = frm.add_child('items', {
+				frm.add_child('items', {
 					item_code: values.item_code,
 					item_name: values.item_name || '',
 					qty: values.qty,
@@ -131,18 +155,13 @@ function show_add_item_dialog(frm) {
 				frappe.show_alert({
 					message: __(`${values.item_code} added`),
 					indicator: 'green'
-				});
+				}, 3);
 			}
 
 			frm.refresh_field('items');
 
-			// Clear fields and keep dialog open for next item
-			d.set_value('item_code', '');
-			d.set_value('item_name', '');
-			d.set_value('uom', '');
-			d.set_value('item_weight_kg', 0);
-			d.set_value('qty', 1);
-			d.fields_dict.item_code.$input && d.fields_dict.item_code.$input.focus();
+			// Reset dialog and re-focus item code field for the next item
+			reset_and_focus(d);
 		},
 		secondary_action_label: __('Done'),
 		secondary_action: function() {
@@ -150,9 +169,14 @@ function show_add_item_dialog(frm) {
 		}
 	});
 
+	// Prevent Escape from closing this dialog (so dismissing validation alerts doesn't exit)
+	d.$wrapper.on('keydown.add-item-dialog', function(e) {
+		if (e.key === 'Escape') {
+			e.stopPropagation();
+		}
+	});
+
 	d.show();
 	// Auto-focus item code field when dialog opens
-	setTimeout(() => {
-		d.fields_dict.item_code.$input && d.fields_dict.item_code.$input.focus();
-	}, 300);
+	setTimeout(() => reset_and_focus(d), 300);
 }

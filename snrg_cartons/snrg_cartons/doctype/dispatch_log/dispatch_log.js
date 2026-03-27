@@ -32,7 +32,7 @@ frappe.ui.form.on('Dispatch Log', {
             } else {
                 frm.add_custom_button(__('Get Freight Quote'), function() {
                     frappe.call({
-                        method: 'snrg_cartons.snrg_cartons.supply_chain.doctype.freight_quotation.freight_quotation.create_from_dispatch',
+                        method: 'snrg_cartons.supply_chain.doctype.freight_quotation.freight_quotation.create_from_dispatch',
                         args: { dispatch_log: frm.doc.name },
                         freeze: true,
                         freeze_message: __('Creating Freight Quotation...'),

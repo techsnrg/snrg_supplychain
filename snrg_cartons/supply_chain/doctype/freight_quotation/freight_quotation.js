@@ -55,7 +55,7 @@ frappe.ui.form.on('Freight Quotation', {
 			// Save first if dirty
 			let do_calculate = function() {
 				frappe.call({
-					method: 'snrg_cartons.snrg_cartons.supply_chain.doctype.freight_quotation.freight_quotation.calculate_freight',
+					method: 'snrg_cartons.supply_chain.doctype.freight_quotation.freight_quotation.calculate_freight',
 					args: { name: frm.doc.name },
 					freeze: true,
 					freeze_message: __('Calculating freight for all transporters...'),
@@ -82,7 +82,7 @@ frappe.ui.form.on('Freight Quotation', {
 					__('This will lock the selected transporter and update the Dispatch Log. Continue?'),
 					function() {
 						frappe.call({
-							method: 'snrg_cartons.snrg_cartons.supply_chain.doctype.freight_quotation.freight_quotation.finalize_selection',
+							method: 'snrg_cartons.supply_chain.doctype.freight_quotation.freight_quotation.finalize_selection',
 							args: { name: frm.doc.name },
 							freeze: true,
 							callback(r) {

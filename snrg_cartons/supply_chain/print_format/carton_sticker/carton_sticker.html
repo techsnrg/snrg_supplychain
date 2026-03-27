@@ -181,7 +181,7 @@
 </style>
 
 {% set item_count = doc.items | length %}
-{% set barcode_uri = frappe.call("snrg_cartons.snrg_cartons.utils.get_code128_barcode", text=doc.name) %}
+{% set barcode_uri = frappe.call("snrg_cartons.supply_chain.utils.get_code128_barcode", text=doc.name) %}
 
 <div class="sticker-container">
 	<div class="sticker-header">

@@ -228,6 +228,7 @@
    "write": 1
   }
  ],
+ "default_print_format": "Dispatch Packing List",
  "search_fields": "name,sales_order,customer",
  "sort_field": "modified",
  "sort_order": "DESC",

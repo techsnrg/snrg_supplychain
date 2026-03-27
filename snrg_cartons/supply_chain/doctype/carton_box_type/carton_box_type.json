@@ -6,6 +6,8 @@
  "engine": "InnoDB",
  "field_order": [
   "box_code",
+  "status",
+  "col_break_top",
   "description",
   "dimensions_section",
   "length_in",
@@ -13,10 +15,8 @@
   "width_in",
   "col_break_h",
   "height_in",
-  "weight_active_section",
-  "empty_weight_g",
-  "col_break_active",
-  "is_active"
+  "weight_section",
+  "empty_weight_g"
  ],
  "fields": [
   {
@@ -26,6 +26,18 @@
    "label": "Box Code",
    "reqd": 1,
    "unique": 1
+  },
+  {
+   "default": "Active",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Active\nInactive"
+  },
+  {
+   "fieldname": "col_break_top",
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "description",
@@ -68,9 +80,9 @@
    "reqd": 1
   },
   {
-   "fieldname": "weight_active_section",
+   "fieldname": "weight_section",
    "fieldtype": "Section Break",
-   "label": "Weight & Status"
+   "label": "Weight"
   },
   {
    "fieldname": "empty_weight_g",
@@ -79,21 +91,11 @@
    "label": "Empty Box Weight (g)",
    "reqd": 1,
    "description": "Weight of the empty box in grams"
-  },
-  {
-   "fieldname": "col_break_active",
-   "fieldtype": "Column Break"
-  },
-  {
-   "default": "1",
-   "fieldname": "is_active",
-   "fieldtype": "Check",
-   "label": "Is Active"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-28 12:00:00.000000",
+ "modified": "2026-03-28 13:00:00.000000",
  "modified_by": "Administrator",
  "module": "Supply Chain",
  "name": "Carton Box Type",
@@ -116,6 +118,15 @@
  "search_fields": "box_code,description",
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": [],
+ "states": [
+  {
+   "color": "Green",
+   "title": "Active"
+  },
+  {
+   "color": "Red",
+   "title": "Inactive"
+  }
+ ],
  "title_field": "box_code"
 }

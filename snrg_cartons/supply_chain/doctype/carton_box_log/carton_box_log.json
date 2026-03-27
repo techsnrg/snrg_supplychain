@@ -10,28 +10,30 @@
   "box_type",
   "dimensions",
   "empty_weight_g",
+  "col_break_details",
+  "packed_date",
+  "packed_by",
+  "warehouse",
   "contents_section",
   "items",
   "weight_summary_section",
   "net_weight_kg",
+  "col_break_weights",
   "gross_weight_kg",
-  "packing_info_section",
-  "packed_date",
-  "packed_by",
-  "warehouse",
   "dispatch_info_section",
   "status",
   "dispatch_log",
   "delivery_note",
-  "sales_invoice",
+  "col_break_dispatch",
   "customer",
-  "dispatched_date"
+  "dispatched_date",
+  "sales_invoice"
  ],
  "fields": [
   {
    "fieldname": "carton_details_section",
    "fieldtype": "Section Break",
-   "label": "Carton details"
+   "label": "Carton Details"
   },
   {
    "default": "CTN-.#####",
@@ -46,7 +48,7 @@
    "fieldname": "box_type",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Box type",
+   "label": "Box Type",
    "options": "Carton Box Type",
    "reqd": 1
   },
@@ -54,13 +56,41 @@
    "fieldname": "dimensions",
    "fieldtype": "Data",
    "label": "Dimensions",
-   "read_only": 0
+   "read_only": 1
   },
   {
    "fieldname": "empty_weight_g",
    "fieldtype": "Float",
    "label": "Empty Box Weight (g)",
-   "read_only": 0
+   "read_only": 1,
+   "description": "Auto-filled from Box Type"
+  },
+  {
+   "fieldname": "col_break_details",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Today",
+   "fieldname": "packed_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Packed Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "packed_by",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Packed By",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "warehouse",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Warehouse",
+   "options": "Warehouse",
+   "reqd": 1
   },
   {
    "fieldname": "contents_section",
@@ -77,52 +107,29 @@
   {
    "fieldname": "weight_summary_section",
    "fieldtype": "Section Break",
-   "label": "Weight summary"
+   "label": "Weight Summary"
   },
   {
    "fieldname": "net_weight_kg",
    "fieldtype": "Float",
-   "label": "Net weight (kg)",
-   "read_only": 0
+   "label": "Net Weight (kg)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "col_break_weights",
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "gross_weight_kg",
    "fieldtype": "Float",
-   "label": "Gross weight (kg)",
-   "read_only": 0
-  },
-  {
-   "fieldname": "packing_info_section",
-   "fieldtype": "Section Break",
-   "label": "Packing info"
-  },
-  {
-   "default": "Today",
-   "fieldname": "packed_date",
-   "fieldtype": "Date",
-   "in_list_view": 1,
-   "label": "Packed date",
-   "reqd": 1
-  },
-  {
-   "fieldname": "packed_by",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Packed by",
-   "options": "Employee"
-  },
-  {
-   "fieldname": "warehouse",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Warehouse",
-   "options": "Warehouse",
-   "reqd": 1
+   "label": "Gross Weight (kg)",
+   "read_only": 1
   },
   {
    "fieldname": "dispatch_info_section",
    "fieldtype": "Section Break",
-   "label": "Dispatch info"
+   "label": "Dispatch Info",
+   "collapsible": 1
   },
   {
    "default": "Available",
@@ -132,32 +139,28 @@
    "label": "Status",
    "no_copy": 1,
    "options": "Available\nDispatched",
-   "read_only": 0,
+   "read_only": 1,
    "reqd": 1
   },
   {
    "fieldname": "dispatch_log",
    "fieldtype": "Link",
-   "label": "Dispatch log",
+   "label": "Dispatch Log",
    "no_copy": 1,
    "options": "Dispatch Log",
-   "read_only": 0
+   "read_only": 1
   },
   {
    "fieldname": "delivery_note",
    "fieldtype": "Link",
-   "label": "Delivery note",
+   "label": "Delivery Note",
    "no_copy": 1,
    "options": "Delivery Note",
-   "read_only": 0
+   "read_only": 1
   },
   {
-   "fieldname": "sales_invoice",
-   "fieldtype": "Link",
-   "label": "Sales invoice",
-   "no_copy": 1,
-   "options": "Sales Invoice",
-   "read_only": 0
+   "fieldname": "col_break_dispatch",
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "customer",
@@ -165,19 +168,27 @@
    "label": "Customer",
    "no_copy": 1,
    "options": "Customer",
-   "read_only": 0
+   "read_only": 1
   },
   {
    "fieldname": "dispatched_date",
    "fieldtype": "Date",
-   "label": "Dispatched date",
+   "label": "Dispatched Date",
    "no_copy": 1,
-   "read_only": 0
+   "read_only": 1
+  },
+  {
+   "fieldname": "sales_invoice",
+   "fieldtype": "Link",
+   "label": "Sales Invoice",
+   "no_copy": 1,
+   "options": "Sales Invoice",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-16 12:00:00.000000",
+ "modified": "2026-03-28 13:00:00.000000",
  "modified_by": "Administrator",
  "module": "Supply Chain",
  "name": "Carton Box Log",
@@ -197,8 +208,18 @@
    "write": 1
   }
  ],
+ "default_print_format": "Carton Sticker",
  "search_fields": "name,customer,dispatch_log",
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [
+  {
+   "color": "Green",
+   "title": "Available"
+  },
+  {
+   "color": "Blue",
+   "title": "Dispatched"
+  }
+ ]
 }

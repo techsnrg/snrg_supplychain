@@ -22,6 +22,27 @@ frappe.ui.form.on('Transporter Serviceability', {
 
 		// Upload from CSV button (only on saved/submitted docs)
 		if (frm.doc.name && !frm.doc.__islocal) {
+			frm.add_custom_button(__('Download CSV Template'), function() {
+				let rows = [
+					['PIN CODE', 'ZONE', 'STATE', 'ODA/SERVICEABILITY', 'ODA CATEGORY'],
+					['110001', 'Delhi Metro', 'Delhi', 'SERVICEABLE', 'S'],
+					['110002', 'Delhi Metro', 'Delhi', 'ODA', 'A'],
+					['110003', 'Delhi Metro', 'Delhi', 'NSZ', ''],
+					['400001', 'Mumbai Metro', 'Maharashtra', 'SERVICEABLE', 'S'],
+					['500001', 'Hyderabad Metro', 'Telangana', 'ODA', 'B'],
+				];
+				let csv_content = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\r\n');
+				let blob = new Blob([csv_content], { type: 'text/csv;charset=utf-8;' });
+				let url = URL.createObjectURL(blob);
+				let a = document.createElement('a');
+				a.href = url;
+				a.download = 'pin_code_upload_template.csv';
+				document.body.appendChild(a);
+				a.click();
+				document.body.removeChild(a);
+				URL.revokeObjectURL(url);
+			}, __('Tools'));
+
 			frm.add_custom_button(__('Upload from CSV'), function() {
 				let d = new frappe.ui.Dialog({
 					title: __('Upload Pin Code CSV'),

@@ -2,7 +2,7 @@
  "doctype": "Print Format",
  "name": "Carton Sticker",
  "doc_type": "Carton Box Log",
- "module": "SNRG Cartons",
+ "module": "Supply Chain",
  "print_format_type": "Jinja",
  "standard": "Yes",
  "custom_format": 0,

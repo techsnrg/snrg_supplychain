@@ -3,8 +3,8 @@ frappe.ui.form.on('Carton Box Log', {
         if (frm.doc.box_type) {
             frappe.db.get_doc('Carton Box Type', frm.doc.box_type)
             .then(doc => {
-                frm.set_value('dimensions', `${doc.length_cm} × ${doc.width_cm} × ${doc.height_cm} cm`);
-                frm.set_value('empty_weight_kg', doc.empty_weight_kg);
+                frm.set_value('dimensions', `${doc.length_in} × ${doc.width_in} × ${doc.height_in} in`);
+                frm.set_value('empty_weight_g', doc.empty_weight_g);
                 frm.trigger('calculate_gross_weight');
             });
         }
@@ -17,7 +17,7 @@ frappe.ui.form.on('Carton Box Log', {
             net += (row.qty || 0) * (row.item_weight_kg || 0);
         });
         frm.set_value('net_weight_kg', net);
-        frm.set_value('gross_weight_kg', net + (frm.doc.empty_weight_kg || 0));
+        frm.set_value('gross_weight_kg', parseFloat((net + (frm.doc.empty_weight_g || 0) / 1000).toFixed(3)));
     }
 });
 

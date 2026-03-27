@@ -348,17 +348,17 @@ def _calc_oda_charge(rate_card, category, weight_kg):
 
 
 def _get_total_volume(dispatch_log_doc):
-	"""Sum L×W×H (cm³) for all cartons in the dispatch log."""
+	"""Sum L×W×H (in³) for all cartons in the dispatch log."""
 	total = 0.0
 	for ctn_row in dispatch_log_doc.cartons:
 		box_type = frappe.db.get_value("Carton Box Log", ctn_row.carton_id, "box_type")
 		if box_type:
 			dims = frappe.db.get_value(
 				"Carton Box Type", box_type,
-				["length_cm", "width_cm", "height_cm"], as_dict=True
+				["length_in", "width_in", "height_in"], as_dict=True
 			)
 			if dims:
-				total += flt(dims.length_cm) * flt(dims.width_cm) * flt(dims.height_cm)
+				total += flt(dims.length_in) * flt(dims.width_in) * flt(dims.height_in)
 	return total
 
 

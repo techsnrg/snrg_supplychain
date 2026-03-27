@@ -7,11 +7,15 @@
  "field_order": [
   "box_code",
   "description",
-  "length_cm",
-  "width_cm",
-  "height_cm",
-  "empty_weight_kg",
-  "max_capacity",
+  "dimensions_section",
+  "length_in",
+  "col_break_w",
+  "width_in",
+  "col_break_h",
+  "height_in",
+  "weight_active_section",
+  "empty_weight_g",
+  "col_break_active",
   "is_active"
  ],
  "fields": [
@@ -19,7 +23,7 @@
    "fieldname": "box_code",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Box code",
+   "label": "Box Code",
    "reqd": 1,
    "unique": 1
   },
@@ -30,51 +34,68 @@
    "label": "Description"
   },
   {
-   "fieldname": "length_cm",
+   "fieldname": "dimensions_section",
+   "fieldtype": "Section Break",
+   "label": "Dimensions (inches)"
+  },
+  {
+   "fieldname": "length_in",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "Length (cm)",
+   "label": "Length (in)",
    "reqd": 1
   },
   {
-   "fieldname": "width_cm",
+   "fieldname": "col_break_w",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "width_in",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "Width (cm)",
+   "label": "Width (in)",
    "reqd": 1
   },
   {
-   "fieldname": "height_cm",
+   "fieldname": "col_break_h",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "height_in",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "Height (cm)",
+   "label": "Height (in)",
    "reqd": 1
   },
   {
-   "fieldname": "empty_weight_kg",
-   "fieldtype": "Float",
-   "in_list_view": 1,
-   "label": "Empty box weight (kg)",
-   "reqd": 1
+   "fieldname": "weight_active_section",
+   "fieldtype": "Section Break",
+   "label": "Weight & Status"
   },
   {
-   "fieldname": "max_capacity",
-   "fieldtype": "Int",
-   "label": "Max capacity (pcs)"
+   "fieldname": "empty_weight_g",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Empty Box Weight (g)",
+   "reqd": 1,
+   "description": "Weight of the empty box in grams"
+  },
+  {
+   "fieldname": "col_break_active",
+   "fieldtype": "Column Break"
   },
   {
    "default": "1",
    "fieldname": "is_active",
    "fieldtype": "Check",
-   "label": "Is active",
-   "reqd": 1
+   "label": "Is Active"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-16 12:00:00.000000",
+ "modified": "2026-03-28 12:00:00.000000",
  "modified_by": "Administrator",
- "module": "SNRG Cartons",
+ "module": "Supply Chain",
  "name": "Carton Box Type",
  "naming_rule": "By fieldname",
  "owner": "Administrator",

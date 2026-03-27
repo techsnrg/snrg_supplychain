@@ -3,7 +3,7 @@ import os
 app_name = "snrg_cartons"
 app_title = "SNRG Supply Chain"
 app_publisher = "SNRG Electricals"
-app_description = "Carton Management & Supply Chain Module"
+app_description = "Supply Chain, Freight & Carton Management for SNRG Electricals"
 app_email = "admin@snrgelectricals.com"
 app_license = "mit"
 

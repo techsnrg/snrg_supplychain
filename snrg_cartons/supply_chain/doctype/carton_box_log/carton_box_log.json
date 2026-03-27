@@ -9,7 +9,7 @@
   "naming_series",
   "box_type",
   "dimensions",
-  "empty_weight_kg",
+  "empty_weight_g",
   "contents_section",
   "items",
   "weight_summary_section",
@@ -57,9 +57,9 @@
    "read_only": 0
   },
   {
-   "fieldname": "empty_weight_kg",
+   "fieldname": "empty_weight_g",
    "fieldtype": "Float",
-   "label": "Empty box weight (kg)",
+   "label": "Empty Box Weight (g)",
    "read_only": 0
   },
   {
@@ -179,7 +179,7 @@
  "links": [],
  "modified": "2026-03-16 12:00:00.000000",
  "modified_by": "Administrator",
- "module": "SNRG Cartons",
+ "module": "Supply Chain",
  "name": "Carton Box Log",
  "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",

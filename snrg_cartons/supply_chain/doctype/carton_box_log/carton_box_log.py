@@ -15,8 +15,8 @@ class CartonBoxLog(Document):
 		if self.box_type:
 			try:
 				box_doc = frappe.get_cached_doc("Carton Box Type", self.box_type)
-				self.dimensions = f"{box_doc.length_cm} × {box_doc.width_cm} × {box_doc.height_cm} cm"
-				self.empty_weight_kg = flt(box_doc.empty_weight_kg)
+				self.dimensions = f"{box_doc.length_in} × {box_doc.width_in} × {box_doc.height_in} in"
+				self.empty_weight_g = flt(box_doc.empty_weight_g)
 			except Exception:
 				pass
 
@@ -39,4 +39,4 @@ class CartonBoxLog(Document):
 			net += flt(row.qty) * flt(row.item_weight_kg)
 
 		self.net_weight_kg = net
-		self.gross_weight_kg = net + flt(self.empty_weight_kg)
+		self.gross_weight_kg = round(net + flt(self.empty_weight_g) / 1000, 3)

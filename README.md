@@ -1,6 +1,6 @@
-# SNRG Cartons
+# SNRG Supply Chain
 
-Carton Management System for SNRG Electricals India Pvt. Ltd.
+Supply Chain & Carton Management Module for SNRG Electricals India Pvt. Ltd.
 
 ## License
 

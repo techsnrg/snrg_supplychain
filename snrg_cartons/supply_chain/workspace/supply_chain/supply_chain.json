@@ -1,7 +1,7 @@
 {
  "category": "Modules",
  "charts": [],
- "content": "[{\"id\":\"zwxyz1\",\"type\":\"header\",\"data\":{\"text\":\"Carton Management\",\"col\":12}},{\"id\":\"zwxyz2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Outward Shipment\",\"col\":3}},{\"id\":\"zwxyz3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Packed Carton\",\"col\":3}},{\"id\":\"zwxyz4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Carton Type\",\"col\":3}},{\"id\":\"zwxyz5\",\"type\":\"header\",\"data\":{\"text\":\"Freight Management\",\"col\":12}},{\"id\":\"zwxyz6\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Freight Quotation\",\"col\":3}},{\"id\":\"zwxyz7\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Transporters\",\"col\":3}},{\"id\":\"zwxyz8\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Transporter Rate Card\",\"col\":3}},{\"id\":\"zwxyz9\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Transporter Serviceability\",\"col\":3}},{\"id\":\"zwxyz10\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Freight Zone\",\"col\":3}}]",
+ "content": "[{\"id\":\"zwxyz1\",\"type\":\"header\",\"data\":{\"text\":\"Carton Management\",\"col\":12}},{\"id\":\"zwxyz2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Outward Shipment\",\"col\":3}},{\"id\":\"zwxyz3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Packed Carton\",\"col\":3}},{\"id\":\"zwxyz4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Carton Type\",\"col\":3}},{\"id\":\"zwxyz5\",\"type\":\"header\",\"data\":{\"text\":\"Freight Management\",\"col\":12}},{\"id\":\"zwxyz6\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Freight Quotation\",\"col\":3}},{\"id\":\"zwxyz8\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Transporter Rate Card\",\"col\":3}},{\"id\":\"zwxyz9\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Transporter Serviceability\",\"col\":3}},{\"id\":\"zwxyz10\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Freight Zone\",\"col\":3}}]",
  "creation": "2026-03-27 12:00:00.000000",
  "developer_mode_only": 0,
  "disable_user_customization": 0,
@@ -80,17 +80,6 @@
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Transporters",
-   "link_count": 0,
-   "link_to": "/app/supplier?is_transporter=1",
-   "link_type": "URL",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
    "label": "Transporter Rate Card",
    "link_count": 0,
    "link_to": "Transporter Rate Card",
@@ -121,7 +110,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-03-27 12:00:00.000000",
+ "modified": "2026-03-28 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "Supply Chain",
  "name": "Supply Chain",
@@ -157,11 +146,6 @@
    "link_to": "Freight Quotation",
    "stats_filter": "{ \"status\": \"Draft\" }",
    "type": "DocType"
-  },
-  {
-   "label": "Transporters",
-   "url": "/app/supplier?is_transporter=1",
-   "type": "URL"
   },
   {
    "color": "Orange",

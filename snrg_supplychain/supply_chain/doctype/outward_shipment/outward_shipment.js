@@ -77,22 +77,8 @@ frappe.ui.form.on('Outward Shipment', {
             frappe.db.get_doc("Sales Order", frm.doc.sales_order).then(so => {
                 // Set customer
                 frm.set_value("customer", so.customer);
-
-                // Populate SO Items table
-                frm.doc.so_items = [];
-                (so.items || []).forEach(item => {
-                    let child = frm.add_child('so_items');
-                    child.item_code = item.item_code;
-                    child.item_name = item.item_name;
-                    child.ordered_qty = item.qty;
-                    child.uom = item.uom;
-                    child.so_detail = item.name;  // the SO Item row name — key for DN linking
-                });
-                frm.refresh_field('so_items');
             });
         } else {
-            frm.doc.so_items = [];
-            frm.refresh_field('so_items');
             frm.set_value("customer", "");
         }
     },

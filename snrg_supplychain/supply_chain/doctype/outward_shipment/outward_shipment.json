@@ -12,8 +12,6 @@
   "column_break_order",
   "dispatch_date",
   "create_delivery_note",
-  "so_items_section",
-  "so_items",
   "cartons_section",
   "cartons",
   "items_summary_section",
@@ -81,18 +79,6 @@
    "fieldname": "create_delivery_note",
    "fieldtype": "Check",
    "label": "Create Delivery Note on Submit"
-  },
-  {
-   "fieldname": "so_items_section",
-   "fieldtype": "Section Break",
-   "label": "Sales Order Items"
-  },
-  {
-   "fieldname": "so_items",
-   "fieldtype": "Table",
-   "label": "Sales Order Items",
-   "options": "Outward Shipment SO Item",
-   "read_only": 1
   },
   {
    "fieldname": "cartons_section",

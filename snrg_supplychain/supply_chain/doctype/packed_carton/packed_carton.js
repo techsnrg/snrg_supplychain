@@ -32,6 +32,34 @@ frappe.ui.form.on('Packed Carton', {
 	}
 });
 
+const WEIGHT_UOM_TO_KG = {
+	kg: 1,
+	kilogram: 1,
+	kilograms: 1,
+	g: 0.001,
+	gm: 0.001,
+	gram: 0.001,
+	grams: 0.001,
+	mg: 0.000001,
+	milligram: 0.000001,
+	milligrams: 0.000001
+};
+
+function convertWeightToKg(weight, weightUom) {
+	const numericWeight = flt(weight);
+	if (!numericWeight) return 0;
+
+	const key = (weightUom || 'kg').trim().toLowerCase();
+	const factor = WEIGHT_UOM_TO_KG[key];
+	if (factor === undefined) {
+		frappe.throw(
+			__('Unsupported Weight UOM: {0}. Please use Kg, Gram, or Milligram on the Item master.', [weightUom || 'blank'])
+		);
+	}
+
+	return numericWeight * factor;
+}
+
 function is_blank_item_row(row) {
 	return row && !row.item_code && !row.item_name && !row.qty && !row.item_weight_kg;
 }
@@ -57,7 +85,7 @@ frappe.ui.form.on('Packed Carton Item', {
 			frappe.db.get_doc('Item', row.item_code).then(item => {
 				frappe.model.set_value(cdt, cdn, 'item_name', item.item_name);
 				frappe.model.set_value(cdt, cdn, 'uom', item.stock_uom);
-				frappe.model.set_value(cdt, cdn, 'item_weight_kg', item.weight_per_unit || 0);
+				frappe.model.set_value(cdt, cdn, 'item_weight_kg', convertWeightToKg(item.weight_per_unit, item.weight_uom));
 				frm.trigger('calculate_gross_weight');
 			});
 		}
@@ -101,7 +129,7 @@ function show_add_item_dialog(frm) {
 					frappe.db.get_doc('Item', item_code).then(item => {
 						d.set_value('item_name', item.item_name || '');
 						d.set_value('uom', item.stock_uom || '');
-						d.set_value('item_weight_kg', item.weight_per_unit || 0);
+						d.set_value('item_weight_kg', convertWeightToKg(item.weight_per_unit, item.weight_uom));
 						// Focus qty field after item is selected
 						d.get_field('qty').df.reqd = 1;
 						d.fields_dict.qty.$input && d.fields_dict.qty.$input.focus();

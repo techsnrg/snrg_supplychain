@@ -7,7 +7,10 @@ from frappe.exceptions import ValidationError
 
 from snrg_supplychain.supply_chain.doctype.freight_quotation import freight_quotation
 from snrg_supplychain.supply_chain.doctype.outward_shipment.outward_shipment import OutwardShipment
-from snrg_supplychain.supply_chain.doctype.packed_carton.packed_carton import PackedCarton
+from snrg_supplychain.supply_chain.doctype.packed_carton.packed_carton import (
+	PackedCarton,
+	convert_weight_to_kg,
+)
 from snrg_supplychain.supply_chain.doctype.transporter_serviceability.transporter_serviceability import (
 	TransporterServiceability,
 	process_csv_upload,
@@ -46,11 +49,14 @@ class SupplyChainLogicTests(TestCase):
 		self.assertEqual(carton.net_weight_kg, 4.0)
 		self.assertEqual(carton.gross_weight_kg, 4.25)
 
+	def test_convert_weight_to_kg_from_grams(self):
+		self.assertEqual(convert_weight_to_kg(20, "Gram"), 0.02)
+
 	def test_packed_carton_requires_item_weight(self):
 		carton = SimpleNamespace(
 			items=[SimpleNamespace(item_code="ITEM-001", item_name="", uom="", item_weight_kg=0)],
 		)
-		item_doc = SimpleNamespace(item_name="Switch", stock_uom="Nos", weight_per_unit=0)
+		item_doc = SimpleNamespace(item_name="Switch", stock_uom="Nos", weight_per_unit=0, weight_uom="Gram")
 
 		with patch("snrg_supplychain.supply_chain.doctype.packed_carton.packed_carton.frappe.get_cached_doc", return_value=item_doc):
 			with self.assertRaises(ValidationError):

@@ -3,6 +3,36 @@ from frappe.model.document import Document
 from frappe.utils import flt
 
 
+WEIGHT_UOM_TO_KG = {
+	"KG": 1,
+	"KILOGRAM": 1,
+	"KILOGRAMS": 1,
+	"G": 0.001,
+	"GM": 0.001,
+	"GRAM": 0.001,
+	"GRAMS": 0.001,
+	"MG": 0.000001,
+	"MILLIGRAM": 0.000001,
+	"MILLIGRAMS": 0.000001,
+}
+
+
+def convert_weight_to_kg(weight, weight_uom):
+	weight = flt(weight)
+	if not weight:
+		return 0
+
+	uom_key = (weight_uom or "kg").strip().upper()
+	factor = WEIGHT_UOM_TO_KG.get(uom_key)
+	if factor is None:
+		frappe.throw(
+			f"Unsupported Weight UOM <b>{weight_uom}</b>. "
+			"Please use Kg, Gram, or Milligram on the Item master."
+		)
+
+	return weight * factor
+
+
 class PackedCarton(Document):
 	def before_save(self):
 		self.set_box_type_details()
@@ -26,7 +56,10 @@ class PackedCarton(Document):
 				if not row.uom:
 					row.uom = item_doc.stock_uom
 				if not row.item_weight_kg:
-					row.item_weight_kg = flt(getattr(item_doc, "weight_per_unit", 0))
+					row.item_weight_kg = convert_weight_to_kg(
+						getattr(item_doc, "weight_per_unit", 0),
+						getattr(item_doc, "weight_uom", None),
+					)
 
 				if not flt(row.item_weight_kg):
 					frappe.throw(

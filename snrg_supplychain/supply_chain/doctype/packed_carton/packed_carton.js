@@ -1,6 +1,8 @@
 frappe.ui.form.on('Packed Carton', {
 
 	refresh: function(frm) {
+		prune_blank_item_rows(frm);
+
 		// Add Item button — only on unsaved / draft forms
 		if (frm.doc.docstatus === 0) {
 			frm.add_custom_button(__('Add Item'), () => {
@@ -29,6 +31,23 @@ frappe.ui.form.on('Packed Carton', {
 		frm.set_value('gross_weight_kg', parseFloat((net + (frm.doc.empty_weight_g || 0) / 1000).toFixed(3)));
 	}
 });
+
+function is_blank_item_row(row) {
+	return row && !row.item_code && !row.item_name && !row.qty && !row.item_weight_kg;
+}
+
+function prune_blank_item_rows(frm) {
+	if (!frm.doc.items || !frm.doc.items.length) return;
+
+	const blank_rows = frm.doc.items.filter(is_blank_item_row);
+	if (!blank_rows.length) return;
+
+	blank_rows.forEach(row => {
+		frappe.model.clear_doc(row.doctype, row.name);
+	});
+
+	frm.refresh_field('items');
+}
 
 // When item_code is selected in child table → fetch item name, UOM, weight
 frappe.ui.form.on('Packed Carton Item', {
@@ -121,6 +140,8 @@ function show_add_item_dialog(frm) {
 		],
 		primary_action_label: __('Add to Carton'),
 		primary_action: function(values) {
+			prune_blank_item_rows(frm);
+
 			// Validate without opening a blocking modal (so Escape doesn't close this dialog)
 			if (!values.item_code) {
 				frappe.show_alert({ message: __('Please select an Item Code first.'), indicator: 'orange' }, 3);
@@ -159,6 +180,7 @@ function show_add_item_dialog(frm) {
 			}
 
 			frm.refresh_field('items');
+			prune_blank_item_rows(frm);
 
 			// Reset dialog and re-focus item code field for the next item
 			reset_and_focus(d);

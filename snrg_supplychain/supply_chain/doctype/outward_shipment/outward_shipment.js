@@ -63,6 +63,14 @@ frappe.ui.form.on('Outward Shipment', {
     },
 
     setup: function(frm) {
+        frm.set_query("sales_order", function() {
+            return {
+                filters: {
+                    docstatus: 1
+                }
+            };
+        });
+
         frm.set_query("carton_id", "cartons", function() {
             return {
                 filters: {

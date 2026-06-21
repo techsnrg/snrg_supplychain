@@ -66,8 +66,10 @@ frappe.ui.form.on('Outward Shipment', {
         frm.set_query("sales_order", function() {
             return {
                 filters: {
-                    docstatus: 1
-                }
+                    docstatus: 1,
+                    status: ["not in", ["Closed", "Completed"]]
+                },
+                order_by: "transaction_date desc, modified desc"
             };
         });
 

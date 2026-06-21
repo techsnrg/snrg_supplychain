@@ -88,6 +88,7 @@
   {
    "fieldname": "cartons",
    "fieldtype": "Table",
+   "in_place_edit": 1,
    "label": "Cartons",
    "options": "Outward Shipment Carton",
    "reqd": 1
@@ -100,6 +101,7 @@
   {
    "fieldname": "dispatch_items",
    "fieldtype": "Table",
+   "in_place_edit": 1,
    "label": "Items",
    "options": "Outward Shipment Item",
    "read_only": 0

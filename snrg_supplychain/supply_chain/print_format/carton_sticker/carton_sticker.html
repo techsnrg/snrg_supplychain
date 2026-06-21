@@ -182,11 +182,14 @@
 
 {% set item_count = doc.items | length %}
 {% set barcode_uri = frappe.call("snrg_supplychain.supply_chain.utils.get_code128_barcode", text=doc.name) %}
+{% set branding = frappe.call("snrg_supplychain.supply_chain.utils.get_print_branding") %}
 
 <div class="sticker-container">
 	<div class="sticker-header">
-		<img class="logo" src="/files/WhatsApp Image 2025-11-27 at 16.04.30.jpeg" alt="" onerror="this.style.display='none'">
-		<span>SNRG ELECTRICALS INDIA PVT. LTD.</span>
+		{% if branding.logo %}
+			<img class="logo" src="{{ branding.logo }}" alt="" onerror="this.style.display='none'">
+		{% endif %}
+		<span>{{ branding.company_name or "SNRG Supply Chain" }}</span>
 	</div>
 
 	<div class="carton-id-section">

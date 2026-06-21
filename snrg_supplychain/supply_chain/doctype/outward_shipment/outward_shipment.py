@@ -2,6 +2,7 @@ import frappe
 from frappe.model.document import Document
 from frappe.utils import flt
 
+
 class OutwardShipment(Document):
 	def before_save(self):
 		self.populate_so_items()
@@ -26,20 +27,20 @@ class OutwardShipment(Document):
 
 	def populate_so_items(self):
 		"""Populate the SO items table from the selected Sales Order."""
-		try:
-			self.so_items = []
-			if self.sales_order:
-				so = frappe.get_doc("Sales Order", self.sales_order)
-				for item in so.items:
-					self.append("so_items", {
-						"item_code": item.item_code,
-						"item_name": item.item_name,
-						"ordered_qty": item.qty,
-						"uom": item.uom,
-						"so_detail": item.name  # SO Item row name for DN linking
-					})
-		except AttributeError:
-			pass
+		if not self.meta.get_field("so_items"):
+			return
+
+		self.so_items = []
+		if self.sales_order:
+			so = frappe.get_doc("Sales Order", self.sales_order)
+			for item in so.items:
+				self.append("so_items", {
+					"item_code": item.item_code,
+					"item_name": item.item_name,
+					"ordered_qty": item.qty,
+					"uom": item.uom,
+					"so_detail": item.name  # SO Item row name for DN linking
+				})
 
 	def get_aggregated_items(self):
 		"""Aggregate items from all cartons into a dict keyed by item_code."""
@@ -65,19 +66,19 @@ class OutwardShipment(Document):
 
 	def populate_items_summary(self):
 		"""Populate the dispatch_items child table if it exists (post-migration)."""
-		try:
-			self.dispatch_items = []
-			item_map = self.get_aggregated_items()
-			for item in item_map.values():
-				self.append("dispatch_items", {
-					"item_code": item["item_code"],
-					"item_name": item["item_name"],
-					"total_qty": item["total_qty"],
-					"uom": item["uom"],
-					"from_cartons": ", ".join(item["cartons"])
-				})
-		except AttributeError:
-			pass
+		if not self.meta.get_field("dispatch_items"):
+			return
+
+		self.dispatch_items = []
+		item_map = self.get_aggregated_items()
+		for item in item_map.values():
+			self.append("dispatch_items", {
+				"item_code": item["item_code"],
+				"item_name": item["item_name"],
+				"total_qty": item["total_qty"],
+				"uom": item["uom"],
+				"from_cartons": ", ".join(item["cartons"])
+			})
 
 	def validate_items_against_sales_order(self):
 		"""
@@ -134,13 +135,10 @@ class OutwardShipment(Document):
 		"""Build a map of item_code -> SO Item row name for linking DN to SO."""
 		so_item_map = {}
 		# Try from so_items child table first (has so_detail stored)
-		try:
+		if self.meta.get_field("so_items"):
 			for row in (self.so_items or []):
-				if row.item_code and row.so_detail:
-					if row.item_code not in so_item_map:
-						so_item_map[row.item_code] = row.so_detail
-		except AttributeError:
-			pass
+				if row.item_code and row.so_detail and row.item_code not in so_item_map:
+					so_item_map[row.item_code] = row.so_detail
 
 		# Fallback: fetch directly from SO
 		if not so_item_map and self.sales_order:
@@ -152,6 +150,12 @@ class OutwardShipment(Document):
 		return so_item_map
 
 	def make_delivery_note(self):
+		if not frappe.has_permission("Delivery Note", "create"):
+			frappe.throw(
+				"You do not have permission to create a Delivery Note. "
+				"Either disable 'Create Delivery Note' or ask an administrator to grant access."
+			)
+
 		dn = frappe.new_doc("Delivery Note")
 		dn.customer = self.customer
 		dn.posting_date = self.dispatch_date
@@ -179,8 +183,7 @@ class OutwardShipment(Document):
 
 				dn.append("items", dn_item)
 
-		dn.flags.ignore_permissions = True
-		dn.insert(ignore_permissions=True)
+		dn.insert()
 		# Leave DN in Draft state — user can review and submit manually
 		self.db_set("delivery_note", dn.name)
 		frappe.msgprint(

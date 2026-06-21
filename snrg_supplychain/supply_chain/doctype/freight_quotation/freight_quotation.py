@@ -52,7 +52,6 @@ def create_from_dispatch(dispatch_log):
 	fq.total_volume_cm3 = _get_total_volume(dl)
 
 	fq.insert()
-	frappe.db.commit()
 
 	# Link back to Outward Shipment
 	frappe.db.set_value("Outward Shipment", dispatch_log, "freight_quotation", fq.name)
@@ -131,7 +130,6 @@ def finalize_selection(name):
 		"freight_amount": row.total_freight
 	})
 
-	frappe.db.commit()
 	return {"transporter": row.transporter, "amount": row.total_freight}
 
 

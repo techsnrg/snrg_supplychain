@@ -1,6 +1,45 @@
-import frappe
 import base64
 import io
+
+import frappe
+from frappe.exceptions import DoesNotExistError
+
+
+def _get_default_company():
+	default_company = frappe.defaults.get_global_default("company")
+	if not default_company:
+		return None
+
+	try:
+		return frappe.get_cached_doc("Company", default_company)
+	except DoesNotExistError:
+		frappe.log_error(
+			title="Missing Default Company",
+			message=f"Default company '{default_company}' was not found while resolving print branding.",
+		)
+		return None
+
+
+@frappe.whitelist()
+def get_print_branding():
+	"""Return reusable branding values for print formats."""
+	app_publishers = frappe.get_hooks("app_publisher")
+	branding = {
+		"company_name": app_publishers[0] if app_publishers else "",
+		"logo": "",
+	}
+
+	company = _get_default_company()
+	if not company:
+		return branding
+
+	branding["company_name"] = getattr(company, "company_name", None) or company.name
+	branding["logo"] = (
+		getattr(company, "company_logo", None)
+		or getattr(company, "company_logo_for_print", None)
+		or ""
+	)
+	return branding
 
 
 @frappe.whitelist()
@@ -31,6 +70,10 @@ def get_code128_barcode(text):
 		# python-barcode not installed, generate a simple SVG barcode
 		return _generate_svg_barcode(text)
 	except Exception:
+		frappe.log_error(
+			title="Barcode Generation Failed",
+			message=frappe.get_traceback(),
+		)
 		return ""
 
 
@@ -156,4 +199,3 @@ def get_packing_list_data(dispatch_log_name):
 		"grand_net": round(grand_net, 2),
 		"grand_gross": round(grand_gross, 2)
 	}
-

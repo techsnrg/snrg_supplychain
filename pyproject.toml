@@ -1,5 +1,5 @@
 [project]
-name = "snrg_cartons"
+name = "snrg_supplychain"
 authors = [
     { name = "SNRG Electricals", email = "admin@snrgelectricals.com"}
 ]

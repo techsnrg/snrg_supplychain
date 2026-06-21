@@ -305,7 +305,7 @@
   }
 </style>
 
-{% set pl = frappe.call("snrg_cartons.supply_chain.utils.get_packing_list_data", dispatch_log_name=doc.name) %}
+{% set pl = frappe.call("snrg_supplychain.supply_chain.utils.get_packing_list_data", dispatch_log_name=doc.name) %}
 
 <div class="print-format">
 <div class="page">

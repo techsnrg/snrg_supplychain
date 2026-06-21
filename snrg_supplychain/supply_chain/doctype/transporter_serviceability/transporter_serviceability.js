@@ -71,7 +71,7 @@ frappe.ui.form.on('Transporter Serviceability', {
 							return;
 						}
 						frappe.call({
-							method: 'snrg_cartons.supply_chain.doctype.transporter_serviceability.transporter_serviceability.process_csv_upload',
+							method: 'snrg_supplychain.supply_chain.doctype.transporter_serviceability.transporter_serviceability.process_csv_upload',
 							args: {
 								doc_name: frm.doc.name,
 								file_url: values.csv_file

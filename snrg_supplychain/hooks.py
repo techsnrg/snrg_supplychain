@@ -1,6 +1,6 @@
 import os
 
-app_name = "snrg_cartons"
+app_name = "snrg_supplychain"
 app_title = "SNRG Supply Chain"
 app_publisher = "SNRG Electricals"
 app_description = "Supply Chain, Freight & Carton Management for SNRG Electricals"
@@ -16,15 +16,15 @@ fixtures = [
 # ------------------
 
 # include js, css files in header of desk.html
-# app_include_css = "/assets/snrg_cartons/css/snrg_cartons.css"
-# app_include_js = "/assets/snrg_cartons/js/snrg_cartons.js"
+# app_include_css = "/assets/snrg_supplychain/css/snrg_supplychain.css"
+# app_include_js = "/assets/snrg_supplychain/js/snrg_supplychain.js"
 
 # include js, css files in header of web template
-# web_include_css = "/assets/snrg_cartons/css/snrg_cartons.css"
-# web_include_js = "/assets/snrg_cartons/js/snrg_cartons.js"
+# web_include_css = "/assets/snrg_supplychain/css/snrg_supplychain.css"
+# web_include_js = "/assets/snrg_supplychain/js/snrg_supplychain.js"
 
 # include custom scss in every website theme (without file extension ".scss")
-# website_theme_scss = "snrg_cartons/public/scss/website"
+# website_theme_scss = "snrg_supplychain/public/scss/website"
 
 # include js, css files in header of web form
 # webform_include_js = {"doctype": "public/js/doctype.js"}
@@ -62,27 +62,27 @@ doctype_js = {
 
 # add methods and filters to jinja environment
 # jinja = {
-# 	"methods": "snrg_cartons.utils.jinja_methods",
-# 	"filters": "snrg_cartons.utils.jinja_filters"
+# 	"methods": "snrg_supplychain.utils.jinja_methods",
+# 	"filters": "snrg_supplychain.utils.jinja_filters"
 # }
 
 # Installation
 # ------------
 
-# before_install = "snrg_cartons.install.before_install"
-# after_install = "snrg_cartons.install.after_install"
+# before_install = "snrg_supplychain.install.before_install"
+# after_install = "snrg_supplychain.install.after_install"
 
 # Uninstallation
 # ------------
 
-# before_uninstall = "snrg_cartons.uninstall.before_uninstall"
-# after_uninstall = "snrg_cartons.uninstall.after_uninstall"
+# before_uninstall = "snrg_supplychain.uninstall.before_uninstall"
+# after_uninstall = "snrg_supplychain.uninstall.after_uninstall"
 
 # Desk Notifications
 # ------------------
 # See frappe.core.notifications.get_notification_config
 
-# notification_config = "snrg_cartons.notifications.get_notification_config"
+# notification_config = "snrg_supplychain.notifications.get_notification_config"
 
 # Permissions
 # -----------
@@ -121,39 +121,39 @@ doctype_js = {
 
 # scheduler_events = {
 # 	"all": [
-# 		"snrg_cartons.tasks.all"
+# 		"snrg_supplychain.tasks.all"
 # 	],
 # 	"daily": [
-# 		"snrg_cartons.tasks.daily"
+# 		"snrg_supplychain.tasks.daily"
 # 	],
 # 	"hourly": [
-# 		"snrg_cartons.tasks.hourly"
+# 		"snrg_supplychain.tasks.hourly"
 # 	],
 # 	"weekly": [
-# 		"snrg_cartons.tasks.weekly"
+# 		"snrg_supplychain.tasks.weekly"
 # 	],
 # 	"monthly": [
-# 		"snrg_cartons.tasks.monthly"
+# 		"snrg_supplychain.tasks.monthly"
 # 	],
 # }
 
 # Testing
 # -------
 
-# before_tests = "snrg_cartons.install.before_tests"
+# before_tests = "snrg_supplychain.install.before_tests"
 
 # Overriding Methods
 # ------------------------------
 #
 # override_whitelisted_methods = {
-# 	"frappe.desk.doctype.event.event.get_events": "snrg_cartons.event.get_events"
+# 	"frappe.desk.doctype.event.event.get_events": "snrg_supplychain.event.get_events"
 # }
 #
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,
 # along with any modifications made in other Frappe apps
 # override_doctype_dashboards = {
-# 	"Task": "snrg_cartons.task.get_dashboard_data"
+# 	"Task": "snrg_supplychain.task.get_dashboard_data"
 # }
 
 # exempt linked doctypes from being automatically cancelled
@@ -167,13 +167,13 @@ doctype_js = {
 
 # Request Events
 # ----------------
-# before_request = ["snrg_cartons.utils.before_request"]
-# after_request = ["snrg_cartons.utils.after_request"]
+# before_request = ["snrg_supplychain.utils.before_request"]
+# after_request = ["snrg_supplychain.utils.after_request"]
 
 # Job Events
 # ----------
-# before_job = ["snrg_cartons.utils.before_job"]
-# after_job = ["snrg_cartons.utils.after_job"]
+# before_job = ["snrg_supplychain.utils.before_job"]
+# after_job = ["snrg_supplychain.utils.after_job"]
 
 # User Data Protection
 # --------------------
@@ -203,5 +203,5 @@ doctype_js = {
 # --------------------------------
 
 # auth_hooks = [
-# 	"snrg_cartons.auth.validate"
+# 	"snrg_supplychain.auth.validate"
 # ]

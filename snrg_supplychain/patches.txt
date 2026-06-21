@@ -1,0 +1,2 @@
+snrg_supplychain.patches.v1_0_hide_packing_slip_shipment
+snrg_supplychain.patches.v1_1_hide_shipment_parcel_template

@@ -31,7 +31,7 @@ fixtures = [
 # webform_include_css = {"doctype": "public/css/doctype.css"}
 
 # include js in page
-# page_js = {"page" : "public/js/file.js"}
+page_js = {"packed_carton_touch": "public/js/packed_carton_touch.js"}
 
 # include js in doctype views
 doctype_js = {

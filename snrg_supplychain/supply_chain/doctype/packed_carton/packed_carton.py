@@ -141,6 +141,23 @@ def get_touch_carton(name=None):
 
 
 @frappe.whitelist()
+def list_touch_cartons(search_text=None, limit=12):
+	filters = {}
+	if search_text:
+		filters["name"] = ["like", f"%{search_text}%"]
+
+	cartons = frappe.get_list(
+		"Packed Carton",
+		filters=filters,
+		fields=["name", "box_type", "packed_date", "warehouse", "status", "gross_weight_kg", "modified"],
+		order_by="modified desc",
+		limit_page_length=max(int(limit or 12), 1),
+	)
+
+	return cartons
+
+
+@frappe.whitelist()
 def save_touch_carton(payload):
 	if isinstance(payload, str):
 		payload = json.loads(payload)

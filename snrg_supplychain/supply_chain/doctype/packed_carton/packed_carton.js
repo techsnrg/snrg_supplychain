@@ -6,8 +6,8 @@ frappe.ui.form.on('Packed Carton', {
 		// Add Item button — only on unsaved / draft forms
 		if (frm.doc.docstatus === 0) {
 			frm.add_custom_button(__('Touch Mode'), () => {
-				if (frm.is_dirty()) {
-					frappe.show_alert({ message: __('Please save the carton before opening Touch Mode.'), indicator: 'orange' }, 4);
+				if (frm.is_new()) {
+					frappe.set_route('packed_carton_touch', 'new');
 					return;
 				}
 				frappe.set_route('packed_carton_touch', frm.doc.name);

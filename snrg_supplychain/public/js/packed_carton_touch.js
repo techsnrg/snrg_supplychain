@@ -56,10 +56,9 @@ snrg_supplychain.packed_carton_touch.Controller = class PackedCartonTouchControl
 		this.wrapper.find(".layout-main-section").html(`
 			<div class="pct-touch">
 				<div class="pct-hero">
-					<div>
+					<div class="pct-brand-block">
 						<div class="pct-kicker">${__("Packing Station")}</div>
-						<h1 class="pct-title">${__("Packed Carton Touch")}</h1>
-						<div class="pct-subtitle">${__("Large-button carton packing screen for phones, tablets, and shop-floor use")}</div>
+						<h1 class="pct-title">${__("Packed Carton")}</h1>
 					</div>
 					<div class="pct-hero-actions">
 						<button class="btn btn-default pct-go-home">${__("Home")}</button>
@@ -76,60 +75,62 @@ snrg_supplychain.packed_carton_touch.Controller = class PackedCartonTouchControl
 		if (!document.getElementById("pct-touch-style")) {
 			$("head").append(`
 				<style id="pct-touch-style">
-					.pct-touch { padding: 10px 12px; background: linear-gradient(180deg, #fff7e5 0%, #fffdf9 100%); min-height: calc(100vh - 92px); height: calc(100vh - 92px); overflow: hidden; }
-					.pct-hero { display:flex; justify-content:space-between; gap:12px; align-items:center; margin-bottom:10px; }
-					.pct-kicker { text-transform:uppercase; letter-spacing:.12em; font-size:12px; color:#8b5e00; font-weight:700; }
-					.pct-title { margin:2px 0; font-size:26px; line-height:1; font-weight:900; color:#2e2416; }
-					.pct-subtitle { font-size:13px; color:#6f5b3e; max-width:560px; }
-					.pct-hero-actions { display:flex; flex-wrap:wrap; gap:10px; justify-content:flex-end; }
-					.pct-card { background:#fff; border:1px solid #ecd9b4; border-radius:18px; padding:12px; box-shadow:0 8px 22px rgba(99,64,10,.06); }
-					.pct-card-title { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:#7a5b20; margin-bottom:8px; }
+					.pct-touch { padding: 8px; background:#eef1f5; min-height: calc(100vh - 92px); height: calc(100vh - 92px); overflow: hidden; color:#17212b; }
+					.pct-hero { display:flex; justify-content:space-between; gap:12px; align-items:center; margin-bottom:8px; background:#17212b; border-radius:14px; padding:10px 12px; color:#fff; }
+					.pct-brand-block { min-width:0; }
+					.pct-kicker { text-transform:uppercase; letter-spacing:.12em; font-size:10px; color:#8ba0b6; font-weight:700; }
+					.pct-title { margin:2px 0 0; font-size:22px; line-height:1; font-weight:900; color:#fff; }
+					.pct-hero-actions { display:flex; flex-wrap:wrap; gap:8px; justify-content:flex-end; }
+					.pct-card { background:#fff; border:1px solid #d8e0ea; border-radius:14px; padding:10px; box-shadow:none; }
+					.pct-card-title { font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.1em; color:#5b6b7c; margin-bottom:8px; }
 					.pct-fields { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
-					.pct-field .control-label { font-size:11px; font-weight:700; color:#61471f; margin-bottom:4px; }
+					.pct-field .control-label { font-size:10px; font-weight:700; color:#5b6b7c; margin-bottom:4px; }
 					.pct-field .control-input-wrapper input,
 					.pct-field .control-input-wrapper .control-value,
 					.pct-field .control-input-wrapper .awesomplete input,
 					.pct-field .control-input-wrapper select {
-						min-height:42px; border-radius:12px; font-size:18px; font-weight:700; background:#fffdf7;
+						min-height:38px; border-radius:10px; font-size:16px; font-weight:700; background:#f7f9fb; border-color:#d8e0ea;
 					}
 					.pct-summary-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
-					.pct-summary-box { background:#fff8ea; border:1px solid #f2dfbe; border-radius:14px; padding:10px; }
-					.pct-summary-label { font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:#876939; font-weight:700; margin-bottom:6px; }
-					.pct-summary-value { font-size:22px; font-weight:900; color:#2d2418; }
-					.pct-summary-meta { margin-top:8px; font-size:13px; color:#5f4a2d; display:grid; gap:4px; }
+					.pct-summary-box { background:#f7f9fb; border:1px solid #d8e0ea; border-radius:12px; padding:8px; }
+					.pct-summary-label { font-size:10px; text-transform:uppercase; letter-spacing:.08em; color:#66788a; font-weight:700; margin-bottom:4px; }
+					.pct-summary-value { font-size:20px; font-weight:900; color:#17212b; }
+					.pct-summary-meta { margin-top:8px; font-size:12px; color:#4d5c6b; display:grid; gap:4px; }
 					.pct-action-row, .pct-footer-actions, .pct-launcher-actions { display:flex; flex-wrap:wrap; gap:8px; }
-					.pct-action-row .btn, .pct-footer-actions .btn, .pct-open-form, .pct-go-home, .pct-new-carton, .pct-launcher-actions .btn { min-height:42px; border-radius:12px; font-size:16px; font-weight:800; padding:0 14px; }
-					.pct-items-list { display:grid; gap:8px; overflow:auto; padding-right:4px; }
-					.pct-item-card { border:1px solid #f0dfc2; border-radius:14px; padding:10px; background:#fffdf9; }
-					.pct-item-code { font-size:18px; font-weight:900; color:#2d2418; }
-					.pct-item-name { font-size:14px; color:#54422a; margin-top:2px; }
-					.pct-item-meta { display:flex; flex-wrap:wrap; gap:10px; margin-top:6px; color:#7a6138; font-size:12px; font-weight:700; }
-					.pct-item-actions { display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px; align-items:center; margin-top:8px; }
+					.pct-action-row .btn, .pct-footer-actions .btn, .pct-open-form, .pct-go-home, .pct-new-carton, .pct-launcher-actions .btn { min-height:38px; border-radius:10px; font-size:14px; font-weight:800; padding:0 12px; }
+					.pct-go-home, .pct-open-form { background:#243140; color:#fff; border-color:#243140; }
+					.pct-items-list { display:grid; gap:6px; overflow:auto; padding-right:2px; align-content:start; }
+					.pct-item-card { border:1px solid #d8e0ea; border-radius:12px; padding:8px 10px; background:#fff; display:grid; grid-template-columns:minmax(0,1.8fr) minmax(0,1fr) auto; gap:10px; align-items:center; }
+					.pct-item-main { min-width:0; }
+					.pct-item-code { font-size:15px; font-weight:900; color:#17212b; line-height:1.1; }
+					.pct-item-name { font-size:12px; color:#4d5c6b; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+					.pct-item-meta { display:grid; gap:2px; color:#66788a; font-size:11px; font-weight:700; }
+					.pct-item-actions { display:flex; justify-content:flex-end; gap:8px; align-items:center; }
 					.pct-qty-controls { display:flex; gap:6px; align-items:center; }
-					.pct-qty-btn { min-width:40px; min-height:40px; border:none; border-radius:10px; background:#1f6feb; color:#fff; font-size:24px; font-weight:900; }
-					.pct-qty-display { min-width:56px; text-align:center; font-size:22px; font-weight:900; color:#2e2416; background:#fff; border:1px solid #eddab8; border-radius:10px; padding:6px 10px; }
-					.pct-remove-item { min-height:38px; border-radius:10px; font-size:14px; font-weight:800; }
-					.pct-empty-state { display:none; padding:18px; border:2px dashed #e3cfa9; border-radius:16px; text-align:center; font-size:16px; font-weight:700; color:#8a6f45; background:#fffaf0; }
+					.pct-qty-btn { min-width:34px; min-height:34px; border:none; border-radius:8px; background:#1173d4; color:#fff; font-size:20px; font-weight:900; }
+					.pct-qty-display { min-width:44px; text-align:center; font-size:18px; font-weight:900; color:#17212b; background:#f7f9fb; border:1px solid #d8e0ea; border-radius:8px; padding:4px 8px; }
+					.pct-remove-item { min-height:34px; border-radius:8px; font-size:12px; font-weight:800; }
+					.pct-empty-state { display:none; padding:14px; border:1px dashed #b6c3d1; border-radius:12px; text-align:center; font-size:14px; font-weight:700; color:#66788a; background:#f7f9fb; }
 					.pct-empty-state.is-visible { display:block; }
 					.pct-home-shell, .pct-editor-shell { display:grid; gap:10px; height: calc(100vh - 152px); min-height: 0; }
-					.pct-home-shell { grid-template-columns: 380px minmax(0, 1fr); }
-					.pct-editor-shell { grid-template-columns: 380px minmax(0, 1fr); }
+					.pct-home-shell { grid-template-columns: 320px minmax(0, 1fr); }
+					.pct-editor-shell { grid-template-columns: 320px minmax(0, 1fr); }
 					.pct-side-stack { display:grid; gap:10px; min-height:0; align-content:start; }
 					.pct-main-panel { min-height:0; display:grid; }
 					.pct-items-panel { display:grid; grid-template-rows:auto 1fr auto; min-height:0; }
 					.pct-home-grid { display:grid; grid-template-columns:1fr; gap:10px; }
-					.pct-launcher-title { font-size:24px; line-height:1.05; font-weight:900; color:#2d2418; margin:0 0 6px; }
-					.pct-launcher-copy { font-size:14px; color:#6b5535; margin-bottom:10px; max-width:560px; }
+					.pct-launcher-title { font-size:18px; line-height:1.05; font-weight:900; color:#17212b; margin:0 0 6px; }
+					.pct-launcher-copy { font-size:12px; color:#66788a; margin-bottom:8px; max-width:560px; }
 					.pct-search-row { display:flex; gap:8px; margin-bottom:8px; }
-					.pct-search-row input { min-height:42px; border-radius:12px; font-size:16px; font-weight:700; }
+					.pct-search-row input { min-height:38px; border-radius:10px; font-size:14px; font-weight:700; background:#f7f9fb; }
 					.pct-recent-list { display:grid; gap:8px; overflow:auto; padding-right:4px; }
-					.pct-recent-card { border:1px solid #ebd8b6; border-radius:14px; padding:10px; background:#fffdf7; cursor:pointer; }
-					.pct-recent-card:hover { background:#fff8ea; }
+					.pct-recent-card { border:1px solid #d8e0ea; border-radius:12px; padding:8px 10px; background:#fff; cursor:pointer; }
+					.pct-recent-card:hover { background:#f7f9fb; }
 					.pct-recent-top { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; }
-					.pct-recent-name { font-size:17px; font-weight:900; color:#2d2418; }
-					.pct-pill { display:inline-flex; align-items:center; gap:6px; min-height:28px; padding:0 10px; border-radius:999px; font-size:12px; font-weight:800; background:#edf8f0; color:#1b6b36; }
-					.pct-recent-meta { display:grid; gap:2px; margin-top:6px; font-size:12px; color:#644f31; }
-					.pct-home-empty { padding:18px; border:2px dashed #e3cfa9; border-radius:16px; text-align:center; font-size:15px; font-weight:700; color:#8a6f45; background:#fffaf0; }
+					.pct-recent-name { font-size:14px; font-weight:900; color:#17212b; }
+					.pct-pill { display:inline-flex; align-items:center; gap:6px; min-height:24px; padding:0 8px; border-radius:999px; font-size:10px; font-weight:800; background:#ebf5ee; color:#0f6a34; }
+					.pct-recent-meta { display:grid; gap:2px; margin-top:4px; font-size:11px; color:#66788a; }
+					.pct-home-empty { padding:16px; border:1px dashed #b6c3d1; border-radius:12px; text-align:center; font-size:13px; font-weight:700; color:#66788a; background:#f7f9fb; }
 					.pct-editor-view.is-hidden, .pct-home-view.is-hidden { display:none; }
 					@media (max-width: 1100px) {
 						.pct-touch { height:auto; min-height:calc(100vh - 92px); overflow:auto; }
@@ -138,15 +139,16 @@ snrg_supplychain.packed_carton_touch.Controller = class PackedCartonTouchControl
 					}
 					@media (max-width: 900px) {
 						.pct-touch { padding:10px; }
-						.pct-hero, .pct-grid, .pct-fields, .pct-home-grid { grid-template-columns:1fr; display:grid; }
-						.pct-title, .pct-launcher-title { font-size:24px; }
+						.pct-hero, .pct-fields, .pct-home-grid { grid-template-columns:1fr; display:grid; align-items:start; }
+						.pct-title, .pct-launcher-title { font-size:20px; }
 						.pct-fields { grid-template-columns:1fr; }
 						.pct-summary-grid { grid-template-columns:1fr 1fr; }
-						.pct-card { border-radius:16px; padding:10px; }
+						.pct-card { border-radius:12px; padding:8px; }
 						.pct-action-row .btn, .pct-footer-actions .btn, .pct-hero-actions .btn, .pct-launcher-actions .btn { flex:1 1 100%; }
 						.pct-search-row { flex-direction:column; }
-						.pct-item-code, .pct-recent-name { font-size:18px; }
-						.pct-item-name { font-size:14px; }
+						.pct-item-card { grid-template-columns:1fr; }
+						.pct-item-code, .pct-recent-name { font-size:14px; }
+						.pct-item-name { font-size:12px; white-space:normal; }
 					}
 				</style>
 			`);
@@ -219,20 +221,20 @@ snrg_supplychain.packed_carton_touch.Controller = class PackedCartonTouchControl
 				<div class="pct-side-stack">
 					<section class="pct-card">
 						<div class="pct-card-title">${__("Operator Console")}</div>
-						<h2 class="pct-launcher-title">${__("Start packing without opening the normal form")}</h2>
-						<div class="pct-launcher-copy">${__("Use this screen like a packing station. Start a new carton, reopen a recent carton, or search an existing carton by number.")}</div>
+						<h2 class="pct-launcher-title">${__("Start Or Resume")}</h2>
+						<div class="pct-launcher-copy">${__("Create a carton or continue an existing one.")}</div>
 						<div class="pct-launcher-actions">
 							<button class="btn btn-primary btn-lg pct-new-carton">${__("New Carton")}</button>
 							<button class="btn btn-default btn-lg pct-open-existing">${__("Resume Carton")}</button>
 						</div>
 					</section>
 					<section class="pct-card">
-						<div class="pct-card-title">${__("Find Existing Carton")}</div>
+						<div class="pct-card-title">${__("Quick Search")}</div>
 						<div class="pct-search-row">
 							<input class="form-control pct-search-input" type="text" placeholder="${__("Search carton number")}" />
 							<button class="btn btn-default pct-search-cartons">${__("Search")}</button>
 						</div>
-						<div class="pct-launcher-copy">${__("Recent cartons stay visible on the right for one-tap reopening.")}</div>
+						<div class="pct-launcher-copy">${__("Recent cartons are listed on the right.")}</div>
 					</section>
 				</div>
 				<section class="pct-card pct-main-panel">
@@ -292,7 +294,7 @@ snrg_supplychain.packed_carton_touch.Controller = class PackedCartonTouchControl
 			<div class="pct-editor-shell">
 				<div class="pct-side-stack">
 					<section class="pct-card pct-card--form">
-						<div class="pct-card-title">${__("Carton Details")}</div>
+						<div class="pct-card-title">${__("Carton")}</div>
 						<div class="pct-fields">
 							<div class="pct-field" data-field="name"></div>
 							<div class="pct-field" data-field="box_type"></div>
@@ -304,7 +306,7 @@ snrg_supplychain.packed_carton_touch.Controller = class PackedCartonTouchControl
 					</section>
 
 					<section class="pct-card pct-card--summary">
-						<div class="pct-card-title">${__("Summary")}</div>
+						<div class="pct-card-title">${__("Totals")}</div>
 						<div class="pct-summary-grid">
 							<div class="pct-summary-box">
 								<div class="pct-summary-label">${__("Lines")}</div>
@@ -451,11 +453,13 @@ snrg_supplychain.packed_carton_touch.Controller = class PackedCartonTouchControl
 		this.$itemsList.html(
 			this.state.items.map((item, index) => `
 				<div class="pct-item-card" data-index="${index}">
-					<div class="pct-item-code">${frappe.utils.escape_html(item.item_code)}</div>
-					<div class="pct-item-name">${frappe.utils.escape_html(item.item_name || "")}</div>
+					<div class="pct-item-main">
+						<div class="pct-item-code">${frappe.utils.escape_html(item.item_code)}</div>
+						<div class="pct-item-name">${frappe.utils.escape_html(item.item_name || "")}</div>
+					</div>
 					<div class="pct-item-meta">
-						<span>${__("UOM")}: ${frappe.utils.escape_html(item.uom || "")}</span>
-						<span>${__("Weight")}: ${flt(item.item_weight_kg).toFixed(3)} kg/${__("unit")}</span>
+						<div>${__("UOM")}: ${frappe.utils.escape_html(item.uom || "")}</div>
+						<div>${__("Wt")}: ${flt(item.item_weight_kg).toFixed(3)} kg/${__("unit")}</div>
 					</div>
 					<div class="pct-item-actions">
 						<div class="pct-qty-controls">

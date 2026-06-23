@@ -1,29 +1,89 @@
 import frappe
 from frappe.model.document import Document
+from frappe.desk.search import validate_and_sanitize_search_inputs
 from frappe.utils import flt
 
 
 class OutwardShipment(Document):
-	def before_save(self):
+	def validate(self):
+		self.validate_duplicate_cartons()
+		self.validate_carton_status()
 		self.populate_so_items()
 		self.populate_items_summary()
-
-	def on_submit(self):
-		self.validate_carton_status()
-		self.validate_items_against_sales_order()
 		self.calculate_totals()
 
+		if self.sales_order and self.cartons:
+			self.validate_items_against_sales_order()
+
+	def before_save(self):
+		pass
+
+	def on_submit(self):
 		if self.create_delivery_note:
 			self.make_delivery_note()
 
 		self.update_packed_cartons()
 		self.db_set('status', 'Submitted')
 
+	def get_selected_carton_ids(self):
+		return [row.carton_id for row in (self.cartons or []) if row.carton_id]
+
+	def validate_duplicate_cartons(self):
+		seen = set()
+		duplicates = []
+
+		for carton_id in self.get_selected_carton_ids():
+			if carton_id in seen:
+				duplicates.append(carton_id)
+			seen.add(carton_id)
+
+		if duplicates:
+			duplicate_list = ", ".join(sorted(set(duplicates)))
+			frappe.throw(
+				f"Duplicate cartons are not allowed in one shipment. Please remove: <b>{duplicate_list}</b>."
+			)
+
+	def get_reserved_cartons_in_other_drafts(self):
+		carton_ids = self.get_selected_carton_ids()
+		if not carton_ids:
+			return {}
+
+		placeholders = ", ".join(["%s"] * len(carton_ids))
+		params = [self.name or ""] + carton_ids
+		rows = frappe.db.sql(
+			f"""
+			SELECT c.carton_id, p.name AS outward_shipment
+			FROM `tabOutward Shipment Carton` c
+			INNER JOIN `tabOutward Shipment` p ON p.name = c.parent
+			WHERE p.docstatus = 0
+				AND p.name != %s
+				AND c.carton_id IN ({placeholders})
+			""",
+			params,
+			as_dict=True,
+		)
+		return {row.carton_id: row.outward_shipment for row in rows}
+
 	def validate_carton_status(self):
-		for row in self.cartons:
+		reserved_cartons = self.get_reserved_cartons_in_other_drafts()
+
+		for row in (self.cartons or []):
+			if not row.carton_id:
+				continue
+
+			if row.carton_id in reserved_cartons:
+				frappe.throw(
+					f"Carton <b>{row.carton_id}</b> is already reserved in draft shipment "
+					f"<b>{reserved_cartons[row.carton_id]}</b>."
+				)
+
 			status = frappe.db.get_value("Packed Carton", row.carton_id, "status")
 			if status != "Available":
 				frappe.throw(f"Carton {row.carton_id} is already dispatched or not available.")
+
+			carton = frappe.get_doc("Packed Carton", row.carton_id)
+			if not carton.items:
+				frappe.throw(f"Carton <b>{row.carton_id}</b> has no items and cannot be added to a shipment.")
 
 	def populate_so_items(self):
 		"""Populate the SO items table from the selected Sales Order."""
@@ -127,9 +187,9 @@ class OutwardShipment(Document):
 			for item in (cbl.items or []):
 				total_pieces += flt(item.qty)
 
-		self.db_set('total_cartons', total_cartons)
-		self.db_set('total_pieces', total_pieces)
-		self.db_set('total_gross_weight', total_gross_weight)
+		self.total_cartons = total_cartons
+		self.total_pieces = total_pieces
+		self.total_gross_weight = total_gross_weight
 
 	def get_so_item_map(self):
 		"""Build a map of item_code -> SO Item row name for linking DN to SO."""
@@ -214,3 +274,74 @@ class OutwardShipment(Document):
 				"dispatched_date": None
 			})
 		self.db_set('status', 'Cancelled')
+
+
+@frappe.whitelist()
+@validate_and_sanitize_search_inputs
+def sales_order_query(doctype, txt, searchfield, start, page_len, filters):
+	search_text = f"%{txt}%"
+
+	return frappe.db.sql(
+		"""
+		SELECT
+			name,
+			customer_name,
+			transaction_date,
+			status
+		FROM `tabSales Order`
+		WHERE docstatus != 2
+			AND status NOT IN ('Closed', 'Completed')
+			AND (
+				name LIKE %(txt)s
+				OR customer_name LIKE %(txt)s
+			)
+		ORDER BY transaction_date DESC, modified DESC, name DESC
+		LIMIT %(start)s, %(page_len)s
+		""",
+		{
+			"txt": search_text,
+			"start": start,
+			"page_len": page_len,
+		},
+	)
+
+
+@frappe.whitelist()
+@validate_and_sanitize_search_inputs
+def available_carton_query(doctype, txt, searchfield, start, page_len, filters):
+	filters = filters or {}
+	current_shipment = filters.get("outward_shipment") or ""
+	search_text = f"%{txt}%"
+
+	return frappe.db.sql(
+		"""
+		SELECT
+			p.name,
+			p.box_type,
+			p.packed_date,
+			p.warehouse
+		FROM `tabPacked Carton` p
+		WHERE p.status = 'Available'
+			AND (
+				p.name LIKE %(txt)s
+				OR COALESCE(p.box_type, '') LIKE %(txt)s
+				OR COALESCE(p.warehouse, '') LIKE %(txt)s
+			)
+			AND NOT EXISTS (
+				SELECT 1
+				FROM `tabOutward Shipment Carton` c
+				INNER JOIN `tabOutward Shipment` s ON s.name = c.parent
+				WHERE c.carton_id = p.name
+					AND s.docstatus = 0
+					AND s.name != %(current_shipment)s
+			)
+		ORDER BY p.packed_date DESC, p.modified DESC, p.name DESC
+		LIMIT %(start)s, %(page_len)s
+		""",
+		{
+			"txt": search_text,
+			"current_shipment": current_shipment,
+			"start": start,
+			"page_len": page_len,
+		},
+	)

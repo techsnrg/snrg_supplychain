@@ -18,21 +18,21 @@
    "in_list_view": 1,
    "label": "Item Code",
    "options": "Item",
-   "read_only": 0
+   "read_only": 1
   },
   {
    "fieldname": "item_name",
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Item Name",
-   "read_only": 0
+   "read_only": 1
   },
   {
    "fieldname": "total_qty",
    "fieldtype": "Float",
    "in_list_view": 1,
    "label": "Total Qty",
-   "read_only": 0
+   "read_only": 1
   },
   {
    "fieldname": "uom",
@@ -40,14 +40,14 @@
    "in_list_view": 1,
    "label": "UOM",
    "options": "UOM",
-   "read_only": 0
+   "read_only": 1
   },
   {
    "fieldname": "from_cartons",
    "fieldtype": "Small Text",
    "in_list_view": 1,
    "label": "From Cartons",
-   "read_only": 0
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,

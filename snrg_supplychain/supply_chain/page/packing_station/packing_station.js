@@ -28,10 +28,12 @@ snrg_supplychain.packing_station.Controller = class PackingStationController {
 		this.page = page;
 		this.state = {
 			mode: "home",
-			activeStep: "details",
 			doc: null,
 			items: [],
 			recentCartons: [],
+			qtyBuffer: "",
+			selectedItemCode: "",
+			selectedItemData: null,
 			totals: {
 				lines: 0,
 				pieces: 0,
@@ -51,156 +53,406 @@ snrg_supplychain.packing_station.Controller = class PackingStationController {
 
 	renderShell() {
 		this.wrapper.find(".layout-main-section").html(`
-			<div class="ps-app">
-				<div class="ps-topbar">
-					<div class="ps-topbar-left">
-						<div class="ps-badge">${__("Packing Station")}</div>
-						<div class="ps-heading">${__("Packed Carton Workflow")}</div>
+			<div class="ps2-app">
+				<div class="ps2-topbar">
+					<div>
+						<div class="ps2-badge">${__("Packing Station")}</div>
+						<div class="ps2-title">${__("Packed Carton")}</div>
 					</div>
-					<div class="ps-topbar-actions">
-						<button class="btn btn-default ps-home-btn">${__("Home")}</button>
-						<button class="btn btn-primary ps-new-btn">${__("New Carton")}</button>
+					<div class="ps2-topbar-actions">
+						<button class="btn btn-default ps2-home-btn">${__("Home")}</button>
+						<button class="btn btn-primary ps2-new-btn">${__("New Carton")}</button>
 					</div>
 				</div>
-				<div class="ps-home-view"></div>
-				<div class="ps-editor-view"></div>
+				<div class="ps2-home-view"></div>
+				<div class="ps2-editor-view"></div>
 			</div>
 		`);
 
-		if (!document.getElementById("packing-station-style")) {
+		if (!document.getElementById("packing-station-style-v2")) {
 			$("head").append(`
-				<style id="packing-station-style">
-					.ps-app { min-height: calc(100vh - 92px); height: calc(100vh - 92px); overflow: hidden; background:#f1f4f8; color:#17212b; padding:8px; }
-					.ps-topbar { display:flex; justify-content:space-between; align-items:center; gap:12px; background:#101927; color:#fff; border-radius:12px; padding:10px 12px; margin-bottom:8px; }
-					.ps-topbar-left { min-width:0; }
-					.ps-badge { font-size:10px; text-transform:uppercase; letter-spacing:.12em; color:#8fa2bb; font-weight:700; }
-					.ps-heading { font-size:20px; font-weight:900; line-height:1.1; margin-top:2px; }
-					.ps-topbar-actions, .ps-action-row, .ps-home-actions, .ps-review-actions, .ps-items-toolbar { display:flex; gap:8px; flex-wrap:wrap; }
-					.ps-topbar-actions .btn, .ps-action-row .btn, .ps-home-actions .btn, .ps-review-actions .btn, .ps-items-toolbar .btn { min-height:36px; border-radius:10px; font-size:13px; font-weight:800; padding:0 12px; }
-					.ps-home-btn { background:#233245; color:#fff; border-color:#233245; }
-					.ps-layout { display:grid; grid-template-columns:260px minmax(0, 1fr); gap:8px; height: calc(100vh - 148px); min-height:0; }
-					.ps-sidebar, .ps-panel, .ps-shell-card { background:#fff; border:1px solid #d9e1ea; border-radius:12px; padding:10px; }
-					.ps-sidebar { display:grid; gap:8px; align-content:start; }
-					.ps-step-nav { display:grid; gap:6px; }
-					.ps-step-btn { width:100%; text-align:left; border:1px solid #d9e1ea; background:#f7f9fb; border-radius:12px; padding:12px; }
-					.ps-step-btn.is-active { background:#0f6cbd; border-color:#0f6cbd; color:#fff; }
-					.ps-step-no { font-size:10px; text-transform:uppercase; letter-spacing:.1em; opacity:.75; }
-					.ps-step-label { font-size:14px; font-weight:900; margin-top:2px; }
-					.ps-step-copy { font-size:11px; margin-top:4px; color:inherit; opacity:.8; }
-					.ps-mini-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px; }
-					.ps-mini-box { border:1px solid #d9e1ea; border-radius:10px; background:#f7f9fb; padding:8px; }
-					.ps-mini-label { font-size:10px; text-transform:uppercase; letter-spacing:.08em; color:#66788a; font-weight:700; }
-					.ps-mini-value { margin-top:2px; font-size:16px; font-weight:900; color:#17212b; }
-					.ps-panel { display:grid; grid-template-rows:auto 1fr; min-height:0; }
-					.ps-panel-header { display:flex; justify-content:space-between; gap:8px; align-items:center; margin-bottom:8px; }
-					.ps-panel-title { font-size:17px; font-weight:900; }
-					.ps-panel-copy { font-size:12px; color:#66788a; }
-					.ps-step-host { min-height:0; overflow:auto; }
-					.ps-form-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
-					.ps-field .control-label { font-size:10px; font-weight:700; color:#5b6b7c; margin-bottom:4px; }
-					.ps-field .control-input-wrapper input,
-					.ps-field .control-input-wrapper .control-value,
-					.ps-field .control-input-wrapper .awesomplete input,
-					.ps-field .control-input-wrapper select {
-						min-height:38px; border-radius:10px; font-size:15px; font-weight:700; background:#f7f9fb; border-color:#d9e1ea;
+				<style id="packing-station-style-v2">
+					.ps2-app {
+						min-height: calc(100vh - 92px);
+						height: calc(100vh - 92px);
+						overflow: hidden;
+						background: #eef2f6;
+						color: #16202a;
+						padding: 8px;
 					}
-					.ps-inline-note { font-size:12px; color:#66788a; margin-top:8px; }
-					.ps-checklist { display:grid; gap:8px; }
-					.ps-checkitem { display:flex; gap:8px; align-items:flex-start; border:1px solid #d9e1ea; border-radius:10px; background:#f7f9fb; padding:8px; }
-					.ps-dot { width:10px; height:10px; margin-top:4px; border-radius:999px; background:#c7d2de; }
-					.ps-dot.is-done { background:#149954; }
-					.ps-checktext { font-size:12px; color:#445261; }
-					.ps-items-toolbar { margin-bottom:8px; }
-					.ps-items-table { border:1px solid #d9e1ea; border-radius:12px; overflow:hidden; }
-					.ps-items-head, .ps-item-row { display:grid; grid-template-columns:minmax(0,2fr) 82px 96px 160px; gap:8px; align-items:center; padding:8px 10px; }
-					.ps-items-head { background:#f7f9fb; font-size:10px; text-transform:uppercase; letter-spacing:.08em; font-weight:800; color:#66788a; }
-					.ps-item-row { border-top:1px solid #eef2f6; background:#fff; }
-					.ps-item-main { min-width:0; }
-					.ps-item-code { font-size:14px; font-weight:900; color:#17212b; }
-					.ps-item-name { font-size:12px; color:#66788a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-					.ps-item-qty { display:flex; gap:6px; align-items:center; }
-					.ps-qty-btn { min-width:30px; min-height:30px; border:none; border-radius:8px; background:#1173d4; color:#fff; font-size:18px; font-weight:900; }
-					.ps-qty-value { min-width:34px; text-align:center; font-size:16px; font-weight:900; border:1px solid #d9e1ea; border-radius:8px; background:#f7f9fb; padding:4px 6px; }
-					.ps-item-meta { font-size:12px; color:#445261; font-weight:700; }
-					.ps-empty { border:1px dashed #b8c5d3; border-radius:10px; background:#f7f9fb; padding:18px; text-align:center; font-size:13px; font-weight:700; color:#66788a; }
-					.ps-review-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; margin-bottom:10px; }
-					.ps-review-box { border:1px solid #d9e1ea; border-radius:10px; background:#f7f9fb; padding:10px; }
-					.ps-review-label { font-size:10px; text-transform:uppercase; letter-spacing:.08em; color:#66788a; font-weight:700; }
-					.ps-review-value { font-size:18px; font-weight:900; color:#17212b; margin-top:4px; }
-					.ps-review-meta { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin-bottom:10px; }
-					.ps-meta-card { border:1px solid #d9e1ea; border-radius:10px; background:#fff; padding:10px; }
-					.ps-meta-line { display:flex; justify-content:space-between; gap:8px; font-size:12px; padding:4px 0; border-bottom:1px solid #eef2f6; }
-					.ps-meta-line:last-child { border-bottom:none; }
-					.ps-home-layout { display:grid; grid-template-columns:320px minmax(0,1fr); gap:8px; height: calc(100vh - 148px); min-height:0; }
-					.ps-home-stack { display:grid; gap:8px; align-content:start; }
-					.ps-home-title { font-size:18px; font-weight:900; margin-bottom:4px; }
-					.ps-home-copy { font-size:12px; color:#66788a; margin-bottom:8px; }
-					.ps-tile-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
-					.ps-tile { border:none; border-radius:14px; min-height:118px; padding:14px; color:#fff; text-align:left; display:flex; flex-direction:column; justify-content:space-between; }
-					.ps-tile-title { font-size:16px; font-weight:900; line-height:1.1; }
-					.ps-tile-copy { font-size:11px; line-height:1.35; opacity:.9; }
-					.ps-tile--blue { background:#0f6cbd; }
-					.ps-tile--teal { background:#0a9396; }
-					.ps-tile--violet { background:#7b2cbf; }
-					.ps-tile--orange { background:#ee6c4d; }
-					.ps-search-row { display:flex; gap:8px; }
-					.ps-search-row input { min-height:38px; border-radius:10px; font-size:14px; font-weight:700; background:#f7f9fb; }
-					.ps-recent-list { display:grid; gap:6px; overflow:auto; align-content:start; }
-					.ps-recent-card { border:1px solid #d9e1ea; border-radius:10px; background:#fff; padding:10px; cursor:pointer; }
-					.ps-recent-card:hover { background:#f7f9fb; }
-					.ps-recent-top { display:flex; justify-content:space-between; gap:8px; align-items:flex-start; }
-					.ps-recent-name { font-size:14px; font-weight:900; }
-					.ps-recent-pill { min-height:22px; padding:0 8px; border-radius:999px; background:#ebf5ee; color:#0f6a34; font-size:10px; font-weight:800; display:inline-flex; align-items:center; }
-					.ps-recent-meta { margin-top:4px; display:grid; gap:2px; font-size:11px; color:#66788a; }
-					.ps-editor-view.is-hidden, .ps-home-view.is-hidden { display:none; }
+					.ps2-topbar {
+						display: flex;
+						justify-content: space-between;
+						align-items: center;
+						gap: 12px;
+						background: #111b27;
+						color: #fff;
+						border-radius: 12px;
+						padding: 10px 12px;
+						margin-bottom: 8px;
+					}
+					.ps2-badge {
+						font-size: 10px;
+						text-transform: uppercase;
+						letter-spacing: 0.12em;
+						color: #8fa2bb;
+						font-weight: 700;
+					}
+					.ps2-title {
+						font-size: 20px;
+						font-weight: 900;
+						line-height: 1.1;
+						margin-top: 2px;
+					}
+					.ps2-topbar-actions,
+					.ps2-home-actions,
+					.ps2-search-row,
+					.ps2-entry-actions,
+					.ps2-footer-actions,
+					.ps2-keypad-grid {
+						display: flex;
+						gap: 8px;
+						flex-wrap: wrap;
+					}
+					.ps2-topbar-actions .btn,
+					.ps2-home-actions .btn,
+					.ps2-entry-actions .btn,
+					.ps2-footer-actions .btn,
+					.ps2-search-row .btn {
+						min-height: 38px;
+						border-radius: 10px;
+						font-size: 13px;
+						font-weight: 800;
+						padding: 0 12px;
+					}
+					.ps2-home-btn {
+						background: #223244;
+						color: #fff;
+						border-color: #223244;
+					}
+					.ps2-home-layout,
+					.ps2-editor-layout {
+						display: grid;
+						gap: 8px;
+						height: calc(100vh - 148px);
+						min-height: 0;
+					}
+					.ps2-home-layout {
+						grid-template-columns: 320px minmax(0, 1fr);
+					}
+					.ps2-editor-layout {
+						grid-template-rows: auto auto 1fr auto;
+					}
+					.ps2-card,
+					.ps2-panel,
+					.ps2-strip {
+						background: #fff;
+						border: 1px solid #d8e1eb;
+						border-radius: 12px;
+						padding: 10px;
+					}
+					.ps2-card-title {
+						font-size: 10px;
+						text-transform: uppercase;
+						letter-spacing: 0.1em;
+						font-weight: 800;
+						color: #67788a;
+						margin-bottom: 8px;
+					}
+					.ps2-home-stack {
+						display: grid;
+						gap: 8px;
+						align-content: start;
+					}
+					.ps2-home-title {
+						font-size: 18px;
+						font-weight: 900;
+						margin-bottom: 4px;
+					}
+					.ps2-home-copy,
+					.ps2-subtle,
+					.ps2-item-preview,
+					.ps2-list-subtitle {
+						font-size: 12px;
+						color: #66788a;
+					}
+					.ps2-tile-grid {
+						display: grid;
+						grid-template-columns: repeat(2, minmax(0, 1fr));
+						gap: 8px;
+					}
+					.ps2-tile {
+						border: none;
+						border-radius: 14px;
+						min-height: 118px;
+						padding: 14px;
+						color: #fff;
+						text-align: left;
+						display: flex;
+						flex-direction: column;
+						justify-content: space-between;
+					}
+					.ps2-tile-title {
+						font-size: 16px;
+						font-weight: 900;
+						line-height: 1.1;
+					}
+					.ps2-tile-copy {
+						font-size: 11px;
+						line-height: 1.35;
+						opacity: 0.92;
+					}
+					.ps2-tile--blue { background: #0f6cbd; }
+					.ps2-tile--teal { background: #0a9396; }
+					.ps2-tile--violet { background: #7b2cbf; }
+					.ps2-tile--orange { background: #ee6c4d; }
+					.ps2-search-row input,
+					.ps2-search-input {
+						min-height: 38px;
+						border-radius: 10px;
+						font-size: 14px;
+						font-weight: 700;
+						background: #f7f9fb;
+					}
+					.ps2-recent-panel,
+					.ps2-list-panel {
+						display: grid;
+						grid-template-rows: auto auto 1fr;
+						min-height: 0;
+					}
+					.ps2-recent-list,
+					.ps2-items-body {
+						overflow: auto;
+						display: grid;
+						gap: 6px;
+						align-content: start;
+					}
+					.ps2-recent-card {
+						border: 1px solid #d8e1eb;
+						border-radius: 10px;
+						background: #fff;
+						padding: 10px;
+						cursor: pointer;
+					}
+					.ps2-recent-card:hover { background: #f7f9fb; }
+					.ps2-recent-top {
+						display: flex;
+						justify-content: space-between;
+						gap: 8px;
+						align-items: flex-start;
+					}
+					.ps2-recent-name { font-size: 14px; font-weight: 900; }
+					.ps2-recent-pill {
+						min-height: 22px;
+						padding: 0 8px;
+						border-radius: 999px;
+						background: #ebf5ee;
+						color: #0f6a34;
+						font-size: 10px;
+						font-weight: 800;
+						display: inline-flex;
+						align-items: center;
+					}
+					.ps2-recent-meta { margin-top: 4px; display: grid; gap: 2px; font-size: 11px; color: #66788a; }
+					.ps2-empty {
+						border: 1px dashed #b8c5d3;
+						border-radius: 10px;
+						background: #f7f9fb;
+						padding: 18px;
+						text-align: center;
+						font-size: 13px;
+						font-weight: 700;
+						color: #66788a;
+					}
+					.ps2-setup-strip {
+						display: grid;
+						grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 220px;
+						gap: 8px;
+						align-items: end;
+					}
+					.ps2-field .control-label {
+						font-size: 10px;
+						font-weight: 700;
+						color: #5b6b7c;
+						margin-bottom: 4px;
+					}
+					.ps2-field .control-input-wrapper input,
+					.ps2-field .control-input-wrapper .control-value,
+					.ps2-field .control-input-wrapper .awesomplete input,
+					.ps2-field .control-input-wrapper select {
+						min-height: 40px;
+						border-radius: 10px;
+						font-size: 15px;
+						font-weight: 700;
+						background: #f7f9fb;
+						border-color: #d8e1eb;
+					}
+					.ps2-total-boxes {
+						display: grid;
+						grid-template-columns: repeat(3, minmax(0, 1fr));
+						gap: 6px;
+					}
+					.ps2-total-box {
+						border: 1px solid #d8e1eb;
+						border-radius: 10px;
+						background: #f7f9fb;
+						padding: 8px;
+					}
+					.ps2-total-label {
+						font-size: 10px;
+						text-transform: uppercase;
+						letter-spacing: 0.08em;
+						color: #67788a;
+						font-weight: 700;
+					}
+					.ps2-total-value {
+						font-size: 16px;
+						font-weight: 900;
+						margin-top: 2px;
+					}
+					.ps2-entry-layout {
+						display: grid;
+						grid-template-columns: minmax(0, 1fr) 280px;
+						gap: 8px;
+						min-height: 0;
+					}
+					.ps2-entry-panel,
+					.ps2-keypad-panel {
+						background: #fff;
+						border: 1px solid #d8e1eb;
+						border-radius: 12px;
+						padding: 10px;
+					}
+					.ps2-entry-panel { display: grid; grid-template-rows: auto auto auto; gap: 8px; }
+					.ps2-item-select { display: grid; gap: 8px; }
+					.ps2-qty-display-box {
+						border: 1px solid #d8e1eb;
+						border-radius: 12px;
+						background: #f7f9fb;
+						padding: 12px;
+					}
+					.ps2-qty-label {
+						font-size: 10px;
+						text-transform: uppercase;
+						letter-spacing: 0.08em;
+						color: #67788a;
+						font-weight: 700;
+					}
+					.ps2-qty-value {
+						margin-top: 6px;
+						font-size: 30px;
+						font-weight: 900;
+						line-height: 1;
+						min-height: 30px;
+					}
+					.ps2-keypad-panel { display: grid; grid-template-rows: auto 1fr auto; gap: 8px; }
+					.ps2-keypad-grid {
+						display: grid;
+						grid-template-columns: repeat(3, minmax(0, 1fr));
+						gap: 8px;
+					}
+					.ps2-key {
+						border: none;
+						border-radius: 12px;
+						min-height: 58px;
+						font-size: 22px;
+						font-weight: 900;
+						background: #dfe8f4;
+						color: #16202a;
+					}
+					.ps2-key--accent { background: #1173d4; color: #fff; }
+					.ps2-key--danger { background: #e85d5d; color: #fff; }
+					.ps2-key--wide { grid-column: span 2; }
+					.ps2-list-panel { min-height: 0; }
+					.ps2-list-header,
+					.ps2-item-row {
+						display: grid;
+						grid-template-columns: minmax(0, 2fr) 100px 110px 96px;
+						gap: 8px;
+						align-items: center;
+						padding: 8px 10px;
+					}
+					.ps2-list-header {
+						font-size: 10px;
+						text-transform: uppercase;
+						letter-spacing: 0.08em;
+						font-weight: 800;
+						color: #67788a;
+						background: #f7f9fb;
+						border: 1px solid #d8e1eb;
+						border-radius: 10px;
+						margin-bottom: 6px;
+					}
+					.ps2-item-row {
+						background: #fff;
+						border: 1px solid #d8e1eb;
+						border-radius: 10px;
+					}
+					.ps2-item-main { min-width: 0; }
+					.ps2-item-code { font-size: 14px; font-weight: 900; }
+					.ps2-item-name { font-size: 12px; color: #66788a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+					.ps2-item-qty,
+					.ps2-item-uom,
+					.ps2-item-weight { font-size: 13px; font-weight: 700; }
+					.ps2-remove-btn {
+						min-height: 34px;
+						border-radius: 8px;
+						font-size: 12px;
+						font-weight: 800;
+					}
+					.ps2-editor-view.is-hidden,
+					.ps2-home-view.is-hidden { display: none; }
 					@media (max-width: 1100px) {
-						.ps-app { height:auto; overflow:auto; }
-						.ps-layout, .ps-home-layout { height:auto; grid-template-columns:1fr; }
+						.ps2-app { height: auto; overflow: auto; }
+						.ps2-home-layout { height: auto; grid-template-columns: 1fr; }
+						.ps2-editor-layout { height: auto; }
+						.ps2-entry-layout { grid-template-columns: 1fr; }
+						.ps2-setup-strip { grid-template-columns: 1fr; }
 					}
 					@media (max-width: 800px) {
-						.ps-topbar { grid-template-columns:1fr; display:grid; align-items:start; }
-						.ps-form-grid, .ps-review-grid, .ps-review-meta { grid-template-columns:1fr; }
-						.ps-items-head, .ps-item-row { grid-template-columns:1fr; }
-						.ps-tile-grid { grid-template-columns:1fr; }
-						.ps-topbar-actions .btn, .ps-action-row .btn, .ps-home-actions .btn, .ps-review-actions .btn, .ps-items-toolbar .btn { flex:1 1 100%; }
-						.ps-search-row { flex-direction:column; }
+						.ps2-topbar { display: grid; align-items: start; }
+						.ps2-tile-grid { grid-template-columns: 1fr; }
+						.ps2-list-header,
+						.ps2-item-row { grid-template-columns: 1fr; }
+						.ps2-topbar-actions .btn,
+						.ps2-home-actions .btn,
+						.ps2-entry-actions .btn,
+						.ps2-footer-actions .btn,
+						.ps2-search-row .btn { flex: 1 1 100%; }
+						.ps2-search-row { flex-direction: column; }
+						.ps2-keypad-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 					}
 				</style>
 			`);
 		}
 
-		this.$homeView = this.wrapper.find(".ps-home-view");
-		this.$editorView = this.wrapper.find(".ps-editor-view");
+		this.$homeView = this.wrapper.find(".ps2-home-view");
+		this.$editorView = this.wrapper.find(".ps2-editor-view");
 	}
 
 	bindActions() {
-		this.wrapper.on("click", ".ps-home-btn", () => this.goHome());
-		this.wrapper.on("click", ".ps-new-btn", () => this.startNew());
-		this.wrapper.on("click", ".ps-home-open-form", () => this.openStandardForm());
-		this.wrapper.on("click", ".ps-step-btn", (e) => this.setStep($(e.currentTarget).data("step")));
-		this.wrapper.on("click", ".ps-resume-btn", () => this.openExistingDialog());
-		this.wrapper.on("click", ".ps-recent-card", (e) => this.openRecent($(e.currentTarget).data("name")));
-		this.wrapper.on("click", ".ps-search-btn", () => this.searchRecent());
-		this.wrapper.on("keydown", ".ps-search-input", (e) => {
+		this.wrapper.on("click", ".ps2-home-btn", () => this.goHome());
+		this.wrapper.on("click", ".ps2-new-btn", () => this.startNew());
+		this.wrapper.on("click", ".ps2-home-open-form", () => this.openStandardForm());
+		this.wrapper.on("click", ".ps2-resume-btn", () => this.openExistingDialog());
+		this.wrapper.on("click", ".ps2-recent-card", (e) => this.openRecent($(e.currentTarget).data("name")));
+		this.wrapper.on("click", ".ps2-search-btn", () => this.searchRecent());
+		this.wrapper.on("keydown", ".ps2-search-input", (e) => {
 			if (e.key === "Enter") {
 				e.preventDefault();
 				this.searchRecent();
 			}
 		});
-		this.wrapper.on("click", ".ps-next-items", () => this.setStep("items"));
-		this.wrapper.on("click", ".ps-next-review", () => this.setStep("review"));
-		this.wrapper.on("click", ".ps-back-details", () => this.setStep("details"));
-		this.wrapper.on("click", ".ps-back-items", () => this.setStep("items"));
-		this.wrapper.on("click", ".ps-add-item", () => this.openAddItemDialog());
-		this.wrapper.on("click", ".ps-clear-items", () => this.clearItems());
-		this.wrapper.on("click", ".ps-open-form", () => this.openStandardForm());
-		this.wrapper.on("click", ".ps-save", () => this.saveDoc());
-		this.wrapper.on("click", ".ps-save-print", async () => {
+		this.wrapper.on("click", ".ps2-key", (e) => this.handleKeypad($(e.currentTarget).data("key")));
+		this.wrapper.on("click", ".ps2-add-item", () => this.addCurrentItem());
+		this.wrapper.on("click", ".ps2-clear-carton", () => this.clearItems());
+		this.wrapper.on("click", ".ps2-open-form", () => this.openStandardForm());
+		this.wrapper.on("click", ".ps2-save", () => this.saveDoc());
+		this.wrapper.on("click", ".ps2-save-print", async () => {
 			await this.saveDoc();
 			this.printDoc();
 		});
-		this.wrapper.on("click", ".ps-qty-btn", (e) => this.adjustQty(e));
-		this.wrapper.on("click", ".ps-remove-item", (e) => this.removeItem(e));
+		this.wrapper.on("click", ".ps2-remove-btn", (e) => this.removeItem($(e.currentTarget).data("index")));
 	}
 
 	async refreshView() {
@@ -212,7 +464,6 @@ snrg_supplychain.packing_station.Controller = class PackingStationController {
 		}
 
 		this.state.mode = "editor";
-		this.state.activeStep = token === "new" ? "details" : "items";
 		await this.loadDoc(token === "new" ? null : token);
 	}
 
@@ -223,7 +474,6 @@ snrg_supplychain.packing_station.Controller = class PackingStationController {
 			freeze: true,
 			freeze_message: __("Loading cartons..."),
 		});
-
 		this.state.recentCartons = response.message || [];
 		this.renderHome();
 	}
@@ -232,65 +482,59 @@ snrg_supplychain.packing_station.Controller = class PackingStationController {
 		this.page.set_title(__("Packing Station"));
 		this.$editorView.addClass("is-hidden").empty();
 		this.$homeView.removeClass("is-hidden").html(`
-			<div class="ps-home-layout">
-				<div class="ps-home-stack">
-					<div class="ps-shell-card">
-						<div class="ps-home-title">${__("Start Work")}</div>
-						<div class="ps-home-copy">${__("Use the station like a handheld device. Tap a tile to begin.")}</div>
-						<div class="ps-tile-grid">
-							<button class="ps-tile ps-tile--blue ps-new-btn">
-								<div class="ps-tile-title">${__("New Carton")}</div>
-								<div class="ps-tile-copy">${__("Start a fresh packing workflow")}</div>
+			<div class="ps2-home-layout">
+				<div class="ps2-home-stack">
+					<div class="ps2-card">
+						<div class="ps2-home-title">${__("Start Work")}</div>
+						<div class="ps2-home-copy">${__("Use the station like a handheld device. Tap a tile to begin.")}</div>
+						<div class="ps2-tile-grid">
+							<button class="ps2-tile ps2-tile--blue ps2-new-btn">
+								<div class="ps2-tile-title">${__("New Carton")}</div>
+								<div class="ps2-tile-copy">${__("Start a fresh packing workflow")}</div>
 							</button>
-							<button class="ps-tile ps-tile--teal ps-resume-btn">
-								<div class="ps-tile-title">${__("Resume")}</div>
-								<div class="ps-tile-copy">${__("Open an existing carton and continue work")}</div>
+							<button class="ps2-tile ps2-tile--teal ps2-resume-btn">
+								<div class="ps2-tile-title">${__("Resume")}</div>
+								<div class="ps2-tile-copy">${__("Open an existing carton and continue work")}</div>
 							</button>
-							<button class="ps-tile ps-tile--violet ps-search-btn">
-								<div class="ps-tile-title">${__("Search")}</div>
-								<div class="ps-tile-copy">${__("Find carton by number from the search box below")}</div>
+							<button class="ps2-tile ps2-tile--violet ps2-search-btn">
+								<div class="ps2-tile-title">${__("Search")}</div>
+								<div class="ps2-tile-copy">${__("Find carton by number from the search box below")}</div>
 							</button>
-							<button class="ps-tile ps-tile--orange ps-home-open-form">
-								<div class="ps-tile-title">${__("Admin Form")}</div>
-								<div class="ps-tile-copy">${__("Open the normal ERP form when needed")}</div>
+							<button class="ps2-tile ps2-tile--orange ps2-home-open-form">
+								<div class="ps2-tile-title">${__("Admin Form")}</div>
+								<div class="ps2-tile-copy">${__("Open the normal ERP form when needed")}</div>
 							</button>
 						</div>
 					</div>
-					<div class="ps-shell-card">
-						<div class="ps-home-title">${__("Search")}</div>
-						<div class="ps-search-row">
-							<input class="form-control ps-search-input" type="text" placeholder="${__("Search carton number")}" />
-							<button class="btn btn-default ps-search-btn">${__("Search")}</button>
+					<div class="ps2-card">
+						<div class="ps2-home-title">${__("Search")}</div>
+						<div class="ps2-search-row">
+							<input class="form-control ps2-search-input" type="text" placeholder="${__("Search carton number")}" />
+							<button class="btn btn-default ps2-search-btn">${__("Search")}</button>
 						</div>
 					</div>
 				</div>
-				<div class="ps-shell-card ps-panel">
-					<div class="ps-panel-header">
-						<div>
-							<div class="ps-panel-title">${__("Recent Cartons")}</div>
-							<div class="ps-panel-copy">${__("Tap a carton to reopen its workflow.")}</div>
-						</div>
-					</div>
-					<div class="ps-step-host">
-						<div class="ps-recent-list"></div>
-					</div>
+				<div class="ps2-card ps2-recent-panel">
+					<div class="ps2-card-title">${__("Recent Cartons")}</div>
+					<div class="ps2-list-subtitle">${__("Tap a carton to reopen it in the station.")}</div>
+					<div class="ps2-recent-list"></div>
 				</div>
 			</div>
 		`);
 
-		const $list = this.wrapper.find(".ps-recent-list");
+		const $list = this.wrapper.find(".ps2-recent-list");
 		if (!this.state.recentCartons.length) {
-			$list.html(`<div class="ps-empty">${__("No cartons yet. Start a new carton to begin packing.")}</div>`);
+			$list.html(`<div class="ps2-empty">${__("No cartons yet. Start a new carton to begin packing.")}</div>`);
 			return;
 		}
 
 		$list.html(this.state.recentCartons.map((carton) => `
-			<div class="ps-recent-card" data-name="${frappe.utils.escape_html(carton.name)}">
-				<div class="ps-recent-top">
-					<div class="ps-recent-name">${frappe.utils.escape_html(carton.name)}</div>
-					<div class="ps-recent-pill">${frappe.utils.escape_html(carton.status || __("Available"))}</div>
+			<div class="ps2-recent-card" data-name="${frappe.utils.escape_html(carton.name)}">
+				<div class="ps2-recent-top">
+					<div class="ps2-recent-name">${frappe.utils.escape_html(carton.name)}</div>
+					<div class="ps2-recent-pill">${frappe.utils.escape_html(carton.status || __("Available"))}</div>
 				</div>
-				<div class="ps-recent-meta">
+				<div class="ps2-recent-meta">
 					<div>${__("Box Type")}: ${frappe.utils.escape_html(carton.box_type || "-")}</div>
 					<div>${__("Packed Date")}: ${frappe.datetime.str_to_user(carton.packed_date || "") || "-"}</div>
 					<div>${__("Warehouse")}: ${frappe.utils.escape_html(carton.warehouse || "-")}</div>
@@ -309,179 +553,95 @@ snrg_supplychain.packing_station.Controller = class PackingStationController {
 
 		this.state.doc = response.message;
 		this.state.items = (response.message.items || []).map((item) => ({ ...item }));
+		this.state.qtyBuffer = "";
+		this.state.selectedItemCode = "";
+		this.state.selectedItemData = null;
 		this.renderEditor();
-		this.renderStep();
+		this.renderControls();
+		this.renderEditorState();
 	}
 
 	renderEditor() {
 		this.page.set_title(this.state.doc?.name || __("New Carton"));
 		this.$homeView.addClass("is-hidden").empty();
 		this.$editorView.removeClass("is-hidden").html(`
-			<div class="ps-layout">
-				<aside class="ps-sidebar">
-					<div class="ps-step-nav"></div>
-					<div class="ps-shell-card">
-						<div class="ps-card-title">${__("Current Carton")}</div>
-						<div style="font-size:18px;font-weight:900;">${frappe.utils.escape_html(this.state.doc?.name || __("Not Saved"))}</div>
-						<div class="ps-inline-note">${this.state.doc?.box_type ? frappe.utils.escape_html(this.state.doc.box_type) : __("Choose box type in Step 1")}</div>
+			<div class="ps2-editor-layout">
+				<div class="ps2-strip ps2-setup-strip">
+					<div class="ps2-field" data-field="box_type"></div>
+					<div class="ps2-field" data-field="warehouse"></div>
+					<div class="ps2-total-boxes">
+						<div class="ps2-total-box"><div class="ps2-total-label">${__("Lines")}</div><div class="ps2-total-value" data-total="lines">0</div></div>
+						<div class="ps2-total-box"><div class="ps2-total-label">${__("Qty")}</div><div class="ps2-total-value" data-total="pieces">0</div></div>
+						<div class="ps2-total-box"><div class="ps2-total-label">${__("Gross")}</div><div class="ps2-total-value" data-total="gross">0</div></div>
 					</div>
-					<div class="ps-mini-grid">
-						<div class="ps-mini-box"><div class="ps-mini-label">${__("Lines")}</div><div class="ps-mini-value" data-mini="lines">0</div></div>
-						<div class="ps-mini-box"><div class="ps-mini-label">${__("Qty")}</div><div class="ps-mini-value" data-mini="pieces">0</div></div>
-						<div class="ps-mini-box"><div class="ps-mini-label">${__("Net")}</div><div class="ps-mini-value" data-mini="net">0</div></div>
-						<div class="ps-mini-box"><div class="ps-mini-label">${__("Gross")}</div><div class="ps-mini-value" data-mini="gross">0</div></div>
-					</div>
-				</aside>
-				<section class="ps-panel">
-					<div class="ps-panel-header">
-						<div>
-							<div class="ps-panel-title"></div>
-							<div class="ps-panel-copy"></div>
+				</div>
+				<div class="ps2-entry-layout">
+					<div class="ps2-entry-panel">
+						<div class="ps2-card-title">${__("Item Entry")}</div>
+						<div class="ps2-item-select">
+							<div class="ps2-field" data-field="item_code"></div>
+							<div class="ps2-item-preview">${__("Select an item to preview it here.")}</div>
 						</div>
-						<div class="ps-action-row">
-							<button class="btn btn-default ps-open-form">${__("Open Form")}</button>
+						<div class="ps2-qty-display-box">
+							<div class="ps2-qty-label">${__("Quantity")}</div>
+							<div class="ps2-qty-value" data-qty-display>0</div>
+						</div>
+						<div class="ps2-entry-actions">
+							<button class="btn btn-primary ps2-add-item">${__("Add Item")}</button>
+							<button class="btn btn-default ps2-open-form">${__("Open Form")}</button>
+							<button class="btn btn-default ps2-clear-carton">${__("Clear Carton")}</button>
 						</div>
 					</div>
-					<div class="ps-step-host"></div>
-				</section>
-			</div>
-		`);
-	}
-
-	renderStepNav() {
-		const steps = [
-			{ key: "details", no: "01", label: __("Details"), copy: __("Set carton basics") },
-			{ key: "items", no: "02", label: __("Items"), copy: __("Build the carton") },
-			{ key: "review", no: "03", label: __("Review"), copy: __("Save and print") },
-		];
-		this.wrapper.find(".ps-step-nav").html(steps.map((step) => `
-			<button class="ps-step-btn ${this.state.activeStep === step.key ? "is-active" : ""}" data-step="${step.key}">
-				<div class="ps-step-no">${step.no}</div>
-				<div class="ps-step-label">${step.label}</div>
-				<div class="ps-step-copy">${step.copy}</div>
-			</button>
-		`).join(""));
-	}
-
-	renderStep() {
-		if (!this.state.doc) return;
-		this.computeTotals();
-		this.renderStepNav();
-		this.renderMiniTotals();
-
-		if (this.state.activeStep === "details") {
-			this.renderDetailsStep();
-			return;
-		}
-		if (this.state.activeStep === "items") {
-			this.syncDocFromControls();
-			this.renderItemsStep();
-			return;
-		}
-		this.syncDocFromControls();
-		this.renderReviewStep();
-	}
-
-	renderPanelHeader(title, copy) {
-		this.wrapper.find(".ps-panel-title").text(title);
-		this.wrapper.find(".ps-panel-copy").text(copy);
-	}
-
-	renderDetailsStep() {
-		this.renderPanelHeader(__("Step 1: Carton Details"), __("Set the carton basics before adding items."));
-		this.wrapper.find(".ps-step-host").html(`
-			<div class="ps-form-grid">
-				<div class="ps-field" data-field="name"></div>
-				<div class="ps-field" data-field="box_type"></div>
-				<div class="ps-field" data-field="packed_date"></div>
-				<div class="ps-field" data-field="warehouse"></div>
-				<div class="ps-field" data-field="packed_by"></div>
-				<div class="ps-field" data-field="status"></div>
-			</div>
-			<div class="ps-inline-note">${__("Dimensions and box weight will auto-fill from the selected carton type.")}</div>
-			<div class="ps-action-row" style="margin-top:10px;">
-				<button class="btn btn-primary ps-next-items">${__("Continue to Items")}</button>
-			</div>
-		`);
-		this.renderControls();
-	}
-
-	renderItemsStep() {
-		this.renderPanelHeader(__("Step 2: Add Items"), __("Build the carton contents before final review."));
-		const $host = this.wrapper.find(".ps-step-host");
-		$host.html(`
-			<div class="ps-items-toolbar">
-				<button class="btn btn-primary ps-add-item">${__("Add Item")}</button>
-				<button class="btn btn-default ps-clear-items">${__("Clear All")}</button>
-				<button class="btn btn-default ps-back-details">${__("Back")}</button>
-				<button class="btn btn-primary ps-next-review">${__("Review Carton")}</button>
-			</div>
-			<div class="ps-items-table">
-				<div class="ps-items-head">
-					<div>${__("Item")}</div>
-					<div>${__("Qty")}</div>
-					<div>${__("UOM / Wt")}</div>
-					<div>${__("Actions")}</div>
+					<div class="ps2-keypad-panel">
+						<div class="ps2-card-title">${__("Numeric Keypad")}</div>
+						<div class="ps2-keypad-grid">
+							<button class="ps2-key" data-key="1">1</button>
+							<button class="ps2-key" data-key="2">2</button>
+							<button class="ps2-key" data-key="3">3</button>
+							<button class="ps2-key" data-key="4">4</button>
+							<button class="ps2-key" data-key="5">5</button>
+							<button class="ps2-key" data-key="6">6</button>
+							<button class="ps2-key" data-key="7">7</button>
+							<button class="ps2-key" data-key="8">8</button>
+							<button class="ps2-key" data-key="9">9</button>
+							<button class="ps2-key" data-key="00">00</button>
+							<button class="ps2-key" data-key="0">0</button>
+							<button class="ps2-key ps2-key--danger" data-key="del">${__("Del")}</button>
+						</div>
+						<div class="ps2-entry-actions">
+							<button class="btn btn-default ps2-key ps2-key--wide" data-key="clear">${__("Clear Qty")}</button>
+						</div>
+					</div>
 				</div>
-				<div class="ps-items-body"></div>
-			</div>
-		`);
-		this.renderItemRows();
-	}
-
-	renderReviewStep() {
-		this.renderPanelHeader(__("Step 3: Review & Save"), __("Verify totals, carton details, and then save or print."));
-		this.wrapper.find(".ps-step-host").html(`
-			<div class="ps-review-grid">
-				<div class="ps-review-box"><div class="ps-review-label">${__("Lines")}</div><div class="ps-review-value">${this.state.totals.lines}</div></div>
-				<div class="ps-review-box"><div class="ps-review-label">${__("Total Qty")}</div><div class="ps-review-value">${this.state.totals.pieces}</div></div>
-				<div class="ps-review-box"><div class="ps-review-label">${__("Net Weight")}</div><div class="ps-review-value">${this.state.totals.net_weight_kg.toFixed(3)} kg</div></div>
-				<div class="ps-review-box"><div class="ps-review-label">${__("Gross Weight")}</div><div class="ps-review-value">${this.state.totals.gross_weight_kg.toFixed(3)} kg</div></div>
-			</div>
-			<div class="ps-review-meta">
-				<div class="ps-meta-card">
-					<div class="ps-meta-line"><span>${__("Carton")}</span><strong>${frappe.utils.escape_html(this.state.doc.name || __("Not Saved"))}</strong></div>
-					<div class="ps-meta-line"><span>${__("Box Type")}</span><strong>${frappe.utils.escape_html(this.state.doc.box_type || "-")}</strong></div>
-					<div class="ps-meta-line"><span>${__("Warehouse")}</span><strong>${frappe.utils.escape_html(this.state.doc.warehouse || "-")}</strong></div>
-					<div class="ps-meta-line"><span>${__("Packed Date")}</span><strong>${frappe.datetime.str_to_user(this.state.doc.packed_date || "") || "-"}</strong></div>
+				<div class="ps2-panel ps2-list-panel">
+					<div class="ps2-card-title">${__("Current Items")}</div>
+					<div class="ps2-list-subtitle">${__("Items already added to this carton.")}</div>
+					<div class="ps2-list-header">
+						<div>${__("Item")}</div>
+						<div>${__("Qty")}</div>
+						<div>${__("UOM")}</div>
+						<div>${__("Action")}</div>
+					</div>
+					<div class="ps2-items-body"></div>
 				</div>
-				<div class="ps-meta-card">
-					<div class="ps-meta-line"><span>${__("Dimensions")}</span><strong>${frappe.utils.escape_html(this.state.doc.dimensions || "-")}</strong></div>
-					<div class="ps-meta-line"><span>${__("Empty Box")}</span><strong>${flt(this.state.doc.empty_weight_g || 0).toFixed(0)} g</strong></div>
-					<div class="ps-meta-line"><span>${__("Packed By")}</span><strong>${frappe.utils.escape_html(this.state.doc.packed_by || "-")}</strong></div>
-					<div class="ps-meta-line"><span>${__("Status")}</span><strong>${frappe.utils.escape_html(this.state.doc.status || __("Available"))}</strong></div>
+				<div class="ps2-footer-actions">
+					<button class="btn btn-default ps2-save">${__("Save")}</button>
+					<button class="btn btn-primary ps2-save-print">${__("Save & Print")}</button>
 				</div>
 			</div>
-			<div class="ps-checklist">
-				${this.checkItem(!!this.state.doc.box_type, __("Box type selected"))}
-				${this.checkItem(!!this.state.doc.warehouse, __("Warehouse selected"))}
-				${this.checkItem(!!this.state.items.length, __("At least one item added"))}
-			</div>
-			<div class="ps-review-actions" style="margin-top:10px;">
-				<button class="btn btn-default ps-back-items">${__("Back to Items")}</button>
-				<button class="btn btn-default ps-save">${__("Save Carton")}</button>
-				<button class="btn btn-primary ps-save-print">${__("Save & Print")}</button>
-			</div>
 		`);
-	}
-
-	checkItem(done, text) {
-		return `<div class="ps-checkitem"><div class="ps-dot ${done ? "is-done" : ""}"></div><div class="ps-checktext">${frappe.utils.escape_html(text)}</div></div>`;
 	}
 
 	renderControls() {
 		const fields = [
-			{ fieldname: "name", label: __("Carton ID"), fieldtype: "Data", read_only: 1 },
 			{ fieldname: "box_type", label: __("Box Type"), fieldtype: "Link", options: "Carton Type", reqd: 1 },
-			{ fieldname: "packed_date", label: __("Packed Date"), fieldtype: "Date", reqd: 1 },
 			{ fieldname: "warehouse", label: __("Warehouse"), fieldtype: "Link", options: "Warehouse", reqd: 1 },
-			{ fieldname: "packed_by", label: __("Packed By"), fieldtype: "Link", options: "Employee" },
-			{ fieldname: "status", label: __("Status"), fieldtype: "Data", read_only: 1 },
+			{ fieldname: "item_code", label: __("Select Item"), fieldtype: "Link", options: "Item", reqd: 0 },
 		];
 
 		this.controls = {};
 		fields.forEach((df) => {
-			const container = this.wrapper.find(`.ps-field[data-field="${df.fieldname}"]`);
+			const container = this.wrapper.find(`.ps2-field[data-field="${df.fieldname}"]`);
 			const control = frappe.ui.form.make_control({
 				parent: container,
 				df: {
@@ -490,39 +650,89 @@ snrg_supplychain.packing_station.Controller = class PackingStationController {
 				},
 				render_input: true,
 			});
-			control.set_value(this.state.doc[df.fieldname] || "");
-			if (df.read_only) {
-				control.df.read_only = 1;
-				control.refresh();
-			}
+			control.set_value(this.getFieldValue(df.fieldname));
 			this.controls[df.fieldname] = control;
 		});
 	}
 
-	syncDocFromControls() {
-		if (!this.controls) return;
-		["box_type", "packed_date", "warehouse", "packed_by"].forEach((fieldname) => {
-			if (this.controls[fieldname]) {
-				this.state.doc[fieldname] = this.controls[fieldname].get_value();
-			}
-		});
+	getFieldValue(fieldname) {
+		if (fieldname === "item_code") return this.state.selectedItemCode || "";
+		return this.state.doc?.[fieldname] || "";
 	}
 
 	onFieldChange(fieldname) {
+		if (fieldname === "item_code") {
+			this.state.selectedItemCode = this.controls.item_code.get_value();
+			this.loadSelectedItemPreview();
+			return;
+		}
+
 		this.syncDocFromControls();
 		if (fieldname === "box_type") {
 			if (!this.state.doc.box_type) {
 				this.state.doc.dimensions = "";
 				this.state.doc.empty_weight_g = 0;
-				this.renderMiniTotals();
+				this.renderTotals();
 				return;
 			}
 			frappe.db.get_doc("Carton Type", this.state.doc.box_type).then((doc) => {
-				this.state.doc.dimensions = `${doc.length_in} × ${doc.width_in} × ${doc.height_in} in`;
+				this.state.doc.dimensions = `${doc.length_in} x ${doc.width_in} x ${doc.height_in} in`;
 				this.state.doc.empty_weight_g = doc.empty_weight_g || 0;
-				this.renderMiniTotals();
+				this.renderTotals();
 			});
 		}
+	}
+
+	async loadSelectedItemPreview() {
+		const itemCode = this.state.selectedItemCode;
+		if (!itemCode) {
+			this.state.selectedItemData = null;
+			this.renderSelectedItemPreview();
+			return;
+		}
+
+		const response = await frappe.call({
+			method: "snrg_supplychain.supply_chain.doctype.packed_carton.packed_carton.get_touch_item",
+			args: { item_code: itemCode },
+		});
+		this.state.selectedItemData = response.message;
+		this.renderSelectedItemPreview();
+	}
+
+	renderSelectedItemPreview() {
+		const $preview = this.wrapper.find(".ps2-item-preview");
+		if (!$preview.length) return;
+		if (!this.state.selectedItemData) {
+			$preview.text(__("Select an item to preview it here."));
+			return;
+		}
+		$preview.text(`${this.state.selectedItemData.item_name} | ${this.state.selectedItemData.uom} | ${flt(this.state.selectedItemData.item_weight_kg).toFixed(3)} kg/${__("unit")}`);
+	}
+
+	syncDocFromControls() {
+		if (!this.controls || !this.state.doc) return;
+		this.state.doc.box_type = this.controls.box_type.get_value();
+		this.state.doc.warehouse = this.controls.warehouse.get_value();
+	}
+
+	handleKeypad(key) {
+		if (key === "clear") {
+			this.state.qtyBuffer = "";
+			this.renderQtyDisplay();
+			return;
+		}
+		if (key === "del") {
+			this.state.qtyBuffer = this.state.qtyBuffer.slice(0, -1);
+			this.renderQtyDisplay();
+			return;
+		}
+		this.state.qtyBuffer = `${this.state.qtyBuffer}${key}`;
+		this.renderQtyDisplay();
+	}
+
+	renderQtyDisplay() {
+		const value = this.state.qtyBuffer || "0";
+		this.wrapper.find("[data-qty-display]").text(value);
 	}
 
 	computeTotals() {
@@ -541,139 +751,91 @@ snrg_supplychain.packing_station.Controller = class PackingStationController {
 		}
 	}
 
-	renderMiniTotals() {
+	renderTotals() {
 		this.computeTotals();
-		this.wrapper.find('[data-mini="lines"]').text(this.state.totals.lines);
-		this.wrapper.find('[data-mini="pieces"]').text(this.state.totals.pieces);
-		this.wrapper.find('[data-mini="net"]').text(this.state.totals.net_weight_kg.toFixed(3));
-		this.wrapper.find('[data-mini="gross"]').text(this.state.totals.gross_weight_kg.toFixed(3));
+		this.wrapper.find('[data-total="lines"]').text(this.state.totals.lines);
+		this.wrapper.find('[data-total="pieces"]').text(this.state.totals.pieces);
+		this.wrapper.find('[data-total="gross"]').text(this.state.totals.gross_weight_kg.toFixed(3));
 	}
 
 	renderItemRows() {
-		const $body = this.wrapper.find(".ps-items-body");
+		const $body = this.wrapper.find(".ps2-items-body");
 		if (!$body.length) return;
 		if (!this.state.items.length) {
-			$body.html(`<div class="ps-empty" style="margin:8px;">${__("No items added yet. Use 'Add Item' to start building the carton.")}</div>`);
+			$body.html(`<div class="ps2-empty">${__("No items added yet. Select an item, enter quantity, and tap 'Add Item'.")}</div>`);
+			this.renderTotals();
 			return;
 		}
 		$body.html(this.state.items.map((item, index) => `
-			<div class="ps-item-row">
-				<div class="ps-item-main">
-					<div class="ps-item-code">${frappe.utils.escape_html(item.item_code)}</div>
-					<div class="ps-item-name">${frappe.utils.escape_html(item.item_name || "")}</div>
+			<div class="ps2-item-row">
+				<div class="ps2-item-main">
+					<div class="ps2-item-code">${frappe.utils.escape_html(item.item_code)}</div>
+					<div class="ps2-item-name">${frappe.utils.escape_html(item.item_name || "")}</div>
 				</div>
-				<div class="ps-item-qty">
-					<button class="ps-qty-btn" data-direction="-1" data-index="${index}">-</button>
-					<div class="ps-qty-value">${flt(item.qty)}</div>
-					<button class="ps-qty-btn" data-direction="1" data-index="${index}">+</button>
-				</div>
-				<div class="ps-item-meta">
-					<div>${frappe.utils.escape_html(item.uom || "")}</div>
-					<div>${flt(item.item_weight_kg).toFixed(3)} kg/${__("unit")}</div>
-				</div>
-				<div class="ps-action-row">
-					<button class="btn btn-default ps-remove-item" data-index="${index}">${__("Remove")}</button>
-				</div>
+				<div class="ps2-item-qty">${flt(item.qty)}</div>
+				<div class="ps2-item-uom">${frappe.utils.escape_html(item.uom || "")}</div>
+				<div><button class="btn btn-default ps2-remove-btn" data-index="${index}">${__("Remove")}</button></div>
 			</div>
 		`).join(""));
-		this.renderMiniTotals();
+		this.renderTotals();
 	}
 
-	setStep(step) {
-		this.state.activeStep = step;
-		this.renderStep();
-	}
-
-	startNew() {
-		frappe.set_route("packing_station", "new");
-	}
-
-	goHome() {
-		frappe.set_route("packing_station");
-	}
-
-	openRecent(name) {
-		if (name) {
-			frappe.set_route("packing_station", name);
-		}
-	}
-
-	searchRecent() {
-		const searchText = (this.wrapper.find(".ps-search-input").val() || "").trim();
-		this.loadHome(searchText);
-	}
-
-	openExistingDialog() {
-		const d = new frappe.ui.Dialog({
-			title: __("Open Existing Carton"),
-			fields: [
-				{
-					fieldname: "carton_name",
-					fieldtype: "Link",
-					label: __("Packed Carton"),
-					options: "Packed Carton",
-					reqd: 1,
-				},
-			],
-			primary_action_label: __("Open"),
-			primary_action: (values) => {
-				frappe.set_route("packing_station", values.carton_name);
-				d.hide();
-			},
-		});
-		d.show();
-	}
-
-	async openAddItemDialog() {
-		const d = new frappe.ui.Dialog({
-			title: __("Add Item"),
-			fields: [
-				{ fieldname: "item_code", fieldtype: "Link", options: "Item", label: __("Item"), reqd: 1 },
-				{ fieldname: "qty", fieldtype: "Float", label: __("Qty"), reqd: 1, default: 1 },
-			],
-			primary_action_label: __("Add"),
-			primary_action: async (values) => {
-				if (!values.item_code || !(values.qty > 0)) {
-					frappe.show_alert({ indicator: "orange", message: __("Choose an item and enter a valid quantity.") });
-					return;
-				}
-				const response = await frappe.call({
-					method: "snrg_supplychain.supply_chain.doctype.packed_carton.packed_carton.get_touch_item",
-					args: { item_code: values.item_code },
-				});
-				const item = response.message;
-				const existing = this.state.items.find((row) => row.item_code === item.item_code);
-				if (existing) {
-					existing.qty = flt(existing.qty) + flt(values.qty);
-				} else {
-					this.state.items.push({
-						item_code: item.item_code,
-						item_name: item.item_name,
-						uom: item.uom,
-						item_weight_kg: item.item_weight_kg,
-						qty: flt(values.qty),
-					});
-				}
-				this.renderItemRows();
-				d.hide();
-			},
-		});
-		d.show();
-	}
-
-	adjustQty(event) {
-		const $btn = $(event.currentTarget);
-		const index = cint($btn.data("index"));
-		const direction = cint($btn.data("direction"));
-		const item = this.state.items[index];
-		if (!item) return;
-		item.qty = Math.max(1, flt(item.qty) + direction);
+	renderEditorState() {
+		this.renderSelectedItemPreview();
+		this.renderQtyDisplay();
 		this.renderItemRows();
 	}
 
-	removeItem(event) {
-		const index = cint($(event.currentTarget).data("index"));
-		this.state.items.splice(index, 1);
+	async addCurrentItem() {
+		this.syncDocFromControls();
+		if (!this.state.doc.box_type || !this.state.doc.warehouse) {
+			frappe.show_alert({ indicator: "orange", message: __("Select Box Type and Warehouse first.") });
+			return;
+		}
+		if (!this.state.selectedItemCode) {
+			frappe.show_alert({ indicator: "orange", message: __("Select an item first.") });
+			return;
+		}
+		const qty = cint(this.state.qtyBuffer || "0");
+		if (!(qty > 0)) {
+			frappe.show_alert({ indicator: "orange", message: __("Enter a valid quantity using the keypad.") });
+			return;
+		}
+
+		let itemData = this.state.selectedItemData;
+		if (!itemData || itemData.item_code !== this.state.selectedItemCode) {
+			const response = await frappe.call({
+				method: "snrg_supplychain.supply_chain.doctype.packed_carton.packed_carton.get_touch_item",
+				args: { item_code: this.state.selectedItemCode },
+			});
+			itemData = response.message;
+		}
+
+		const existing = this.state.items.find((row) => row.item_code === itemData.item_code);
+		if (existing) {
+			existing.qty = flt(existing.qty) + qty;
+		} else {
+			this.state.items.push({
+				item_code: itemData.item_code,
+				item_name: itemData.item_name,
+				uom: itemData.uom,
+				item_weight_kg: itemData.item_weight_kg,
+				qty,
+			});
+		}
+
+		this.state.qtyBuffer = "";
+		this.state.selectedItemCode = "";
+		this.state.selectedItemData = null;
+		if (this.controls.item_code) {
+			this.controls.item_code.set_value("");
+		}
+		this.renderEditorState();
+		frappe.show_alert({ indicator: "green", message: __("Item added to carton") });
+	}
+
+	removeItem(index) {
+		this.state.items.splice(cint(index), 1);
 		this.renderItemRows();
 	}
 
@@ -707,10 +869,51 @@ snrg_supplychain.packing_station.Controller = class PackingStationController {
 		if (this.state.doc.name && this.routeToken !== this.state.doc.name) {
 			frappe.set_route("packing_station", this.state.doc.name);
 		}
-		frappe.show_alert({ indicator: "green", message: __(`${this.state.doc.name} saved`) });
 		this.renderEditor();
-		this.renderStep();
+		this.renderControls();
+		this.renderEditorState();
+		frappe.show_alert({ indicator: "green", message: __(`${this.state.doc.name} saved`) });
 		return this.state.doc;
+	}
+
+	startNew() {
+		frappe.set_route("packing_station", "new");
+	}
+
+	goHome() {
+		frappe.set_route("packing_station");
+	}
+
+	openRecent(name) {
+		if (name) {
+			frappe.set_route("packing_station", name);
+		}
+	}
+
+	searchRecent() {
+		const searchText = (this.wrapper.find(".ps2-search-input").val() || "").trim();
+		this.loadHome(searchText);
+	}
+
+	openExistingDialog() {
+		const d = new frappe.ui.Dialog({
+			title: __("Open Existing Carton"),
+			fields: [
+				{
+					fieldname: "carton_name",
+					fieldtype: "Link",
+					label: __("Packed Carton"),
+					options: "Packed Carton",
+					reqd: 1,
+				},
+			],
+			primary_action_label: __("Open"),
+			primary_action: (values) => {
+				frappe.set_route("packing_station", values.carton_name);
+				d.hide();
+			},
+		});
+		d.show();
 	}
 
 	openStandardForm() {

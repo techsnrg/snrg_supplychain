@@ -104,7 +104,7 @@
    "in_place_edit": 1,
    "label": "Items",
    "options": "Outward Shipment Item",
-   "read_only": 0
+   "read_only": 1
   },
   {
    "fieldname": "summary_section",

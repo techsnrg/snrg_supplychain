@@ -3,9 +3,7 @@ frappe.ui.form.on('Outward Shipment Carton', {
         let row = locals[cdt][cdn];
         if (row.carton_id) {
             frappe.db.get_doc('Packed Carton', row.carton_id).then(cbl => {
-                let summary = (cbl.items || [])
-                    .map(i => `${i.item_code} × ${i.qty}`)
-                    .join(', ');
+                let summary = summarizeCartonContents(cbl.items || []);
                 frappe.model.set_value(cdt, cdn, 'box_type', cbl.box_type);
                 frappe.model.set_value(cdt, cdn, 'packed_date', cbl.packed_date);
                 frappe.model.set_value(cdt, cdn, 'items_summary', summary);
@@ -23,6 +21,11 @@ frappe.ui.form.on('Outward Shipment Carton', {
 
 frappe.ui.form.on('Outward Shipment', {
     refresh: function(frm) {
+        if (frm.doc.cartons && frm.doc.cartons.length) {
+            frm.trigger('calculate_totals');
+            frm.trigger('rebuild_items_summary');
+        }
+
         // Add Carton button on draft/unsaved shipments
         if (frm.doc.docstatus === 0) {
             frm.add_custom_button(__('Add Carton'), () => {
@@ -65,18 +68,15 @@ frappe.ui.form.on('Outward Shipment', {
     setup: function(frm) {
         frm.set_query("sales_order", function() {
             return {
-                filters: {
-                    docstatus: 1,
-                    status: ["not in", ["Closed", "Completed"]]
-                },
-                order_by: "transaction_date desc, modified desc"
+                query: "snrg_supplychain.supply_chain.doctype.outward_shipment.outward_shipment.sales_order_query"
             };
         });
 
         frm.set_query("carton_id", "cartons", function() {
             return {
+                query: "snrg_supplychain.supply_chain.doctype.outward_shipment.outward_shipment.available_carton_query",
                 filters: {
-                    status: "Available"
+                    outward_shipment: frm.doc.name || ""
                 }
             };
         });
@@ -147,6 +147,11 @@ frappe.ui.form.on('Outward Shipment', {
             frm.set_value('total_pieces', total_pieces);
             frm.refresh_field('dispatch_items');
         });
+    },
+
+    cartons_add: function(frm) {
+        frm.trigger('calculate_totals');
+        frm.trigger('rebuild_items_summary');
     }
 });
 
@@ -169,6 +174,12 @@ function reset_carton_and_focus(d) {
     }, 80);
 }
 
+function summarizeCartonContents(items) {
+    return (items || [])
+        .map(i => `${i.item_code} × ${parseInt(i.qty || 0)} ${i.uom || ''}`.trim())
+        .join(', ');
+}
+
 function show_add_carton_dialog(frm) {
     let d = new frappe.ui.Dialog({
         title: __('Add Carton to Shipment'),
@@ -179,14 +190,15 @@ function show_add_carton_dialog(frm) {
                 label: __('Carton ID'),
                 options: 'Packed Carton',
                 reqd: 1,
-                get_query: () => ({ filters: { status: 'Available' } }),
+                get_query: () => ({
+                    query: "snrg_supplychain.supply_chain.doctype.outward_shipment.outward_shipment.available_carton_query",
+                    filters: { outward_shipment: frm.doc.name || '' }
+                }),
                 onchange: function() {
                     let carton_id = d.get_value('carton_id');
                     if (!carton_id) return;
                     frappe.db.get_doc('Packed Carton', carton_id).then(cbl => {
-                        let preview = (cbl.items || [])
-                            .map(i => `${i.item_code} × ${parseInt(i.qty)} ${i.uom}`)
-                            .join('\n');
+                        let preview = summarizeCartonContents(cbl.items || []).replace(/, /g, '\n');
                         d.set_value('box_type', cbl.box_type || '');
                         d.set_value('packed_date', cbl.packed_date || '');
                         d.set_value('gross_weight_kg', cbl.gross_weight_kg || 0);
@@ -262,6 +274,7 @@ function show_add_carton_dialog(frm) {
                 indicator: 'green'
             }, 3);
 
+            frm.scroll_to_field('cartons');
             reset_carton_and_focus(d);
         },
         secondary_action_label: __('Done'),

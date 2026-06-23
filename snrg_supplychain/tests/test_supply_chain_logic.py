@@ -7,6 +7,7 @@ from frappe.exceptions import ValidationError
 
 from snrg_supplychain.supply_chain.doctype.freight_quotation import freight_quotation
 from snrg_supplychain.supply_chain.doctype.outward_shipment.outward_shipment import OutwardShipment
+from snrg_supplychain.supply_chain.doctype.outward_shipment import outward_shipment as outward_shipment_module
 from snrg_supplychain.supply_chain.doctype.packed_carton.packed_carton import (
 	PackedCarton,
 	convert_weight_to_kg,
@@ -78,6 +79,23 @@ class SupplyChainLogicTests(TestCase):
 			with self.assertRaises(ValidationError):
 				OutwardShipment.validate_items_against_sales_order(shipment)
 
+	def test_duplicate_cartons_are_blocked(self):
+		shipment = SimpleNamespace(
+			get_selected_carton_ids=lambda: ["CTN-0001", "CTN-0001", "CTN-0002"]
+		)
+
+		with self.assertRaises(ValidationError):
+			OutwardShipment.validate_duplicate_cartons(shipment)
+
+	def test_reserved_cartons_in_other_drafts_are_blocked(self):
+		shipment = SimpleNamespace(
+			cartons=[SimpleNamespace(carton_id="CTN-0001")],
+			get_reserved_cartons_in_other_drafts=lambda: {"CTN-0001": "DL-0001"},
+		)
+
+		with self.assertRaises(ValidationError):
+			OutwardShipment.validate_carton_status(shipment)
+
 	def test_make_delivery_note_requires_create_permission(self):
 		shipment = SimpleNamespace(
 			customer="Customer A",
@@ -128,3 +146,9 @@ class SupplyChainLogicTests(TestCase):
 		doc = SimpleNamespace(valid_from="2026-06-22", valid_to="2026-06-21")
 		with self.assertRaises(ValidationError):
 			TransporterServiceability.validate(doc)
+
+	def test_available_carton_query_orders_newest_first(self):
+		with patch.object(outward_shipment_module.frappe.db, "sql", return_value=[]) as sql_mock:
+			outward_shipment_module.available_carton_query("Packed Carton", "", "name", 0, 20, {"outward_shipment": "DL-0001"})
+
+		self.assertIn("ORDER BY p.packed_date DESC, p.modified DESC, p.name DESC", sql_mock.call_args[0][0])

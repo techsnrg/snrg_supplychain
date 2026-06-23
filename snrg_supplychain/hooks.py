@@ -35,6 +35,7 @@ page_js = {"packed_carton_touch": "public/js/packed_carton_touch.js"}
 
 # include js in doctype views
 doctype_js = {
+    "Item": "public/js/item_custom.js",
     "Sales Order": "public/js/sales_order_custom.js",
 }
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}

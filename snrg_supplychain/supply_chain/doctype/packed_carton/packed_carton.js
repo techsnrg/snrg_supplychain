@@ -5,12 +5,12 @@ frappe.ui.form.on('Packed Carton', {
 
 		// Add Item button — only on unsaved / draft forms
 		if (frm.doc.docstatus === 0) {
-			frm.add_custom_button(__('Touch Mode'), () => {
+			frm.add_custom_button(__('Packing Station'), () => {
 				if (frm.is_new()) {
-					frappe.set_route('packed_carton_touch', 'new');
+					frappe.set_route('packing_station', 'new');
 					return;
 				}
-				frappe.set_route('packed_carton_touch', frm.doc.name);
+				frappe.set_route('packing_station', frm.doc.name);
 			}).addClass('btn-default');
 
 			frm.add_custom_button(__('Add Item'), () => {

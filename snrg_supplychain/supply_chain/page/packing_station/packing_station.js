@@ -433,7 +433,6 @@ snrg_supplychain.packing_station.Controller = class PackingStationController {
 	bindActions() {
 		this.wrapper.on("click", ".ps2-home-btn", () => this.goHome());
 		this.wrapper.on("click", ".ps2-new-btn", () => this.startNew());
-		this.wrapper.on("click", ".ps2-home-open-form", () => this.openStandardForm());
 		this.wrapper.on("click", ".ps2-resume-btn", () => this.openExistingDialog());
 		this.wrapper.on("click", ".ps2-recent-card", (e) => this.openRecent($(e.currentTarget).data("name")));
 		this.wrapper.on("click", ".ps2-search-btn", () => this.searchRecent());
@@ -446,7 +445,6 @@ snrg_supplychain.packing_station.Controller = class PackingStationController {
 		this.wrapper.on("click", ".ps2-key", (e) => this.handleKeypad($(e.currentTarget).data("key")));
 		this.wrapper.on("click", ".ps2-add-item", () => this.addCurrentItem());
 		this.wrapper.on("click", ".ps2-clear-carton", () => this.clearItems());
-		this.wrapper.on("click", ".ps2-open-form", () => this.openStandardForm());
 		this.wrapper.on("click", ".ps2-save", () => this.saveDoc());
 		this.wrapper.on("click", ".ps2-save-print", async () => {
 			await this.saveDoc();
@@ -499,10 +497,6 @@ snrg_supplychain.packing_station.Controller = class PackingStationController {
 							<button class="ps2-tile ps2-tile--violet ps2-search-btn">
 								<div class="ps2-tile-title">${__("Search")}</div>
 								<div class="ps2-tile-copy">${__("Find carton by number from the search box below")}</div>
-							</button>
-							<button class="ps2-tile ps2-tile--orange ps2-home-open-form">
-								<div class="ps2-tile-title">${__("Admin Form")}</div>
-								<div class="ps2-tile-copy">${__("Open the normal ERP form when needed")}</div>
 							</button>
 						</div>
 					</div>
@@ -588,7 +582,6 @@ snrg_supplychain.packing_station.Controller = class PackingStationController {
 						</div>
 						<div class="ps2-entry-actions">
 							<button class="btn btn-primary ps2-add-item">${__("Add Item")}</button>
-							<button class="btn btn-default ps2-open-form">${__("Open Form")}</button>
 							<button class="btn btn-default ps2-clear-carton">${__("Clear Carton")}</button>
 						</div>
 					</div>

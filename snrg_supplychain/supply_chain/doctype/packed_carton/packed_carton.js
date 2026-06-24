@@ -1,15 +1,15 @@
 frappe.ui.form.on('Packed Carton', {
 
 	refresh: function(frm) {
+		if (frm.is_new()) {
+			frappe.set_route('packing_station', 'new');
+			return;
+		}
+
 		prune_blank_item_rows(frm);
 
-		// Add Item button — only on unsaved / draft forms
 		if (frm.doc.docstatus === 0) {
 			frm.add_custom_button(__('Packing Station'), () => {
-				if (frm.is_new()) {
-					frappe.set_route('packing_station', 'new');
-					return;
-				}
 				frappe.set_route('packing_station', frm.doc.name);
 			}).addClass('btn-primary');
 		}

@@ -911,10 +911,10 @@ snrg_supplychain.packing_station.Controller = class PackingStationController {
 
 	openStandardForm() {
 		if (this.state.doc?.name) {
-			frappe.set_route("Form", "Packed Carton", this.state.doc.name);
+			frappe.set_route("packing_station", this.state.doc.name);
 			return;
 		}
-		frappe.new_doc("Packed Carton");
+		frappe.set_route("packing_station", "new");
 	}
 
 	printDoc() {

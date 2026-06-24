@@ -1,7 +1,7 @@
 {
  "category": "Modules",
  "charts": [],
- "content": "[{\"id\":\"zwxyz1\",\"type\":\"header\",\"data\":{\"text\":\"Carton Management\",\"col\":12}},{\"id\":\"zwxyz2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Outward Shipment\",\"col\":3}},{\"id\":\"zwxyz3b\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Packing Station\",\"col\":3}},{\"id\":\"zwxyz4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Carton Type\",\"col\":3}},{\"id\":\"zwxyz5\",\"type\":\"header\",\"data\":{\"text\":\"Freight Management\",\"col\":12}},{\"id\":\"zwxyz6\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Freight Quotation\",\"col\":3}},{\"id\":\"zwxyz8\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Transporter Rate Card\",\"col\":3}},{\"id\":\"zwxyz9\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Transporter Serviceability\",\"col\":3}},{\"id\":\"zwxyz10\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Freight Zone\",\"col\":3}}]",
+ "content": "[{\"id\":\"zwxyz1\",\"type\":\"header\",\"data\":{\"text\":\"Carton Management\",\"col\":12}},{\"id\":\"zwxyz2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Outward Shipment\",\"col\":3}},{\"id\":\"zwxyz3b\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Carton Packing\",\"col\":3}},{\"id\":\"zwxyz4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Carton Type\",\"col\":3}},{\"id\":\"zwxyz5\",\"type\":\"header\",\"data\":{\"text\":\"Freight Management\",\"col\":12}},{\"id\":\"zwxyz6\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Freight Quotation\",\"col\":3}},{\"id\":\"zwxyz8\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Transporter Rate Card\",\"col\":3}},{\"id\":\"zwxyz9\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Transporter Serviceability\",\"col\":3}},{\"id\":\"zwxyz10\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Freight Zone\",\"col\":3}}]",
  "creation": "2026-03-27 12:00:00.000000",
  "developer_mode_only": 0,
  "disable_user_customization": 0,
@@ -38,7 +38,7 @@
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Packing Station",
+   "label": "Carton Packing",
    "link_count": 0,
    "link_to": "packing_station",
    "link_type": "Page",
@@ -129,7 +129,7 @@
   },
   {
    "color": "Blue",
-   "label": "Packing Station",
+   "label": "Carton Packing",
    "link_to": "packing_station",
    "type": "Page"
   },

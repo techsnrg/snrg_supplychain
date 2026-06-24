@@ -3,7 +3,7 @@ frappe.provide("snrg_supplychain.packing_station");
 frappe.pages["packing_station"].on_page_load = function (wrapper) {
 	const page = frappe.ui.make_app_page({
 		parent: wrapper,
-		title: __("Packing Station"),
+		title: __("Carton Packing"),
 		single_column: true,
 	});
 
@@ -31,7 +31,6 @@ snrg_supplychain.packing_station.Controller = class PackingStationController {
 			doc: null,
 			items: [],
 			recentCartons: [],
-			qtyBuffer: "",
 			selectedItemCode: "",
 			selectedItemData: null,
 			totals: {
@@ -55,9 +54,9 @@ snrg_supplychain.packing_station.Controller = class PackingStationController {
 		this.wrapper.find(".layout-main-section").html(`
 			<div class="ps2-app">
 				<div class="ps2-topbar">
-					<div>
-						<div class="ps2-badge">${__("Packing Station")}</div>
-						<div class="ps2-title">${__("Packed Carton")}</div>
+						<div>
+						<div class="ps2-badge">${__("Carton Packing")}</div>
+						<div class="ps2-title">${__("Packing Station")}</div>
 					</div>
 					<div class="ps2-topbar-actions">
 						<button class="btn btn-default ps2-home-btn">${__("Home")}</button>
@@ -108,8 +107,7 @@ snrg_supplychain.packing_station.Controller = class PackingStationController {
 					.ps2-home-actions,
 					.ps2-search-row,
 					.ps2-entry-actions,
-					.ps2-footer-actions,
-					.ps2-keypad-grid {
+					.ps2-footer-actions {
 						display: flex;
 						gap: 8px;
 						flex-wrap: wrap;
@@ -311,13 +309,9 @@ snrg_supplychain.packing_station.Controller = class PackingStationController {
 						margin-top: 2px;
 					}
 					.ps2-entry-layout {
-						display: grid;
-						grid-template-columns: minmax(0, 1fr) 280px;
-						gap: 8px;
 						min-height: 0;
 					}
-					.ps2-entry-panel,
-					.ps2-keypad-panel {
+					.ps2-entry-panel {
 						background: #fff;
 						border: 1px solid #d8e1eb;
 						border-radius: 12px;
@@ -325,7 +319,7 @@ snrg_supplychain.packing_station.Controller = class PackingStationController {
 					}
 					.ps2-entry-panel { display: grid; grid-template-rows: auto auto auto; gap: 8px; }
 					.ps2-item-select { display: grid; gap: 8px; }
-					.ps2-qty-display-box {
+					.ps2-qty-box {
 						border: 1px solid #d8e1eb;
 						border-radius: 12px;
 						background: #f7f9fb;
@@ -338,31 +332,24 @@ snrg_supplychain.packing_station.Controller = class PackingStationController {
 						color: #67788a;
 						font-weight: 700;
 					}
-					.ps2-qty-value {
+					.ps2-qty-input {
+						width: 100%;
 						margin-top: 6px;
-						font-size: 30px;
+						min-height: 72px;
+						border: 1px solid #d8e1eb;
+						border-radius: 12px;
+						background: #fff;
+						padding: 12px 16px;
+						font-size: 32px;
 						font-weight: 900;
 						line-height: 1;
-						min-height: 30px;
-					}
-					.ps2-keypad-panel { display: grid; grid-template-rows: auto 1fr auto; gap: 8px; }
-					.ps2-keypad-grid {
-						display: grid;
-						grid-template-columns: repeat(3, minmax(0, 1fr));
-						gap: 8px;
-					}
-					.ps2-key {
-						border: none;
-						border-radius: 12px;
-						min-height: 58px;
-						font-size: 22px;
-						font-weight: 900;
-						background: #dfe8f4;
 						color: #16202a;
 					}
-					.ps2-key--accent { background: #1173d4; color: #fff; }
-					.ps2-key--danger { background: #e85d5d; color: #fff; }
-					.ps2-key--wide { grid-column: span 2; }
+					.ps2-qty-input:focus {
+						outline: none;
+						border-color: #7aa7d9;
+						box-shadow: 0 0 0 3px rgba(17, 115, 212, 0.12);
+					}
 					.ps2-list-panel { min-height: 0; }
 					.ps2-list-header,
 					.ps2-item-row {
@@ -406,7 +393,6 @@ snrg_supplychain.packing_station.Controller = class PackingStationController {
 						.ps2-app { height: auto; overflow: auto; }
 						.ps2-home-layout { height: auto; grid-template-columns: 1fr; }
 						.ps2-editor-layout { height: auto; }
-						.ps2-entry-layout { grid-template-columns: 1fr; }
 						.ps2-setup-strip { grid-template-columns: 1fr; }
 					}
 					@media (max-width: 800px) {
@@ -420,7 +406,6 @@ snrg_supplychain.packing_station.Controller = class PackingStationController {
 						.ps2-footer-actions .btn,
 						.ps2-search-row .btn { flex: 1 1 100%; }
 						.ps2-search-row { flex-direction: column; }
-						.ps2-keypad-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 					}
 				</style>
 			`);
@@ -442,7 +427,6 @@ snrg_supplychain.packing_station.Controller = class PackingStationController {
 				this.searchRecent();
 			}
 		});
-		this.wrapper.on("click", ".ps2-key", (e) => this.handleKeypad($(e.currentTarget).data("key")));
 		this.wrapper.on("click", ".ps2-add-item", () => this.addCurrentItem());
 		this.wrapper.on("click", ".ps2-clear-carton", () => this.clearItems());
 		this.wrapper.on("click", ".ps2-save", () => this.saveDoc());
@@ -477,7 +461,7 @@ snrg_supplychain.packing_station.Controller = class PackingStationController {
 	}
 
 	renderHome() {
-		this.page.set_title(__("Packing Station"));
+		this.page.set_title(__("Carton Packing"));
 		this.$editorView.addClass("is-hidden").empty();
 		this.$homeView.removeClass("is-hidden").html(`
 			<div class="ps2-home-layout">
@@ -547,7 +531,6 @@ snrg_supplychain.packing_station.Controller = class PackingStationController {
 
 		this.state.doc = response.message;
 		this.state.items = (response.message.items || []).map((item) => ({ ...item }));
-		this.state.qtyBuffer = "";
 		this.state.selectedItemCode = "";
 		this.state.selectedItemData = null;
 		this.renderEditor();
@@ -576,33 +559,20 @@ snrg_supplychain.packing_station.Controller = class PackingStationController {
 							<div class="ps2-field" data-field="item_code"></div>
 							<div class="ps2-item-preview">${__("Select an item to preview it here.")}</div>
 						</div>
-						<div class="ps2-qty-display-box">
+						<div class="ps2-qty-box">
 							<div class="ps2-qty-label">${__("Quantity")}</div>
-							<div class="ps2-qty-value" data-qty-display>0</div>
+							<input
+								type="number"
+								inputmode="numeric"
+								min="0"
+								step="1"
+								class="ps2-qty-input"
+								placeholder="${__("Enter quantity")}"
+							/>
 						</div>
 						<div class="ps2-entry-actions">
 							<button class="btn btn-primary ps2-add-item">${__("Add Item")}</button>
 							<button class="btn btn-default ps2-clear-carton">${__("Clear Carton")}</button>
-						</div>
-					</div>
-					<div class="ps2-keypad-panel">
-						<div class="ps2-card-title">${__("Numeric Keypad")}</div>
-						<div class="ps2-keypad-grid">
-							<button class="ps2-key" data-key="1">1</button>
-							<button class="ps2-key" data-key="2">2</button>
-							<button class="ps2-key" data-key="3">3</button>
-							<button class="ps2-key" data-key="4">4</button>
-							<button class="ps2-key" data-key="5">5</button>
-							<button class="ps2-key" data-key="6">6</button>
-							<button class="ps2-key" data-key="7">7</button>
-							<button class="ps2-key" data-key="8">8</button>
-							<button class="ps2-key" data-key="9">9</button>
-							<button class="ps2-key" data-key="00">00</button>
-							<button class="ps2-key" data-key="0">0</button>
-							<button class="ps2-key ps2-key--danger" data-key="del">${__("Del")}</button>
-						</div>
-						<div class="ps2-entry-actions">
-							<button class="btn btn-default ps2-key ps2-key--wide" data-key="clear">${__("Clear Qty")}</button>
 						</div>
 					</div>
 				</div>
@@ -708,24 +678,8 @@ snrg_supplychain.packing_station.Controller = class PackingStationController {
 		this.state.doc.warehouse = this.controls.warehouse.get_value();
 	}
 
-	handleKeypad(key) {
-		if (key === "clear") {
-			this.state.qtyBuffer = "";
-			this.renderQtyDisplay();
-			return;
-		}
-		if (key === "del") {
-			this.state.qtyBuffer = this.state.qtyBuffer.slice(0, -1);
-			this.renderQtyDisplay();
-			return;
-		}
-		this.state.qtyBuffer = `${this.state.qtyBuffer}${key}`;
-		this.renderQtyDisplay();
-	}
-
-	renderQtyDisplay() {
-		const value = this.state.qtyBuffer || "0";
-		this.wrapper.find("[data-qty-display]").text(value);
+	getQtyValue() {
+		return cint(this.wrapper.find(".ps2-qty-input").val() || 0);
 	}
 
 	computeTotals() {
@@ -775,7 +729,6 @@ snrg_supplychain.packing_station.Controller = class PackingStationController {
 
 	renderEditorState() {
 		this.renderSelectedItemPreview();
-		this.renderQtyDisplay();
 		this.renderItemRows();
 	}
 
@@ -789,9 +742,9 @@ snrg_supplychain.packing_station.Controller = class PackingStationController {
 			frappe.show_alert({ indicator: "orange", message: __("Select an item first.") });
 			return;
 		}
-		const qty = cint(this.state.qtyBuffer || "0");
+		const qty = this.getQtyValue();
 		if (!(qty > 0)) {
-			frappe.show_alert({ indicator: "orange", message: __("Enter a valid quantity using the keypad.") });
+			frappe.show_alert({ indicator: "orange", message: __("Enter a valid quantity.") });
 			return;
 		}
 
@@ -817,12 +770,12 @@ snrg_supplychain.packing_station.Controller = class PackingStationController {
 			});
 		}
 
-		this.state.qtyBuffer = "";
 		this.state.selectedItemCode = "";
 		this.state.selectedItemData = null;
 		if (this.controls.item_code) {
 			this.controls.item_code.set_value("");
 		}
+		this.wrapper.find(".ps2-qty-input").val("");
 		this.renderEditorState();
 		frappe.show_alert({ indicator: "green", message: __("Item added to carton") });
 	}

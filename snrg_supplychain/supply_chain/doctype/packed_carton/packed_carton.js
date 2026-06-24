@@ -9,7 +9,7 @@ frappe.ui.form.on('Packed Carton', {
 		prune_blank_item_rows(frm);
 
 		if (frm.doc.docstatus === 0) {
-			frm.add_custom_button(__('Packing Station'), () => {
+			frm.add_custom_button(__('Open Carton Packing'), () => {
 				frappe.set_route('packing_station', frm.doc.name);
 			}).addClass('btn-primary');
 		}

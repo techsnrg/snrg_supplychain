@@ -3,6 +3,5 @@ frappe.listview_settings['Packed Carton'] = {
 		listview.page.set_primary_action(__('Open Carton Packing'), () => {
 			frappe.set_route('packing_station', 'new');
 		}, 'add');
-		listview.page.set_indicator(__('Operational flow runs through Carton Packing'), 'blue');
 	},
 };

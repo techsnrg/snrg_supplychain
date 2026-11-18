@@ -27,8 +27,7 @@ browser fixtures below. Both endpoints passed: the comparison returned 100
 versus 110; the report returned 14 columns and one overdue row with 10 pending.
 
 `create_purchasing_ui_fixtures.py` creates clearly marked disposable records
-for a browser check. These remain in local staging while visual verification
-is pending: supplier `PURCHASING UI TEST ONLY`, item
+for a browser check. These remain in local staging for review: supplier `PURCHASING UI TEST ONLY`, item
 `PURCHASING-UI-TEST-ONLY`, history PO `PUR-ORD-2026-00001`, draft PO
 `PUR-ORD-2026-00002`. Avoid rerunning the creator without cleaning up first.
 
@@ -41,9 +40,21 @@ After signing into localhost as Administrator:
    the test supplier; expect the history PO with 10 pending, INR 1,000 pre-tax.
 5. Check source PO link, smaller browser width and coexistence with other buttons.
 
-Visual check is not claimed complete: Edge reached the local login page,
-but the user-entered Administrator password was rejected. Backend HTTP
-checks succeeded using the disposable buyer independently of that login.
+Browser verification completed on 2026-11-19 in the local in-app browser:
+- An authenticated direct PO URL reached Desk; the login screen had remained
+  visible despite a valid session. No further password reset was needed.
+- Restored the PO script hook in the shared staging container (the PR already
+  includes it), cleared cache, and restarted only the local web process.
+- Current 110 versus previous 100 displayed +10%. An unsaved draft rate of
+  120 displayed +20%, then was restored to 110 without saving.
+- Overdue report navigation preserved company and displayed one PO, pending
+  quantity 10, and INR 1,000 before tax. Minimum days 99 plus Refresh showed
+  Nothing to show; restoring 1 plus Refresh restored the result.
+- Desktop controls and narrow-width overflow menu both exposed the tools.
+- Replaced the comparison's legacy /app/ source URL with Frappe's standard
+  get_form_link helper for version-correct Desk URLs.
+- Staging lacks socket.io, so realtime connection warnings remain unrelated
+  to the successful comparison/report requests.
 
 To remove the marked browser examples after review, copy and run
 `cleanup_purchasing_ui_fixtures.py` in the same container. It refuses to run

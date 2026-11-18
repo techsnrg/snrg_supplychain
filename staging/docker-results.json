@@ -1,0 +1,29 @@
+{
+  "passed": [
+    "real query selects submitted history and excludes cancelled/current",
+    "rate increase is 10 percent",
+    "unsaved UOM-normalized rate comparison",
+    "backdated PO excludes later history",
+    "restricted buyer can query permitted history",
+    "restricted buyer gets permitted overdue rows",
+    "company permissions exclude other company",
+    "unprivileged report user rejected",
+    "partial receipt leaves six pending at correct value",
+    "due today is not overdue",
+    "fully received row excluded",
+    "direct-to-customer row excluded",
+    "report executes with columns and company-filtered results",
+    "report registered by migrate",
+    "real purchase receipt updates PO received quantity",
+    "report follows real purchase receipt",
+    "report follows ERPNext authoritative quantity after return",
+    "return quantities: received=2.0, returned=2.0",
+    "foreign currency normalized to company currency",
+    "duplicate lines use discounted quantity-weighted history",
+    "actual alternate-UOM PO normalized to stock UOM",
+    "closed order excluded from overdue report"
+  ],
+  "count": 22,
+  "site": "production-staging.localhost",
+  "fixtures_rolled_back": true
+}

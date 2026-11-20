@@ -1,0 +1,248 @@
+"""Permission-checked production service. Stock Entries remain the ledger authority."""
+import json
+import hashlib
+from collections import defaultdict
+import frappe
+from frappe.utils import flt
+
+DT = 'Daily Production'
+
+
+def save_internal(doc):
+    previous = frappe.flags.get('in_daily_production_service')
+    frappe.flags.in_daily_production_service = True
+    try:
+        doc.save()
+    finally:
+        frappe.flags.in_daily_production_service = previous
+
+
+def allowed(doc, submit=False):
+    doc.check_permission('write')
+    if submit and not frappe.has_permission('Stock Entry', 'submit'):
+        frappe.throw('Stock Entry submit permission is required.', frappe.PermissionError)
+
+
+def locked(name):
+    frappe.db.sql('select name from `tabDaily Production` where name=%s for update', (name,))
+    return frappe.get_doc(DT, name)
+
+
+def settings(doc):
+    station = frappe.get_doc('Production Station', doc.station)
+    station.check_permission('read')
+    if not station.enabled:
+        frappe.throw('This production station is disabled.')
+    if station.consumption_method not in ('Stocked components', 'Expanded raw materials'):
+        frappe.throw('Choose the station consumption method before posting.')
+    config = {k: station.get(k) for k in ('company','source_warehouse','target_warehouse','consumption_method','cost_center')}
+    for field in ('source_warehouse','target_warehouse'):
+        config[field] = doc.get(field) or config[field]
+        if not config[field]:
+            frappe.throw('Select both source and target warehouses.')
+        wh = frappe.get_doc('Warehouse', config[field])
+        wh.check_permission('read')
+        if wh.company != station.company or wh.is_group or wh.disabled:
+            frappe.throw('Select active, non-group warehouses belonging to the station company.')
+    return config
+
+
+def validate_recipe(bom, expanded, seen):
+    if bom.name in seen:
+        return
+    seen.add(bom.name)
+    if bom.docstatus != 1 or not bom.is_active:
+        frappe.throw(f'{bom.name}: the recipe must be active and submitted.')
+    if bom.get('custom_mould_configuration') or bom.with_operations or bom.get('secondary_items') or bom.get('scrap_items') or bom.get('process_loss_percentage') or bom.get('inspection_required'):
+        frappe.throw(f'{bom.name}: use the detailed manufacturing workflow for moulding, operations, quality, scrap or process loss.')
+    if expanded:
+        for component in bom.items:
+            if component.bom_no and not component.get('do_not_explode'):
+                child = frappe.get_doc('BOM',component.bom_no)
+                child.check_permission('read')
+                if child.company != bom.company:
+                    frappe.throw('Subassembly BOMs must belong to the production company.')
+                validate_recipe(child,expanded,seen)
+
+
+def make_entry(doc, row, config, pin=False):
+    item = frappe.get_doc('Item', row.item_code)
+    item.check_permission('read')
+    if item.disabled or not item.is_stock_item or item.has_variants:
+        frappe.throw(f'{row.item_code}: choose an active stock item, not a template.')
+    if frappe.get_cached_value('UOM', item.stock_uom, 'must_be_whole_number') and flt(row.qty) % 1:
+        frappe.throw(f'{row.item_code}: quantity must be a whole number.')
+    boms = frappe.get_list('BOM', filters=dict(item=row.item_code,company=config['company'],is_default=1,is_active=1,docstatus=1), pluck='name', limit_page_length=2)
+    if len(boms) != 1:
+        frappe.throw(f'{row.item_code}: exactly one active submitted default BOM is required.')
+    if row.bom_no and row.bom_no != boms[0]:
+        frappe.throw(f'{row.item_code}: default BOM changed. Create a new draft for review.')
+    bom = frappe.get_doc('BOM', boms[0])
+    bom.check_permission('read')
+    if bom.uom != item.stock_uom:
+        frappe.throw(f'{row.item_code}: BOM UOM must match the stock UOM for quick production.')
+    validate_recipe(bom,config['consumption_method']=='Expanded raw materials',set())
+    entry = frappe.new_doc('Stock Entry')
+    entry.update(dict(stock_entry_type='Manufacture',purpose='Manufacture',company=config['company'],from_bom=1,bom_no=bom.name,fg_completed_qty=row.qty,use_multi_level_bom=int(config['consumption_method']=='Expanded raw materials'),from_warehouse=config['source_warehouse'],to_warehouse=config['target_warehouse'],cost_center=config['cost_center'],posting_date=doc.posting_date,posting_time=doc.posting_time,set_posting_time=1,custom_daily_production=doc.name,custom_daily_production_row=row.name,remarks=f'Bulk production {doc.name}, row {row.idx}'))
+    entry.get_items()
+    for detail in entry.items:
+        detail.s_warehouse = config['source_warehouse'] if detail.s_warehouse else None
+        detail.t_warehouse = config['target_warehouse'] if detail.t_warehouse else None
+        flags = frappe.get_cached_value('Item', detail.item_code, ['has_batch_no','has_serial_no','inspection_required_before_purchase'], as_dict=True)
+        if flags.has_batch_no or flags.has_serial_no or flags.inspection_required_before_purchase or entry.inspection_required:
+            frappe.throw(f'{detail.item_code}: batch, serial or quality details require the detailed Stock Entry screen.')
+    if entry.get('process_loss_qty') or entry.get('process_loss_percentage'):
+        frappe.throw('Process loss requires the detailed manufacturing workflow.')
+    if any(d.get('secondary_item_type') or d.get('is_scrap_item') for d in entry.items):
+        frappe.throw('This BOM has secondary outputs; use the detailed manufacturing workflow.')
+    if pin:
+        row.bom_no, row.uom, row.item_name = bom.name, item.stock_uom, item.item_name
+    return entry
+
+
+def valuation_issues(entry):
+    """Use the same outgoing-rate resolver as Stock Entry without writing stock."""
+    from erpnext.stock.utils import _get_incoming_rate
+    issues = []
+    muted = getattr(frappe.flags, 'mute_messages', False)
+    try:
+        frappe.flags.mute_messages = True
+        for detail in entry.items:
+            if not detail.s_warehouse:
+                continue
+            try:
+                _get_incoming_rate(entry.get_args_for_incoming_rate(detail), raise_error_if_no_rate=True)
+            except frappe.ValidationError as exc:
+                issues.append(dict(item_code=detail.item_code,item_name=detail.item_name,
+                    warehouse=detail.s_warehouse,message=frappe.utils.strip_html(str(exc))))
+    finally:
+        frappe.flags.mute_messages = muted
+    return issues
+
+
+def review_doc(doc, config, pin=False):
+    from erpnext.stock.utils import get_stock_balance
+    demand = defaultdict(float)
+    results = []
+    missing_rates = {}
+    outputs = {r.item_code for r in doc.items if r.status != 'Posted'}
+    for row in doc.items:
+        if row.status == 'Posted':
+            continue
+        entry = make_entry(doc, row, config, pin=pin)
+        for issue in valuation_issues(entry):
+            key = (issue['item_code'],issue['warehouse'])
+            missing_rates.setdefault(key,issue)
+        materials = []
+        for detail in entry.items:
+            if detail.s_warehouse:
+                if detail.item_code in outputs:
+                    frappe.throw('This sheet contains dependent production stages. Post component production first, then finished goods in a separate sheet.')
+                qty = flt(detail.transfer_qty) or flt(detail.qty)*flt(detail.conversion_factor)
+                demand[(detail.item_code,detail.s_warehouse)] += qty
+                materials.append(dict(item_code=detail.item_code,item_name=detail.item_name,qty=qty,uom=detail.stock_uom))
+        results.append(dict(item_code=row.item_code,qty=row.qty,uom=row.uom,bom_no=entry.bom_no,materials=materials))
+    shortages = []
+    for (item, warehouse), required in demand.items():
+        available = flt(get_stock_balance(item,warehouse,doc.posting_date,doc.posting_time))
+        if required > available + 0.000001:
+            shortages.append(dict(item_code=item,warehouse=warehouse,required=required,available=available))
+    return dict(rows=results,shortages=shortages,valuation_issues=list(missing_rates.values()))
+
+
+@frappe.whitelist()
+def review(name):
+    doc = frappe.get_doc(DT,name)
+    allowed(doc)
+    config = settings(doc)
+    result = review_doc(doc,config)
+    result['review_token'] = review_token(doc,config,result)
+    return result
+
+
+def review_token(doc, config, result):
+    payload = dict(modified=str(doc.modified), config=config, rows=result['rows'])
+    return hashlib.sha256(json.dumps(payload,sort_keys=True,default=str).encode()).hexdigest()
+
+
+@frappe.whitelist()
+def post(name, token):
+    if frappe.request and frappe.request.method != 'POST':
+        frappe.throw('Use POST to post production.')
+    doc = locked(name)
+    allowed(doc,submit=True)
+    if doc.status == 'Posted':
+        return dict(name=doc.name,status=doc.status)
+    config = settings(doc)
+    if doc.settings_snapshot and json.loads(doc.settings_snapshot) != config:
+        frappe.throw('Production settings changed. Warehouses and station settings must match the original posting when retrying.')
+    preview = review_doc(doc,config,pin=True)
+    if preview['valuation_issues']:
+        codes = ', '.join(issue['item_code'] for issue in preview['valuation_issues'])
+        frappe.throw(f'Material valuation is missing for {codes}. Resolve the material costs and review production again before posting.')
+    if token != review_token(doc,config,preview):
+        frappe.throw('Production changed since review. Review the sheet again before posting.')
+    doc.source_warehouse = config['source_warehouse']
+    doc.target_warehouse = config['target_warehouse']
+    doc.company = config['company']
+    doc.settings_snapshot = json.dumps(config,sort_keys=True)
+    doc.status = 'Queued'
+    save_internal(doc)
+    frappe.enqueue('snrg_supplychain.supply_chain.daily_production.process',queue='long',enqueue_after_commit=True,name=doc.name,user=frappe.session.user)
+    return dict(name=doc.name,status=doc.status)
+
+
+def check_entry_stock(entry):
+    from erpnext.stock.utils import get_stock_balance
+    requirements = defaultdict(float)
+    for row in entry.items:
+        if row.s_warehouse:
+            requirements[(row.item_code,row.s_warehouse)] += flt(row.transfer_qty) or flt(row.qty)*flt(row.conversion_factor)
+    warnings = []
+    # Retain deterministic locks; shortages are warnings. ERPNext item settings
+    # remain authoritative for negative stock, valuation and tracked inventory.
+    for (item,warehouse), qty in sorted(requirements.items()):
+        frappe.db.sql('select name from `tabBin` where item_code=%s and warehouse=%s for update',(item,warehouse))
+        available = flt(get_stock_balance(item,warehouse,entry.posting_date,entry.posting_time))
+        if qty > available + 0.000001:
+            warnings.append(dict(item_code=item,warehouse=warehouse,required=qty,available=available))
+    return warnings
+
+
+def process(name, user):
+    """One committed transaction per row, serialized by sheet lock. Safe to resume."""
+    frappe.set_user(user)
+    initial = frappe.get_doc(DT,name)
+    for row_name in [r.name for r in initial.items]:
+        try:
+            doc = locked(name)
+            allowed(doc,submit=True)
+            row = next(r for r in doc.items if r.name == row_name)
+            if row.status == 'Posted':
+                frappe.db.commit()
+                continue
+            config = settings(doc)
+            if json.loads(doc.settings_snapshot) != config:
+                frappe.throw('Station settings changed after review.')
+            entry = make_entry(doc,row,config)
+            warnings = check_entry_stock(entry)
+            if warnings:
+                entry.remarks += '\nMaterial shortage warning: ' + '; '.join(f"{w['item_code']}: need {w['required']}, available {w['available']} in {w['warehouse']}" for w in warnings)
+            entry.insert()
+            entry.submit()
+            row.stock_entry,row.status,row.error = entry.name,'Posted',None
+            save_internal(doc)
+            frappe.db.commit()
+        except Exception as exc:
+            frappe.db.rollback()
+            doc = locked(name)
+            row = next(r for r in doc.items if r.name == row_name)
+            if row.status != 'Posted':
+                row.status,row.error = 'Failed',str(exc)[:1000]
+                save_internal(doc)
+            frappe.db.commit()
+    doc = locked(name)
+    posted = sum(r.status == 'Posted' for r in doc.items)
+    doc.status = 'Posted' if posted == len(doc.items) else 'Partially Posted' if posted else 'Failed'
+    save_internal(doc)
+    frappe.db.commit()

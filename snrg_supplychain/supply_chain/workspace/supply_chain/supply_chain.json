@@ -1,7 +1,7 @@
 {
  "category": "Modules",
  "charts": [],
- "content": "[{\"id\":\"zwxyz1\",\"type\":\"header\",\"data\":{\"text\":\"Carton Management\",\"col\":12}},{\"id\":\"zwxyz2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Outward Shipment\",\"col\":3}},{\"id\":\"zwxyz3b\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Carton Packing\",\"col\":3}},{\"id\":\"zwxyz4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Carton Type\",\"col\":3}},{\"id\":\"zwxyz5\",\"type\":\"header\",\"data\":{\"text\":\"Freight Management\",\"col\":12}},{\"id\":\"zwxyz6\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Freight Quotation\",\"col\":3}},{\"id\":\"zwxyz8\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Transporter Rate Card\",\"col\":3}},{\"id\":\"zwxyz9\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Transporter Serviceability\",\"col\":3}},{\"id\":\"zwxyz10\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Freight Zone\",\"col\":3}}]",
+ "content": "[{\"id\": \"bulk-production-header\", \"type\": \"header\", \"data\": {\"text\": \"Manufacturing\", \"col\": 12}}, {\"id\": \"bulk-production-entry\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Bulk Production\", \"col\": 3}}, {\"id\": \"production-stations\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Production Station\", \"col\": 3}}, {\"id\": \"zwxyz1\", \"type\": \"header\", \"data\": {\"text\": \"Carton Management\", \"col\": 12}}, {\"id\": \"zwxyz2\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Outward Shipment\", \"col\": 3}}, {\"id\": \"zwxyz3b\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Carton Packing\", \"col\": 3}}, {\"id\": \"zwxyz4\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Carton Type\", \"col\": 3}}, {\"id\": \"zwxyz5\", \"type\": \"header\", \"data\": {\"text\": \"Freight Management\", \"col\": 12}}, {\"id\": \"zwxyz6\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Freight Quotation\", \"col\": 3}}, {\"id\": \"zwxyz8\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Transporter Rate Card\", \"col\": 3}}, {\"id\": \"zwxyz9\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Transporter Serviceability\", \"col\": 3}}, {\"id\": \"zwxyz10\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Freight Zone\", \"col\": 3}}]",
  "creation": "2026-03-27 12:00:00.000000",
  "developer_mode_only": 0,
  "disable_user_customization": 0,
@@ -9,7 +9,7 @@
  "extends": "",
  "extends_another_page": 0,
  "hide_custom": 0,
- "icon": "🚛",
+ "icon": "\ud83d\ude9b",
  "is_default": 0,
  "is_hidden": 0,
  "label": "Supply Chain",
@@ -119,6 +119,16 @@
  "restrict_to_domain": "",
  "roles": [],
  "shortcuts": [
+  {
+   "label": "Bulk Production",
+   "type": "Page",
+   "link_to": "daily-production-entry"
+  },
+  {
+   "label": "Production Station",
+   "type": "DocType",
+   "link_to": "Production Station"
+  },
   {
    "color": "Blue",
    "format": "{} Active",

@@ -209,3 +209,7 @@ doctype_list_js = {
 # auth_hooks = [
 # 	"snrg_supplychain.auth.validate"
 # ]
+
+# Bulk Production schema and Stock Entry traceability links.
+after_migrate = ["snrg_supplychain.supply_chain.production_setup.after_migrate"]
+after_install = ["snrg_supplychain.supply_chain.production_setup.after_migrate"]

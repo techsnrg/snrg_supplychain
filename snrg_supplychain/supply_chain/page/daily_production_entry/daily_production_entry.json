@@ -1,0 +1,22 @@
+{
+  "doctype": "Page",
+  "name": "daily-production-entry",
+  "page_name": "daily-production-entry",
+  "title": "Bulk Production",
+  "module": "Supply Chain",
+  "standard": "Yes",
+  "roles": [
+    {
+      "role": "Manufacturing User"
+    },
+    {
+      "role": "Manufacturing Manager"
+    },
+    {
+      "role": "Stock Manager"
+    },
+    {
+      "role": "System Manager"
+    }
+  ]
+}

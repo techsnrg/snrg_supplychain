@@ -62,7 +62,26 @@ class ProductionTests(unittest.TestCase):
         self.assertEqual(doc.items[1].stock_entry,'MAT-STE-1')
         self.assertEqual(doc.status,'Partially Posted')
         entry.submit.assert_called_once()
-    def test_worker_reports_shortage_warning_without_blocking(self):
+    def test_post_rejects_shortages_before_queueing(self):
+        self.doc.settings_snapshot=None;self.doc.status='Draft'
+        preview=dict(shortages=[dict(item_code='POLYMER')],valuation_issues=[])
+        enqueue=Mock()
+        with patch.object(service,'locked',return_value=self.doc),patch.object(service,'allowed'),patch.object(service,'settings',return_value=self.config),patch.object(service,'review_doc',return_value=preview),patch.object(service.frappe,'enqueue',enqueue,create=True):
+            with self.assertRaisesRegex(ValueError,'Insufficient materials'):service.post(self.doc.name,'old-token')
+        enqueue.assert_not_called()
+
+    def test_stock_depleted_after_review_never_submits(self):
+        self.doc.flags=Obj();self.doc.save=Mock();self.doc.settings_snapshot=__import__('json').dumps(self.config)
+        db=Obj(commit=Mock(),rollback=Mock())
+        entry=Obj(insert=Mock(),submit=Mock())
+        shortages=[dict(item_code='POLYMER',required=70,available=50,warehouse='Raw')]
+        with patch.multiple(service.frappe,set_user=Mock(),get_doc=Mock(return_value=self.doc),db=db,create=True),patch.object(service,'locked',return_value=self.doc),patch.object(service,'allowed'),patch.object(service,'settings',return_value=self.config),patch.object(service,'check_entry_stock',return_value=shortages),patch.object(service,'make_entry',return_value=entry):
+            service.process(self.doc.name,'operator@example.com')
+        entry.insert.assert_not_called();entry.submit.assert_not_called()
+        self.assertEqual(self.doc.status,'Failed')
+        self.assertTrue(all('Insufficient materials' in row.error for row in self.doc.items))
+
+    def test_worker_detects_shortage_for_submission_guard(self):
         entry=self.entry(70);entry.posting_date='2026-11-17';entry.posting_time='10:00:00'
         with patch.object(service.frappe,'db',Obj(sql=Mock()),create=True):
             warnings=service.check_entry_stock(entry)

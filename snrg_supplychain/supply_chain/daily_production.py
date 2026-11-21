@@ -177,6 +177,9 @@ def post(name, token):
     if doc.settings_snapshot and json.loads(doc.settings_snapshot) != config:
         frappe.throw('Production settings changed. Warehouses and station settings must match the original posting when retrying.')
     preview = review_doc(doc,config,pin=True)
+    if preview['shortages']:
+        codes = ', '.join(issue['item_code'] for issue in preview['shortages'])
+        frappe.throw(f'Insufficient materials for {codes}. Replenish the source warehouse or reduce the quantities, then review again.')
     if preview['valuation_issues']:
         codes = ', '.join(issue['item_code'] for issue in preview['valuation_issues'])
         frappe.throw(f'Material valuation is missing for {codes}. Resolve the material costs and review production again before posting.')
@@ -199,8 +202,8 @@ def check_entry_stock(entry):
         if row.s_warehouse:
             requirements[(row.item_code,row.s_warehouse)] += flt(row.transfer_qty) or flt(row.qty)*flt(row.conversion_factor)
     warnings = []
-    # Retain deterministic locks; shortages are warnings. ERPNext item settings
-    # remain authoritative for negative stock, valuation and tracked inventory.
+    # Serialize competing sheets on their material bins and reject shortages
+    # even when an Item permits negative stock in other ERPNext workflows.
     for (item,warehouse), qty in sorted(requirements.items()):
         frappe.db.sql('select name from `tabBin` where item_code=%s and warehouse=%s for update',(item,warehouse))
         available = flt(get_stock_balance(item,warehouse,entry.posting_date,entry.posting_time))
@@ -227,7 +230,8 @@ def process(name, user):
             entry = make_entry(doc,row,config)
             warnings = check_entry_stock(entry)
             if warnings:
-                entry.remarks += '\nMaterial shortage warning: ' + '; '.join(f"{w['item_code']}: need {w['required']}, available {w['available']} in {w['warehouse']}" for w in warnings)
+                details = '; '.join(f"{w['item_code']}: need {w['required']}, available {w['available']} in {w['warehouse']}" for w in warnings)
+                frappe.throw('Insufficient materials. ' + details)
             entry.insert()
             entry.submit()
             row.stock_entry,row.status,row.error = entry.name,'Posted',None

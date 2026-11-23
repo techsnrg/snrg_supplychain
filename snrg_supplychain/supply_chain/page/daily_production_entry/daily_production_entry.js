@@ -2,6 +2,7 @@ frappe.pages['daily-production-entry'].on_page_load = function(wrapper) {
   wrapper.production = new DailyProductionScreen(wrapper);
 };
 frappe.pages['daily-production-entry'].on_page_show = function(wrapper) {
+  wrapper.production.activate();
   if (!wrapper.production.loading && (frappe.route_options?.new_sheet || new URLSearchParams(window.location.search).get('new_sheet'))) {
     frappe.route_options = null; wrapper.production.newSheet(); return;
   }
@@ -20,13 +21,15 @@ class DailyProductionScreen {
     this.dirty = false;
     this.poll = null;
     this.root = $('<div class="daily-production"></div>').appendTo(this.page.main);
-    this.renderShell();
+    this.renderShell();this.activate();
+    if(window.ResizeObserver){this.footerObserver=new ResizeObserver(()=>this.alignFooter());this.footerObserver.observe(this.root[0]);}
+    window.addEventListener('resize',()=>this.alignFooter());
     this.page.add_menu_item(__('New sheet'), () => this.startNew());
     this.page.add_menu_item(__('Paste from Excel'), () => this.paste());
     this.page.add_menu_item(__('Sheet details'), () => {if(this.doc?.name)frappe.set_route('Form','Daily Production',this.doc.name);else frappe.msgprint(__('Save this sheet to view its details.'));});
     this.page.add_menu_item(__('Production history'), () => frappe.set_route('List', 'Daily Production'));
     this.page.add_menu_item(__('Production stations'), () => frappe.set_route('List', 'Production Station'));
-    $(wrapper).on('hide', () => clearTimeout(this.poll));
+    $(wrapper).on('hide', () => {clearTimeout(this.poll);document.body.classList.remove('dp-entry-active');});
     window.addEventListener('beforeunload',event=>{if(this.dirty){event.preventDefault();event.returnValue='';}});
     this.root.find('input,button').prop('disabled',true);
     this.feedback(__('Loading your saved draft…'));
@@ -46,12 +49,14 @@ class DailyProductionScreen {
   async call(method, args) { return (await frappe.call({method, args})).message; }
   renderShell() {
     this.root.html(`<style>
+      [data-theme="dark"] .daily-production,[data-theme="dark"] .dp-review-dialog{--dp-danger-color:var(--red-300,#eb4c4c)}
+      html:has(body.dp-entry-active){overflow:clip}body.dp-entry-active{overflow:clip}
       .daily-production {max-width:1050px;margin:auto;padding:16px 8px 110px;color:var(--text-color)}
       .dp-context,.dp-add,.dp-row,.dp-empty {background:var(--card-bg);border:1px solid var(--border-color);border-radius:12px;padding:16px;margin-bottom:12px}
       .dp-context,.dp-add {display:grid;grid-template-columns:2fr 1fr 1fr;gap:16px}
       .dp-warehouses {display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}.dp-warehouses .form-control{min-width:0}
-      .dp-row-error{grid-column:1/-1;overflow-wrap:anywhere;line-height:1.5}.dp-review-dialog .modal-footer button{min-height:48px;font-size:16px}.dp-review-dialog summary{min-height:44px;padding:10px 0}.dp-review-dialog .modal-body{overflow-wrap:anywhere}.dp-missing-warehouse{font-size:13px;color:var(--text-muted);margin-bottom:6px}.dp-missing-items{padding-left:18px;margin:0 0 14px;color:var(--red-600,#b42318)}.dp-missing-items li{margin-bottom:5px;line-height:1.4}
-      .dp-context>div,.dp-warehouses>div,.dp-add>div{min-width:0}.dp-review-dialog .modal-header .btn-modal-close{min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center}.dp-missing-group{border-left:3px solid var(--red-600,#b42318);padding-left:12px;margin:12px 0 16px}.dp-shortage-list p{margin-bottom:8px}.dp-review-dialog summary:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+      .dp-row-error{grid-column:1/-1;overflow-wrap:anywhere;line-height:1.5}.dp-review-dialog .modal-footer button{min-height:48px;font-size:16px}.dp-review-dialog summary{min-height:44px;padding:10px 0}.dp-review-dialog .modal-body{overflow-wrap:anywhere}.dp-missing-warehouse{font-size:13px;color:var(--text-muted);margin-bottom:6px}.dp-missing-items{padding-left:18px;margin:0 0 14px;color:var(--dp-danger-color,var(--red-600,#b42318))}.dp-missing-items li{margin-bottom:5px;line-height:1.4}
+      .dp-context>div,.dp-warehouses>div,.dp-add>div{min-width:0}.dp-review-dialog .modal-header .btn-modal-close{min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center}.dp-missing-group{border-left:3px solid var(--dp-danger-color,var(--red-600,#b42318));padding-left:12px;margin:12px 0 16px}.dp-shortage-list p{margin-bottom:8px}.dp-review-dialog summary:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
       .dp-warning{color:var(--orange-700,#9a4d00)}
       .dp-add {grid-template-columns:3fr 1fr auto;align-items:end}
       .daily-production label {display:block;font-size:14px;font-weight:600;margin-bottom:6px}
@@ -60,16 +65,16 @@ class DailyProductionScreen {
       .dp-row {display:grid;grid-template-columns:minmax(0,1fr) 150px minmax(110px,280px) 48px;align-items:center;gap:16px}
       .dp-row-name {font-weight:600;overflow-wrap:anywhere}.dp-meta {font-size:13px;color:var(--text-muted);margin-top:4px;overflow-wrap:anywhere}
       .dp-top-status{display:flex;justify-content:flex-end;margin-bottom:12px}.dp-status-pill{font-size:13px;padding:6px 12px;white-space:nowrap}
-      .dp-feedback {margin:8px 0;overflow-wrap:anywhere}.dp-feedback:empty{display:none}.dp-save-status{font-size:13px;color:var(--text-muted);margin-left:10px}.dp-save-status:empty{display:none}.dp-summary-line{display:flex;align-items:center;flex-wrap:wrap;gap:4px}.dp-error {color:var(--red-600,#b42318)}
-      .dp-bottom {position:fixed;bottom:0;left:0;right:0;background:var(--card-bg);border-top:1px solid var(--border-color);padding:12px max(16px,env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom));z-index:100}
+      .dp-feedback {margin:8px 0;overflow-wrap:anywhere}.dp-feedback:empty{display:none}.dp-save-status{font-size:13px;color:var(--text-muted);margin-left:10px}.dp-save-status:empty{display:none}.dp-summary-line{display:flex;align-items:center;flex-wrap:wrap;gap:4px}.dp-error {color:var(--dp-danger-color,var(--red-600,#b42318))}
+      .dp-bottom {position:fixed;bottom:0;left:var(--dp-footer-left,0px);right:var(--dp-footer-right,0px);background:var(--card-bg);border-top:1px solid var(--border-color);padding:12px max(16px,env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom));z-index:100}
       .dp-bottom-inner {max-width:1030px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
       .dp-actions {display:flex;gap:8px}.dp-empty {text-align:center;padding:40px 20px}
       .dp-history {margin:12px 0}.dp-row input {width:100%}.dp-state {overflow-wrap:anywhere}.dp-state a {display:block;min-height:44px;padding-top:8px;text-decoration:underline}
       .daily-production button:focus-visible,.daily-production input:focus-visible {outline:2px solid var(--primary);outline-offset:2px}
-      @media(max-width:640px){.dp-warehouses{grid-template-columns:1fr;gap:12px}.dp-context{grid-template-columns:1fr 1fr}.dp-station{grid-column:1/-1}.dp-add{grid-template-columns:1fr 100px}.dp-item-picker{grid-column:1/-1}.dp-row{grid-template-columns:1fr 110px;gap:12px}.dp-row .dp-state{grid-column:1}.dp-remove{grid-column:2;justify-self:end}.dp-actions{flex-wrap:wrap}.dp-bottom-inner{align-items:center}.dp-empty{padding:24px 12px}.dp-bottom-inner{display:grid;grid-template-columns:1fr;gap:8px}.dp-actions{display:grid;grid-template-columns:1fr 1.4fr}.dp-summary{font-size:14px}.daily-production{padding-bottom:160px}}
-      .dp-settings-bar{display:none}.dp-field-error:empty{display:none}.dp-field-error{color:var(--red-600,#b42318);font-size:13px;line-height:1.4;margin-top:6px;overflow-wrap:anywhere}.daily-production [aria-invalid="true"]{border:1px solid var(--red-600,#b42318)}
-      .dp-table-wrap{border:1px solid var(--border-color);border-radius:12px;overflow:hidden;background:var(--card-bg);margin-bottom:12px}.dp-table{width:100%;table-layout:fixed;border-collapse:collapse}.dp-table th{font-size:13px;color:var(--text-muted);font-weight:600;text-align:left;padding:10px 12px;background:var(--subtle-fg,var(--card-bg));border-bottom:1px solid var(--border-color)}.dp-table .dp-row{display:table-row;border:0;border-radius:0;margin:0;padding:0}.dp-table td{padding:8px 12px;vertical-align:middle;border-bottom:1px solid var(--border-color)}.dp-table tbody tr:last-child td{border-bottom:0}.dp-table .dp-quantity-col{width:150px}.dp-table .dp-state-col{width:200px}.dp-table .dp-action-col{width:72px}.dp-table .dp-qty-label{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}.dp-table .dp-row-error td{padding-top:0}.dp-table .dp-state a{min-height:44px}.dp-table .dp-remove{width:48px}.dp-table .dp-meta{margin-top:2px}.dp-table .dp-row-name{line-height:1.35}
-      .dp-review-dialog .modal-body{overscroll-behavior:contain}.dp-review-dialog .modal-dialog{margin:16px auto}.dp-review-dialog .modal-content{overflow:hidden;display:flex;flex-direction:column;max-height:calc(100dvh - 32px)}.dp-review-dialog .modal-header,.dp-review-dialog .modal-footer{flex-shrink:0}.dp-review-dialog .modal-body{min-height:0;overflow-y:auto;max-height:none}.dp-review-dialog .dp-blockers{border-left:3px solid var(--red-600,#b42318);padding-left:12px;margin-bottom:20px}.dp-blockers h4{margin-top:0}.dp-blocker-group{margin-top:12px}.dp-blocker-list{padding-left:18px;margin:6px 0 0}.dp-blocker-list li{margin-bottom:10px;line-height:1.4}.dp-blocker-reasons{font-size:13px;color:var(--red-600,#b42318);margin-top:3px}.dp-blocker-numbers{display:flex;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--text-color);margin-top:4px}.dp-review-context{font-size:13px;color:var(--text-muted);line-height:1.6;margin-bottom:16px}
+      @media(max-width:640px){.dp-bottom{left:0;right:0}.dp-warehouses{grid-template-columns:1fr;gap:12px}.dp-context{grid-template-columns:1fr 1fr}.dp-station{grid-column:1/-1}.dp-add{grid-template-columns:1fr 100px}.dp-item-picker{grid-column:1/-1}.dp-row{grid-template-columns:1fr 110px;gap:12px}.dp-row .dp-state{grid-column:1}.dp-remove{grid-column:2;justify-self:end}.dp-actions{flex-wrap:wrap}.dp-bottom-inner{align-items:center}.dp-empty{padding:24px 12px}.dp-bottom-inner{display:grid;grid-template-columns:1fr;gap:8px}.dp-actions{display:grid;grid-template-columns:1fr 1.4fr}.dp-summary{font-size:14px}.daily-production{padding-bottom:160px}}
+      .dp-settings-bar{display:none}.dp-field-error:empty{display:none}.dp-field-error{color:var(--dp-danger-color,var(--red-600,#b42318));font-size:13px;line-height:1.4;margin-top:6px;overflow-wrap:anywhere}.daily-production [aria-invalid="true"]{border:1px solid var(--dp-danger-color,var(--red-600,#b42318))}
+      .dp-table-wrap{border:1px solid var(--border-color);border-radius:12px;overflow:clip;background:var(--card-bg);margin-bottom:12px}.dp-table{width:100%;table-layout:fixed;border-collapse:collapse}.dp-table th{position:sticky;top:48px;z-index:2;font-size:13px;color:var(--text-muted);font-weight:600;text-align:left;padding:10px 12px;background:var(--subtle-fg,var(--card-bg));border-bottom:1px solid var(--border-color)}.dp-table .dp-row{display:table-row;border:0;border-radius:0;margin:0;padding:0}.dp-table td{padding:8px 12px;vertical-align:middle;border-bottom:1px solid var(--border-color)}.dp-table tbody tr:last-child td{border-bottom:0}.dp-table .dp-quantity-col{width:150px}.dp-table .dp-state-col{width:200px}.dp-table .dp-action-col{width:72px}.dp-table .dp-qty-label{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}.dp-table .dp-row-error td{padding-top:0}.dp-table .dp-state a{min-height:44px}.dp-table .dp-remove{width:48px}.dp-table .dp-meta{margin-top:2px}.dp-table .dp-row-name{line-height:1.35}
+      .dp-review-dialog .modal-body{overscroll-behavior:contain}.dp-review-dialog .modal-dialog{margin:16px auto}.dp-review-dialog .modal-content{overflow:hidden;display:flex;flex-direction:column;max-height:calc(100dvh - 32px)}.dp-review-dialog .modal-header,.dp-review-dialog .modal-footer{flex-shrink:0}.dp-review-dialog .modal-body{min-height:0;overflow-y:auto;max-height:none}.dp-review-dialog .dp-blockers{border-left:3px solid var(--dp-danger-color,var(--red-600,#b42318));padding-left:12px;margin-bottom:20px}.dp-blockers h4{margin-top:0}.dp-blocker-group{margin-top:12px}.dp-blocker-list{padding-left:18px;margin:6px 0 0}.dp-blocker-list li{margin-bottom:10px;line-height:1.4}.dp-blocker-reasons{font-size:13px;color:var(--dp-danger-color,var(--red-600,#b42318));margin-top:3px}.dp-blocker-numbers{display:flex;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--text-color);margin-top:4px}.dp-review-context{font-size:13px;color:var(--text-muted);line-height:1.6;margin-bottom:16px}
       @media(max-width:640px){.dp-settings{border:1px solid var(--border-color);border-radius:12px;padding:12px;margin-bottom:16px;background:var(--card-bg)}.dp-settings-bar{display:flex;align-items:center;gap:12px;justify-content:space-between}.dp-settings-summary{min-width:0;font-size:14px;overflow-wrap:anywhere}.dp-settings-summary small{display:block;color:var(--text-muted);margin-top:4px;font-size:12px}.dp-settings-toggle{flex-shrink:0}.dp-settings.is-collapsed .dp-settings-fields{display:none}.dp-settings:not(.is-collapsed) .dp-settings-fields{padding-top:12px}.dp-settings .dp-context{padding:0;border:0;border-radius:0}.dp-settings .dp-warehouses{margin-bottom:0}.dp-table-wrap{border:0;background:transparent;overflow:visible}.dp-table,.dp-table tbody{display:block;width:100%}.dp-table thead,.dp-table colgroup{display:none}.dp-table .dp-row{display:grid;grid-template-columns:minmax(0,1fr) 110px;gap:12px;border:1px solid var(--border-color);border-radius:12px;margin-bottom:12px;padding:16px;background:var(--card-bg)}.dp-table td{display:block;border:0;padding:0;min-width:0}.dp-table .dp-qty-label{position:static;width:auto;height:auto;clip:auto;white-space:normal;margin-bottom:6px}.dp-table .dp-state{grid-column:1}.dp-table .dp-action-cell{grid-column:2;justify-self:end}.dp-table .dp-row-error{display:block;margin:-4px 0 12px;padding:12px 16px;border:1px solid var(--border-color);border-radius:12px;background:var(--card-bg)}.dp-table .dp-row-error td{padding:0}.dp-blocker-numbers{gap:8px}}
     </style>
     <div class="dp-top-status"><span class="indicator-pill gray dp-status-pill" role="status" aria-live="polite">${__('Loading')}</span></div>
@@ -114,6 +119,17 @@ class DailyProductionScreen {
   feedback(text,error=false){
     this.root.find('.dp-feedback').attr('role',error?'alert':'status').attr('aria-live',error?'assertive':'polite').text(error?text:'').toggleClass('dp-error',error);
     this.root.find('.dp-save-status').text(error?__('Needs attention'):text);
+  }
+  activate(){
+    document.body.classList.add('dp-entry-active');
+    document.scrollingElement.scrollTop=0;
+    this.alignFooter();
+  }
+  alignFooter(){
+    if(!this.root[0]?.getClientRects().length)return;
+    const rect=this.root[0].getBoundingClientRect();
+    this.root[0].style.setProperty('--dp-footer-left',`${Math.max(0,rect.left)}px`);
+    this.root[0].style.setProperty('--dp-footer-right',`${Math.max(0,window.innerWidth-rect.right)}px`);
   }
   renderSettings(){
     const ready=Boolean(this.station?.get_value()&&this.sourceWarehouse?.get_value()&&this.targetWarehouse?.get_value());
@@ -250,7 +266,7 @@ class DailyProductionScreen {
     const editable=this.doc.status==='Draft';
     const statusColor={'Draft':'gray','Queued':'blue','Posted':'green','Partially Posted':'orange','Failed':'red'}[this.doc.status]||'gray';
     this.root.find('.dp-status-pill').attr('class',`indicator-pill ${statusColor} dp-status-pill`).text(__(this.doc.status));
-    this.renderSettings();
+    this.renderSettings();this.alignFooter();
     const rows=this.doc.items.map((r,i)=>`<tr class="dp-row"><td><div class="dp-row-name">${this.esc(r.item_name||r.item_code)}</div><div class="dp-meta">${this.esc(r.item_code)} · ${this.esc(r.uom||'')}</div></td><td><label class="dp-qty-label" for="dp-qty-${i}">${__('Quantity')}<span class="sr-only"> — ${this.esc(r.item_code)}</span></label><input id="dp-qty-${i}" class="form-control dp-qty" data-index="${i}" type="number" inputmode="decimal" step="any" min="0" value="${this.esc(r.qty)}" ${editable?'':'disabled'}><div class="dp-field-error" id="dp-qty-error-${i}"></div></td><td class="dp-state">${this.esc(r.status||'Pending')}${r.stock_entry?`<a href="${this.esc(frappe.utils.get_form_link('Stock Entry',r.stock_entry))}">${this.esc(r.stock_entry)}</a>`:''}</td><td class="dp-action-cell">${editable?`<button class="btn btn-default dp-remove" data-index="${i}" aria-label="${this.esc(__('Remove {0}',[r.item_code]))}">×</button>`:''}</td></tr>${r.error?`<tr class="dp-error dp-row-error"><td colspan="4">${this.esc(this.errorMessage(r.error))}</td></tr>`:''}`).join('');
     this.root.find('.dp-rows').html(this.doc.items.length?`<div class="dp-table-wrap"><table class="dp-table" aria-label="${__('Production items')}"><colgroup><col><col class="dp-quantity-col"><col class="dp-state-col"><col class="dp-action-col"></colgroup><thead><tr><th scope="col">${__('Item')}</th><th scope="col">${__('Produced quantity')}</th><th scope="col">${__('Status')}</th><th scope="col"><span class="sr-only">${__('Actions')}</span></th></tr></thead><tbody>${rows}</tbody></table></div>`:`<div class="dp-empty"><strong>${__('Start with an item and quantity')}</strong><p class="dp-meta">${__('Add each completed item. You can post one item now or several together.')}</p></div>`);
     this.root.find('.dp-summary').text(`${this.doc.items.length} ${this.doc.items.length===1?__('item'):__('items')}`);
@@ -271,6 +287,8 @@ class DailyProductionScreen {
     if(!this.doc.items.length){this.fieldError('.dp-item-picker input',__('Add at least one item to this sheet.'));return false;}
     if(!this.root.find('#dp-date').val()){this.settingsCollapsed=false;this.renderSettings();this.fieldError('#dp-date',__('Choose a production date.'));return false;}
     if(!this.validateQuantities()){this.feedback(__('Check the highlighted quantities.'),true);return false;}
+    const active=typeof document!=='undefined'?document.activeElement:null;
+    const restoreId=active?.id&&this.root[0]?.contains(active)?active.id:null;
     this.busy=true;this.root.find('input,button').prop('disabled',true);this.feedback(__('Saving…'));
     try {
       this.doc.source_warehouse=this.sourceWarehouse.get_value();this.doc.target_warehouse=this.targetWarehouse.get_value();
@@ -278,7 +296,7 @@ class DailyProductionScreen {
       const saved=await this.call('frappe.client.save',{doc:this.doc});
       this.doc=saved;this.dirty=false;this.rememberSheet(saved.name);this.feedback(__('Saved'));this.renderRows();return true;
     }catch(e){this.feedback(__('Not saved. Your changes remain on this screen. Check the connection and retry.'),true);return false;}
-    finally{this.busy=false;this.root.find('input,button').prop('disabled',false);this.renderRows();}
+    finally{this.busy=false;this.root.find('input,button').prop('disabled',false);this.renderRows();if(restoreId&&this.root[0]?.getClientRects().length)document.getElementById(restoreId)?.focus({preventScroll:true});}
   }
   async review(){
     if(this.busy)return;

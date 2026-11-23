@@ -38,6 +38,11 @@ class DailyProductionScreen {
     });
   }
   esc(value) { return frappe.utils.escape_html(String(value ?? '')); }
+  errorMessage(error){
+    const message=String(error).replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim();
+    if(/allow zero valuation|allow_zero_valuation|valuation rate for|valuation rate missing/i.test(message))return __('Material valuation is missing. Ask the inventory or accounts team to record the correct incoming material cost, then review production again. Posting remains blocked until a valid cost is available.');
+    return message;
+  }
   async call(method, args) { return (await frappe.call({method, args})).message; }
   renderShell() {
     this.root.html(`<style>
@@ -246,7 +251,7 @@ class DailyProductionScreen {
     const statusColor={'Draft':'gray','Queued':'blue','Posted':'green','Partially Posted':'orange','Failed':'red'}[this.doc.status]||'gray';
     this.root.find('.dp-status-pill').attr('class',`indicator-pill ${statusColor} dp-status-pill`).text(__(this.doc.status));
     this.renderSettings();
-    const rows=this.doc.items.map((r,i)=>`<tr class="dp-row"><td><div class="dp-row-name">${this.esc(r.item_name||r.item_code)}</div><div class="dp-meta">${this.esc(r.item_code)} · ${this.esc(r.uom||'')}</div></td><td><label class="dp-qty-label" for="dp-qty-${i}">${__('Quantity')}<span class="sr-only"> — ${this.esc(r.item_code)}</span></label><input id="dp-qty-${i}" class="form-control dp-qty" data-index="${i}" type="number" inputmode="decimal" step="any" min="0" value="${this.esc(r.qty)}" ${editable?'':'disabled'}><div class="dp-field-error" id="dp-qty-error-${i}"></div></td><td class="dp-state">${this.esc(r.status||'Pending')}${r.stock_entry?`<a href="${this.esc(frappe.utils.get_form_link('Stock Entry',r.stock_entry))}">${this.esc(r.stock_entry)}</a>`:''}</td><td class="dp-action-cell">${editable?`<button class="btn btn-default dp-remove" data-index="${i}" aria-label="${this.esc(__('Remove {0}',[r.item_code]))}">×</button>`:''}</td></tr>${r.error?`<tr class="dp-error dp-row-error"><td colspan="4">${this.esc(String(r.error).replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim())}</td></tr>`:''}`).join('');
+    const rows=this.doc.items.map((r,i)=>`<tr class="dp-row"><td><div class="dp-row-name">${this.esc(r.item_name||r.item_code)}</div><div class="dp-meta">${this.esc(r.item_code)} · ${this.esc(r.uom||'')}</div></td><td><label class="dp-qty-label" for="dp-qty-${i}">${__('Quantity')}<span class="sr-only"> — ${this.esc(r.item_code)}</span></label><input id="dp-qty-${i}" class="form-control dp-qty" data-index="${i}" type="number" inputmode="decimal" step="any" min="0" value="${this.esc(r.qty)}" ${editable?'':'disabled'}><div class="dp-field-error" id="dp-qty-error-${i}"></div></td><td class="dp-state">${this.esc(r.status||'Pending')}${r.stock_entry?`<a href="${this.esc(frappe.utils.get_form_link('Stock Entry',r.stock_entry))}">${this.esc(r.stock_entry)}</a>`:''}</td><td class="dp-action-cell">${editable?`<button class="btn btn-default dp-remove" data-index="${i}" aria-label="${this.esc(__('Remove {0}',[r.item_code]))}">×</button>`:''}</td></tr>${r.error?`<tr class="dp-error dp-row-error"><td colspan="4">${this.esc(this.errorMessage(r.error))}</td></tr>`:''}`).join('');
     this.root.find('.dp-rows').html(this.doc.items.length?`<div class="dp-table-wrap"><table class="dp-table" aria-label="${__('Production items')}"><colgroup><col><col class="dp-quantity-col"><col class="dp-state-col"><col class="dp-action-col"></colgroup><thead><tr><th scope="col">${__('Item')}</th><th scope="col">${__('Produced quantity')}</th><th scope="col">${__('Status')}</th><th scope="col"><span class="sr-only">${__('Actions')}</span></th></tr></thead><tbody>${rows}</tbody></table></div>`:`<div class="dp-empty"><strong>${__('Start with an item and quantity')}</strong><p class="dp-meta">${__('Add each completed item. You can post one item now or several together.')}</p></div>`);
     this.root.find('.dp-summary').text(`${this.doc.items.length} ${this.doc.items.length===1?__('item'):__('items')}`);
     this.root.find('.dp-add,.dp-paste').toggle(editable);

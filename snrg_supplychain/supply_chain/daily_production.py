@@ -100,6 +100,16 @@ def make_entry(doc, row, config, pin=False):
     return entry
 
 
+def production_error_message(error):
+    """Operator guidance must never suggest bypassing material valuation."""
+    import re
+    message = re.sub(r'<[^>]*>', ' ', str(error))
+    message = re.sub(r'\s+', ' ', message).strip()
+    if any(term in message.lower() for term in ('allow zero valuation', 'allow_zero_valuation', 'valuation rate for', 'valuation rate missing')):
+        return 'Material valuation is missing. Ask the inventory or accounts team to record the correct incoming material cost, then review production again. Posting remains blocked until a valid cost is available.'
+    return message[:1000]
+
+
 def valuation_issues(entry):
     """Use the same outgoing-rate resolver as Stock Entry without writing stock."""
     from erpnext.stock.utils import _get_incoming_rate
@@ -114,7 +124,7 @@ def valuation_issues(entry):
                 _get_incoming_rate(entry.get_args_for_incoming_rate(detail), raise_error_if_no_rate=True)
             except frappe.ValidationError as exc:
                 issues.append(dict(item_code=detail.item_code,item_name=detail.item_name,
-                    warehouse=detail.s_warehouse,message=frappe.utils.strip_html(str(exc))))
+                    warehouse=detail.s_warehouse,message=production_error_message(exc)))
     finally:
         frappe.flags.mute_messages = muted
     return issues
@@ -242,7 +252,7 @@ def process(name, user):
             doc = locked(name)
             row = next(r for r in doc.items if r.name == row_name)
             if row.status != 'Posted':
-                row.status,row.error = 'Failed',str(exc)[:1000]
+                row.status,row.error = 'Failed',production_error_message(exc)
                 save_internal(doc)
             frappe.db.commit()
     doc = locked(name)

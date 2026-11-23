@@ -31,6 +31,12 @@ class ProductionTests(unittest.TestCase):
         self.mods = patch.dict(sys.modules,{'erpnext':types.ModuleType('erpnext'),'erpnext.stock':types.ModuleType('erpnext.stock'),'erpnext.stock.utils':self.stock});self.mods.start();self.addCleanup(self.mods.stop)
     def entry(self,qty,item='POLYMER'):
         return Obj(bom_no='BOM-A',items=[Obj(item_code=item,item_name=item,s_warehouse='Raw',transfer_qty=qty,stock_uom='Kg')])
+    def test_valuation_failure_never_suggests_bypassing_cost(self):
+        message=service.production_error_message("Valuation Rate for the Item <b>RAW</b> is required. Please enable 'Allow Zero Valuation Rate'.")
+        self.assertNotIn('Allow Zero',message)
+        self.assertIn('Posting remains blocked',message)
+        self.assertEqual(service.production_error_message('Insufficient materials.'),'Insufficient materials.')
+
     def test_combined_shortage(self):
         with patch.object(service,'make_entry',side_effect=[self.entry(30),self.entry(40)]):result=service.review_doc(self.doc,self.config)
         self.assertEqual(result['shortages'][0]['required'],70)

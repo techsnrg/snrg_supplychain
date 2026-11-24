@@ -5,6 +5,8 @@ from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 
 def after_migrate():
     create_custom_fields({'Stock Entry': [
+        dict(fieldname='custom_bulk_disassembly',label='Bulk Disassembly',fieldtype='Link',options='Bulk Disassembly',insert_after='work_order',read_only=1,no_copy=1),
+        dict(fieldname='custom_bulk_disassembly_row',label='Bulk Disassembly Row',fieldtype='Data',insert_after='custom_bulk_disassembly',read_only=1,hidden=1,unique=1,no_copy=1),
         dict(fieldname='custom_daily_production',label='Bulk Production',fieldtype='Link',options='Daily Production',insert_after='work_order',read_only=1,no_copy=1),
         dict(fieldname='custom_daily_production_row',label='Bulk Production Row',fieldtype='Data',insert_after='custom_daily_production',read_only=1,hidden=1,unique=1,no_copy=1),
     ]})

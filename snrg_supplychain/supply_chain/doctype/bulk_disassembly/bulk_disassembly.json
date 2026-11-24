@@ -1,0 +1,136 @@
+{
+  "doctype": "DocType",
+  "name": "Bulk Disassembly",
+  "module": "Supply Chain",
+  "engine": "InnoDB",
+  "field_order": [
+    "station",
+    "company",
+    "source_warehouse",
+    "target_warehouse",
+    "posting_date",
+    "posting_time",
+    "shift",
+    "status",
+    "settings_snapshot",
+    "items",
+    "notes"
+  ],
+  "fields": [
+    {
+      "fieldname": "station",
+      "fieldtype": "Link",
+      "label": "Station",
+      "options": "Production Station",
+      "reqd": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "company",
+      "fieldtype": "Link",
+      "label": "Company",
+      "options": "Company",
+      "read_only": 1,
+      "reqd": 1
+    },
+    {
+      "fieldname": "posting_date",
+      "fieldtype": "Date",
+      "label": "Posting Date",
+      "default": "Today",
+      "reqd": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "posting_time",
+      "fieldtype": "Time",
+      "label": "Posting Time",
+      "reqd": 1
+    },
+    {
+      "fieldname": "shift",
+      "fieldtype": "Data",
+      "label": "Shift"
+    },
+    {
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "label": "Status",
+      "options": "Draft\nQueued\nPosted\nPartially Posted\nFailed",
+      "default": "Draft",
+      "read_only": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "settings_snapshot",
+      "fieldtype": "Long Text",
+      "label": "Settings Snapshot",
+      "hidden": 1,
+      "read_only": 1
+    },
+    {
+      "fieldname": "items",
+      "fieldtype": "Table",
+      "label": "Items",
+      "options": "Bulk Disassembly Item",
+      "reqd": 1
+    },
+    {
+      "fieldname": "notes",
+      "fieldtype": "Small Text",
+      "label": "Notes"
+    },
+    {
+      "fieldname": "source_warehouse",
+      "label": "Source Warehouse",
+      "fieldtype": "Link",
+      "options": "Warehouse",
+      "reqd": 1
+    },
+    {
+      "fieldname": "target_warehouse",
+      "label": "Target Warehouse",
+      "fieldtype": "Link",
+      "options": "Warehouse",
+      "reqd": 1
+    }
+  ],
+  "autoname": "BDIS-.YYYY.-.#####",
+  "track_changes": 1,
+  "permissions": [
+    {
+      "role": "Manufacturing User",
+      "read": 1,
+      "write": 1,
+      "create": 1,
+      "report": 1,
+      "export": 1
+    },
+    {
+      "role": "Manufacturing Manager",
+      "read": 1,
+      "write": 1,
+      "create": 1,
+      "report": 1,
+      "export": 1
+    },
+    {
+      "role": "Stock Manager",
+      "read": 1,
+      "write": 1,
+      "create": 1,
+      "report": 1,
+      "export": 1
+    },
+    {
+      "role": "System Manager",
+      "read": 1,
+      "write": 1,
+      "create": 1,
+      "report": 1,
+      "export": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC"
+}

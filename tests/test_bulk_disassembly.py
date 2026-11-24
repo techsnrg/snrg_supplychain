@@ -1,0 +1,114 @@
+"""Service regressions without a bench; ERP ledger acceptance is separate."""
+import importlib
+import sys
+import types
+import unittest
+from unittest.mock import Mock, patch
+from pathlib import Path
+sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
+frappe = types.ModuleType('frappe')
+frappe.whitelist = lambda *a, **k: lambda fn: fn
+frappe.PermissionError = PermissionError
+frappe.throw = lambda message, *args: (_ for _ in ()).throw(ValueError(message))
+frappe.request = None
+utils = types.ModuleType('frappe.utils')
+utils.cint = int
+utils.flt = lambda value: float(value or 0)
+utils.nowtime = lambda: '10:00:00'
+sys.modules.setdefault('frappe',frappe)
+sys.modules.setdefault('frappe.utils',utils)
+service = importlib.import_module('snrg_supplychain.supply_chain.bulk_disassembly')
+class Obj(types.SimpleNamespace):
+    def get(self,key,default=None): return getattr(self,key,default)
+frappe.flags = Obj()
+
+class DisassemblyTests(unittest.TestCase):
+    def setUp(self):
+        self.rates = patch.object(service,'valuation_issues',return_value=[]);self.rates.start();self.addCleanup(self.rates.stop)
+        self.config = dict(company='SNRG',source_warehouse='Raw',target_warehouse='Finished',consumption_method='Stocked components',cost_center=None)
+        self.doc = Obj(name='BDIS-1',modified='2026-11-17 10:00:00',posting_date='2026-11-17',posting_time='10:00:00',items=[Obj(name='r1',item_code='A',qty=20,uom='Nos',status='Pending'),Obj(name='r2',item_code='B',qty=40,uom='Nos',status='Pending')])
+        self.stock = types.ModuleType('erpnext.stock.utils');self.stock.get_stock_balance = Mock(return_value=50)
+        self.mods = patch.dict(sys.modules,{'erpnext':types.ModuleType('erpnext'),'erpnext.stock':types.ModuleType('erpnext.stock'),'erpnext.stock.utils':self.stock});self.mods.start();self.addCleanup(self.mods.stop)
+    def entry(self,qty,item='POLYMER'):
+        return Obj(bom_no='BOM-A',items=[Obj(item_code=item,item_name=item,s_warehouse='Raw',t_warehouse=None,is_finished_item=1,transfer_qty=qty,stock_uom='Kg')])
+    def test_valuation_failure_never_suggests_bypassing_cost(self):
+        message=service.production_error_message("Valuation Rate for the Item <b>RAW</b> is required. Please enable 'Allow Zero Valuation Rate'.")
+        self.assertNotIn('Allow Zero',message)
+        self.assertIn('Posting remains blocked',message)
+        self.assertEqual(service.production_error_message('Insufficient materials.'),'Insufficient materials.')
+
+    def test_recovery_is_not_counted_as_outgoing_demand(self):
+        entry=self.entry(2)
+        entry.items.append(Obj(item_code='COMPONENT',item_name='Component',s_warehouse=None,t_warehouse='Target',transfer_qty=4,stock_uom='Nos'))
+        with patch.object(service,'make_entry',return_value=entry): result=service.review_doc(self.doc,self.config)
+        self.assertEqual(result['rows'][0]['materials'][0]['qty'],4)
+        self.assertEqual(result['rows'][0]['consumed'][0]['qty'],2)
+        self.stock.get_stock_balance.assert_called_once()
+
+    def test_zero_rate_blocks_without_bypass_advice(self):
+        self.rates.stop()
+        self.stock._get_incoming_rate=Mock(return_value=0)
+        entry=self.entry(1);entry.get_args_for_incoming_rate=Mock(return_value={})
+        with patch.object(service.frappe,'ValidationError',ValueError,create=True): result=service.valuation_issues(entry)
+        self.assertEqual(len(result),1)
+        self.assertIn('Posting remains blocked',result[0]['message'])
+
+    def test_combined_shortage(self):
+        with patch.object(service,'make_entry',side_effect=[self.entry(30),self.entry(40)]):result=service.review_doc(self.doc,self.config)
+        self.assertEqual(result['shortages'][0]['required'],70)
+        self.stock.get_stock_balance.assert_called_once_with('POLYMER','Raw','2026-11-17','10:00:00')
+    def test_posted_rows_excluded_from_retry_demand(self):
+        self.doc.items[0].status='Posted'
+        with patch.object(service,'make_entry',return_value=self.entry(40)) as make:result=service.review_doc(self.doc,self.config)
+        self.assertEqual(len(result['rows']),1);self.assertFalse(result['shortages']);self.assertEqual(make.call_count,1)
+    def test_dependent_stages_blocked(self):
+        entry=self.entry(20,'B');entry.items[0].is_finished_item=0
+        with patch.object(service,'make_entry',return_value=entry):
+            with self.assertRaisesRegex(ValueError,'Only the finished item'):service.review_doc(self.doc,self.config)
+    def test_review_invalidated_by_settings_or_bom_changes(self):
+        result={'rows':[dict(item_code='A',qty=20,bom_no='BOM-A',materials=[])]};before=service.review_token(self.doc,self.config,result)
+        self.assertNotEqual(before,service.review_token(self.doc,dict(self.config,consumption_method='Expanded raw materials'),result))
+        result['rows'][0]['bom_no']='BOM-A-NEW';self.assertNotEqual(before,service.review_token(self.doc,self.config,result))
+    def test_posted_row_never_submits_again(self):
+        doc=Obj(items=[Obj(name='r1',status='Posted')],flags=Obj(),save=Mock());db=Obj(commit=Mock(),rollback=Mock())
+        with patch.multiple(service.frappe,set_user=Mock(),get_doc=Mock(return_value=doc),db=db,create=True),patch.object(service,'locked',return_value=doc),patch.object(service,'allowed'),patch.object(service,'make_entry') as make:service.process('BDIS-1','operator@example.com')
+        make.assert_not_called();self.assertEqual(doc.status,'Posted')
+    def test_submission_failure_rolls_back_and_other_row_continues(self):
+        doc=self.doc
+        doc.flags=Obj();doc.save=Mock();doc.settings_snapshot=__import__('json').dumps(self.config)
+        db=Obj(commit=Mock(),rollback=Mock())
+        entry=Obj(name='MAT-STE-1',insert=Mock(),submit=Mock())
+        with patch.multiple(service.frappe,set_user=Mock(),get_doc=Mock(return_value=doc),db=db,create=True),patch.object(service,'locked',return_value=doc),patch.object(service,'allowed'),patch.object(service,'settings',return_value=self.config),patch.object(service,'check_entry_stock',return_value=[]),patch.object(service,'make_entry',side_effect=[ValueError('Insufficient stock'),entry]):
+            service.process('BDIS-1','operator@example.com')
+        db.rollback.assert_called_once()
+        self.assertEqual(doc.items[0].status,'Failed')
+        self.assertEqual(doc.items[1].stock_entry,'MAT-STE-1')
+        self.assertEqual(doc.status,'Partially Posted')
+        entry.submit.assert_called_once()
+    def test_post_rejects_shortages_before_queueing(self):
+        self.doc.settings_snapshot=None;self.doc.status='Draft'
+        preview=dict(shortages=[dict(item_code='POLYMER')],valuation_issues=[])
+        enqueue=Mock()
+        with patch.object(service,'locked',return_value=self.doc),patch.object(service,'allowed'),patch.object(service,'settings',return_value=self.config),patch.object(service,'review_doc',return_value=preview),patch.object(service.frappe,'enqueue',enqueue,create=True):
+            with self.assertRaisesRegex(ValueError,'Insufficient materials'):service.post(self.doc.name,'old-token')
+        enqueue.assert_not_called()
+
+    def test_stock_depleted_after_review_never_submits(self):
+        self.doc.flags=Obj();self.doc.save=Mock();self.doc.settings_snapshot=__import__('json').dumps(self.config)
+        db=Obj(commit=Mock(),rollback=Mock())
+        entry=Obj(insert=Mock(),submit=Mock())
+        shortages=[dict(item_code='POLYMER',required=70,available=50,warehouse='Raw')]
+        with patch.multiple(service.frappe,set_user=Mock(),get_doc=Mock(return_value=self.doc),db=db,create=True),patch.object(service,'locked',return_value=self.doc),patch.object(service,'allowed'),patch.object(service,'settings',return_value=self.config),patch.object(service,'check_entry_stock',return_value=shortages),patch.object(service,'make_entry',return_value=entry):
+            service.process(self.doc.name,'operator@example.com')
+        entry.insert.assert_not_called();entry.submit.assert_not_called()
+        self.assertEqual(self.doc.status,'Failed')
+        self.assertTrue(all('Insufficient materials' in row.error for row in self.doc.items))
+
+    def test_worker_detects_shortage_for_submission_guard(self):
+        entry=self.entry(70);entry.posting_date='2026-11-17';entry.posting_time='10:00:00'
+        with patch.object(service.frappe,'db',Obj(sql=Mock()),create=True):
+            warnings=service.check_entry_stock(entry)
+        self.assertEqual(warnings[0]['required'],70)
+        self.assertEqual(warnings[0]['available'],50)
+
+if __name__=='__main__':unittest.main()

@@ -1,0 +1,22 @@
+{
+  "doctype": "Page",
+  "name": "bulk-disassembly-entry",
+  "page_name": "bulk-disassembly-entry",
+  "title": "Bulk Disassembly",
+  "module": "Supply Chain",
+  "standard": "Yes",
+  "roles": [
+    {
+      "role": "Manufacturing User"
+    },
+    {
+      "role": "Manufacturing Manager"
+    },
+    {
+      "role": "Stock Manager"
+    },
+    {
+      "role": "System Manager"
+    }
+  ]
+}

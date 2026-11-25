@@ -111,4 +111,22 @@ class DisassemblyTests(unittest.TestCase):
         self.assertEqual(warnings[0]['required'],70)
         self.assertEqual(warnings[0]['available'],50)
 
+    def test_delete_draft_requires_delete_permission(self):
+        doc=Obj(status='Draft',check_permission=Mock(side_effect=PermissionError('denied')))
+        with patch.object(service,'locked',return_value=doc),patch.object(service.frappe,'delete_doc',create=True) as delete:
+            with self.assertRaises(PermissionError):service.delete_draft('draft')
+            delete.assert_not_called()
+
+    def test_delete_draft_only_deletes_draft(self):
+        for status in ('Queued','Posted','Partially Posted','Failed'):
+            doc=Obj(status=status,check_permission=Mock())
+            with patch.object(service,'locked',return_value=doc),patch.object(service.frappe,'delete_doc',create=True) as delete:
+                with self.assertRaisesRegex(ValueError,'Only unposted drafts'):service.delete_draft('draft')
+                delete.assert_not_called()
+        doc=Obj(status='Draft',check_permission=Mock())
+        with patch.object(service,'locked',return_value=doc),patch.object(service.frappe,'delete_doc',create=True) as delete:
+            self.assertEqual(service.delete_draft('draft'),dict(name='draft',deleted=True))
+            doc.check_permission.assert_called_once_with('delete')
+            delete.assert_called_once_with(service.DT,'draft')
+
 if __name__=='__main__':unittest.main()

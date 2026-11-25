@@ -260,3 +260,16 @@ def process(name, user):
     doc.status = 'Posted' if posted == len(doc.items) else 'Partially Posted' if posted else 'Failed'
     save_internal(doc)
     frappe.db.commit()
+
+
+@frappe.whitelist()
+def delete_draft(name):
+    """Serialize deletion against posting and enforce native delete permissions."""
+    if frappe.request and frappe.request.method != 'POST':
+        frappe.throw('Use POST to delete a draft.')
+    doc = locked(name)
+    doc.check_permission('delete')
+    if doc.status != 'Draft':
+        frappe.throw('Only unposted drafts can be deleted.')
+    frappe.delete_doc(DT, name)
+    return dict(name=name, deleted=True)

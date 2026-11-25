@@ -25,6 +25,7 @@ class DailyProductionScreen {
     if(window.ResizeObserver){this.footerObserver=new ResizeObserver(()=>this.alignFooter());this.footerObserver.observe(this.root[0]);}
     window.addEventListener('resize',()=>this.alignFooter());
     this.page.add_menu_item(__('New sheet'), () => this.startNew());
+    this.deleteDraftMenu=this.page.add_menu_item(__('Delete draft'), () => this.deleteDraft());
     this.page.add_menu_item(__('Paste from Excel'), () => this.paste());
     this.page.add_menu_item(__('Sheet details'), () => {if(this.doc?.name)frappe.set_route('Form','Daily Production',this.doc.name);else frappe.msgprint(__('Save this sheet to view its details.'));});
     this.page.add_menu_item(__('Production history'), () => frappe.set_route('List', 'Daily Production'));
@@ -154,6 +155,20 @@ class DailyProductionScreen {
     this.doc.items.forEach((row,index)=>{if(!Number.isFinite(Number(row.qty))||Number(row.qty)<=0){valid=false;this.fieldError(`#dp-qty-${index}`,__('Enter a quantity greater than zero.'));}});
     return valid;
   }
+  async deleteDraft(){
+    if(this.busy||this.loading||!this.doc?.name||this.doc.status!=='Draft')return;
+    const name=this.doc.name;
+    frappe.confirm(__('Delete draft {0}? This permanently removes the sheet and its unsaved changes. No stock will be posted.',[this.esc(name)]),async()=>{
+      if(this.busy||this.loading||this.doc?.name!==name||this.doc.status!=='Draft')return;
+      clearTimeout(this.saveTimer);this.busy=true;this.renderRows();
+      try{
+        await this.call(this.api+'delete_draft',{name});
+        this.dirty=false;this.busy=false;
+        await this.newSheet();this.feedback(__('Draft deleted'));
+      }catch(e){this.feedback(__('Could not delete this draft. It may have changed or you may not have delete permission. Reopen the sheet before trying again.'),true);}
+      finally{this.busy=false;this.renderRows();}
+    });
+  }
   startNew(){
     if(this.busy||this.loading)return;
     if(this.dirty||this.item.get_value()||this.root.find('#dp-add-qty').val())frappe.confirm(__('Discard unsaved changes?'),()=>this.newSheet());
@@ -263,6 +278,7 @@ class DailyProductionScreen {
     finally{this.busy=false;this.renderRows();}
   }
   renderRows(){
+    this.deleteDraftMenu?.toggle(Boolean(this.doc?.name&&this.doc.status==='Draft'&&!this.busy&&!this.loading));
     const editable=this.doc.status==='Draft';
     const statusColor={'Draft':'gray','Queued':'blue','Posted':'green','Partially Posted':'orange','Failed':'red'}[this.doc.status]||'gray';
     this.root.find('.dp-status-pill').attr('class',`indicator-pill ${statusColor} dp-status-pill`).text(__(this.doc.status));

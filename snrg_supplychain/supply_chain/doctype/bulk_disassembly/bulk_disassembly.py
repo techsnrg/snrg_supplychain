@@ -34,5 +34,11 @@ class BulkDisassembly(Document):
                 row.item_name, row.uom = item.item_name, item.stock_uom
 
     def on_trash(self):
-        if self.status != 'Draft':
+        # Protect native deletion as well as the custom screen against a posting race.
+        frappe.db.sql('select name from `tabBulk Disassembly` where name=%s for update', (self.name,))
+        status = frappe.db.get_value(self.doctype, self.name, 'status')
+        if status != 'Draft':
             frappe.throw('Only unposted drafts can be deleted.')
+
+        if frappe.db.exists('Stock Entry', {'custom_bulk_disassembly': self.name}):
+            frappe.throw('This sheet has linked Stock Entries and cannot be deleted.')

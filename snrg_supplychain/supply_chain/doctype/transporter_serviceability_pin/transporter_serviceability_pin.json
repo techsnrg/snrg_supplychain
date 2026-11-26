@@ -1,58 +1,69 @@
 {
- "actions": [],
- "creation": "2026-03-27 12:00:00.000000",
- "doctype": "DocType",
- "engine": "InnoDB",
- "field_order": [
-  "pin_code",
-  "zone",
-  "state",
-  "serviceability",
-  "oda_category"
- ],
- "fields": [
-  {
-   "fieldname": "pin_code",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Pin Code",
-   "reqd": 1
-  },
-  {
-   "fieldname": "zone",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Zone",
-   "description": "Transporter's own zone label (informational)"
-  },
-  {
-   "fieldname": "state",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "State"
-  },
-  {
-   "fieldname": "serviceability",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Serviceability",
-   "options": "SERVICEABLE\nODA\nNSZ",
-   "reqd": 1
-  },
-  {
-   "fieldname": "oda_category",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "ODA Category",
-   "options": "\nS\nA\nB\nC\nD\nE"
-  }
- ],
- "istable": 1,
- "links": [],
- "modified": "2026-03-27 12:00:00.000000",
- "modified_by": "Administrator",
- "module": "Supply Chain",
- "name": "Transporter Serviceability Pin",
- "owner": "Administrator",
- "track_changes": 0
+  "actions": [],
+  "creation": "2026-03-27 12:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "layout_0_section",
+    "pin_code",
+    "zone",
+    "state",
+    "layout_4_column",
+    "serviceability",
+    "oda_category"
+  ],
+  "fields": [
+    {
+      "fieldname": "layout_0_section",
+      "fieldtype": "Section Break",
+      "label": "Details"
+    },
+    {
+      "fieldname": "pin_code",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Pin Code",
+      "reqd": 1
+    },
+    {
+      "fieldname": "zone",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Zone",
+      "description": "Transporter's own zone label (informational)"
+    },
+    {
+      "fieldname": "state",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "State"
+    },
+    {
+      "fieldname": "layout_4_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "serviceability",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "label": "Serviceability",
+      "options": "SERVICEABLE\nODA\nNSZ",
+      "reqd": 1
+    },
+    {
+      "fieldname": "oda_category",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "label": "ODA Category",
+      "options": "\nS\nA\nB\nC\nD\nE"
+    }
+  ],
+  "istable": 1,
+  "links": [],
+  "modified": "2026-03-27 12:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "Supply Chain",
+  "name": "Transporter Serviceability Pin",
+  "owner": "Administrator",
+  "track_changes": 0
 }

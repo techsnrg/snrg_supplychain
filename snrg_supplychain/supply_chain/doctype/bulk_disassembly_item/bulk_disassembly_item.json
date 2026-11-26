@@ -4,16 +4,24 @@
   "module": "Supply Chain",
   "engine": "InnoDB",
   "field_order": [
+    "layout_0_section",
     "item_code",
     "qty",
     "item_name",
     "uom",
+    "layout_5_column",
     "bom_no",
     "stock_entry",
     "status",
+    "layout_9_section",
     "error"
   ],
   "fields": [
+    {
+      "fieldname": "layout_0_section",
+      "fieldtype": "Section Break",
+      "label": "Details"
+    },
     {
       "fieldname": "item_code",
       "fieldtype": "Link",
@@ -43,6 +51,10 @@
       "read_only": 1
     },
     {
+      "fieldname": "layout_5_column",
+      "fieldtype": "Column Break"
+    },
+    {
       "fieldname": "bom_no",
       "fieldtype": "Link",
       "label": "Bom No",
@@ -63,6 +75,11 @@
       "options": "Pending\nPosted\nFailed",
       "default": "Pending",
       "read_only": 1
+    },
+    {
+      "fieldname": "layout_9_section",
+      "fieldtype": "Section Break",
+      "label": "Notes"
     },
     {
       "fieldname": "error",

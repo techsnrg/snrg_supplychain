@@ -1,0 +1,185 @@
+/* Scoped operational-page layout. Standard Desk forms use native metadata layouts. */
+body :is(.daily-production,.bulk-disassembly,.ps2-app,.snrg-invoice-queue) {
+  min-inline-size: 0;
+  inline-size: 100%;
+  overflow-wrap: anywhere;
+}
+body :is(.daily-production,.bulk-disassembly) {
+  max-inline-size: 1280px;
+  margin-inline: auto;
+  padding-inline: clamp(12px, 2vw, 24px);
+  padding-block-start: 20px;
+  scroll-padding-block-end: 180px;
+}
+body :is(.dp-context,.bd-context) {
+  grid-template-columns: minmax(0,2fr) minmax(140px,1fr) minmax(140px,1fr);
+  align-items: start;
+}
+body :is(.dp-add,.bd-add) {
+  grid-template-columns: minmax(0,3fr) minmax(120px,1fr) auto;
+}
+body :is(.dp-warehouses,.bd-warehouses) {
+  grid-template-columns: repeat(2,minmax(0,1fr));
+}
+body :is(.dp-bottom-inner,.bd-bottom-inner) { max-inline-size: none; min-inline-size: 0; }
+body :is(.dp-summary-line,.bd-summary-line) { min-inline-size: 0; overflow-wrap: anywhere; }
+body :is(.dp-actions,.bd-actions) { flex-shrink: 0; }
+body :is(.dp-table,.bd-table) th { text-align: start; }
+body :is(.dp-table,.bd-table) :is(td,th) { overflow-wrap: anywhere; }
+body :is(.dp-table,.bd-table) :is(.dp-action-col,.bd-action-col) { inline-size: 72px; }
+body .ps2-app { max-inline-size: 1280px; padding-inline: clamp(12px,2vw,24px); }
+body :is(.ps2-warehouse-home,.snrg-production-home) {
+  --warehouse-accent: #713aa5;
+  --warehouse-tint: #f4ecfb;
+  max-inline-size: 1440px;
+}
+[data-theme="dark"] :is(.ps2-warehouse-home,.snrg-production-home) {
+  --warehouse-accent: #d3a7f5;
+  --warehouse-tint: #302141;
+}
+body:has(:is(#page-warehouse-home,#page-production-home):not([style*="display: none"]) :is(.ps2-warehouse-home,.snrg-production-home))
+  :is(.body-sidebar,.sidebar-toggle-btn,.sidebar-collapse-arrow) {
+  display: none !important;
+}
+:is(.ps2-warehouse-home,.snrg-production-home) .ps2-work-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(min(100%,165px),1fr));
+  gap: 10px;
+  margin-block-start: 12px;
+}
+:is(.ps2-warehouse-home,.snrg-production-home) .ps2-work-actions .btn {
+  display: inline-flex;
+  inline-size: 100%;
+  min-block-size: 44px;
+  align-items: center;
+  gap: 9px;
+  padding-inline: 14px;
+  white-space: normal;
+  text-align: start;
+  border: 1px solid transparent;
+  background: var(--warehouse-tint);
+  color: var(--warehouse-accent);
+  font-weight: 600;
+}
+:is(.ps2-warehouse-home,.snrg-production-home) .ps2-work-actions :is([data-warehouse-action="shipment"],.ps2-primary-operation) {
+  background: #713aa5;
+  color: white;
+}
+:is(.ps2-warehouse-home,.snrg-production-home) .ps2-work-actions svg {
+  inline-size: 17px;
+  block-size: 17px;
+  flex: 0 0 17px;
+  color: currentColor;
+}
+@media (hover: hover) {
+  :is(.ps2-warehouse-home,.snrg-production-home) .ps2-work-actions .btn:hover {
+    box-shadow: 0 2px 5px oklch(0 0 0 / .09);
+    border-color: currentColor;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  :is(.ps2-warehouse-home,.snrg-production-home) .ps2-work-actions .btn {
+    transition: box-shadow 160ms ease, border-color 160ms ease;
+  }
+}
+:is(.ps2-warehouse-home,.snrg-production-home) .ps2-work-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  border-block-end: 1px solid var(--border-color);
+  margin-block-end: 16px;
+}
+:is(.ps2-warehouse-home,.snrg-production-home) .ps2-work-tabs .btn {
+  border: 0;
+  border-block-end: 2px solid transparent;
+  background: transparent;
+  color: var(--text-color);
+  border-radius: 0;
+  min-block-size: 44px;
+  padding: 8px 3px;
+  cursor: pointer;
+  font-weight: 600;
+}
+:is(.ps2-warehouse-home,.snrg-production-home) .ps2-work-tabs [aria-pressed="true"] {
+  border-block-end-color: var(--warehouse-accent);
+  color: var(--warehouse-accent);
+  font-weight: 700;
+}
+:is(.ps2-app,.snrg-production-home) .ps2-card-title {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.4;
+  font-weight: 650;
+}
+body .ps2-workspace { grid-template-columns: minmax(0,1fr) minmax(240px,300px); }
+body .ps2-setup-strip { grid-template-columns: repeat(3,minmax(0,1fr)); }
+body :is(.ps2-topbar-actions,.ps2-entry-actions,.ps2-footer-actions,.ps2-queue-actions) { min-inline-size: 0; }
+body :is(.ps2-topbar-actions,.ps2-entry-actions,.ps2-footer-actions,.ps2-queue-actions) .btn {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: center;
+}
+body .ps2-stock-item dl { grid-template-columns: minmax(0,1fr) auto; }
+body .ps2-recent-meta { overflow-wrap: anywhere; }
+body .snrg-invoice-queue { padding: clamp(12px,2vw,24px); }
+body .snrg-invoice-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-block-end: 24px;
+}
+body .snrg-invoice-search { flex: 1 1 280px; max-inline-size: 480px; margin: 0; }
+body .snrg-invoice-search > span { display: block; margin-block-end: 8px; }
+body .snrg-invoice-count { margin: 0; color: var(--text-muted); }
+body .snrg-invoice-queue .table { table-layout: auto; inline-size: 100%; }
+body .snrg-invoice-queue :is(td,th) { vertical-align: middle; overflow-wrap: anywhere; }
+body .snrg-invoice-queue .table a:not(.btn) { overflow-wrap: anywhere; }
+body .snrg-invoice-queue .btn { white-space: normal; }
+body .snrg-invoice-empty { padding-block: 32px; color: var(--text-muted); }
+@media (max-width: 1000px) {
+  body .ps2-workspace { grid-template-columns: minmax(0,1fr); }
+  body .ps2-stock-aside { border-inline-start: 0; border-block-start: 1px solid var(--border-color); padding: 20px 0 0; }
+}
+@media (max-width: 760px) {
+  body :is(.dp-context,.bd-context) { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  body :is(.dp-station,.bd-station) { grid-column: 1 / -1; }
+  body .ps2-setup-strip { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+@media (max-width: 640px) {
+  body :is(.daily-production,.bulk-disassembly) { padding-block-start: 12px; padding-block-end: 190px; }
+  body :is(.dp-warehouses,.bd-warehouses) { grid-template-columns: minmax(0,1fr); }
+  body :is(.dp-add,.bd-add) { grid-template-columns: minmax(0,1fr) minmax(90px,110px); }
+  body :is(.dp-item-picker,.bd-item-picker) { grid-column: 1 / -1; }
+  body :is(.dp-bottom-inner,.bd-bottom-inner) { display: grid; grid-template-columns: minmax(0,1fr); }
+  body :is(.dp-actions,.bd-actions) { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  body :is(.dp-bottom,.bd-bottom) .btn { white-space: normal; }
+  body .ps2-topbar-actions { inline-size: 100%; justify-content: start; }
+  body .ps2-topbar-actions .btn { flex: 1 1 140px; }
+  body .snrg-invoice-toolbar { align-items: stretch; gap: 12px; }
+  body .snrg-invoice-search { max-inline-size: none; flex-basis: 100%; }
+  body .snrg-invoice-queue :is(table,tbody) { display: block; inline-size: 100%; }
+  body .snrg-invoice-queue thead { display: none; }
+  body .snrg-invoice-queue tr {
+    display: grid;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: 12px 16px;
+    padding-block: 20px;
+    border-block-end: 1px solid var(--border-color);
+  }
+  body .snrg-invoice-queue td { display: block; border: 0; padding: 0; min-inline-size: 0; }
+  body .snrg-invoice-queue td::before { content: attr(data-label); display: block; color: var(--text-muted); margin-block-end: 4px; }
+  body .snrg-invoice-queue td:last-child { grid-column: 1 / -1; }
+  body .snrg-invoice-queue .text-right { text-align: start !important; }
+  body .snrg-invoice-queue .table-responsive { overflow: visible; }
+}
+@media (max-width: 380px) {
+  body :is(.dp-context,.bd-context,.ps2-setup-strip) { grid-template-columns: minmax(0,1fr); }
+  body :is(.dp-add,.bd-add) { grid-template-columns: minmax(0,1fr); }
+  body :is(.dp-add-button,.bd-add-button) { inline-size: 100%; }
+}
+/* Align native Link controls with plain quantity inputs in operational entry rows. */
+body :is(.dp-add,.bd-add) .form-group { margin-block-end: 0; }
+body .ps2-app .ps2-topbar > div:has(> .ps2-title) { display: none; }
+body .ps2-app .ps2-topbar { justify-content: flex-start; }

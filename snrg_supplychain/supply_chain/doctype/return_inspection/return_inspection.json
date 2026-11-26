@@ -1,0 +1,376 @@
+{
+  "doctype": "DocType",
+  "name": "Return Inspection",
+  "module": "Supply Chain",
+  "engine": "InnoDB",
+  "track_changes": 1,
+  "fields": [
+    {
+      "fieldname": "layout_0_tab",
+      "fieldtype": "Tab Break",
+      "label": "Inspection"
+    },
+    {
+      "fieldname": "layout_1_section",
+      "fieldtype": "Section Break",
+      "label": "Historical inspection"
+    },
+    {
+      "fieldname": "receipt",
+      "fieldtype": "Link",
+      "label": "Receipt",
+      "reqd": 1,
+      "options": "Return Receipt"
+    },
+    {
+      "fieldname": "authorization",
+      "fieldtype": "Link",
+      "label": "Authorization",
+      "read_only": 1,
+      "options": "Material Return Authorization"
+    },
+    {
+      "fieldname": "layout_4_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "responsible_user",
+      "fieldtype": "Link",
+      "label": "Responsible User",
+      "reqd": 1,
+      "options": "User"
+    },
+    {
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "label": "Status",
+      "default": "Draft",
+      "read_only": 1,
+      "options": "Draft\nCompleted"
+    },
+    {
+      "fieldname": "layout_7_section",
+      "fieldtype": "Section Break",
+      "label": "Inspection findings"
+    },
+    {
+      "fieldname": "items",
+      "fieldtype": "Table",
+      "label": "Items",
+      "reqd": 1,
+      "options": "Return Inspection Item"
+    },
+    {
+      "fieldname": "layout_9_tab",
+      "fieldtype": "Tab Break",
+      "label": "Rejection"
+    },
+    {
+      "fieldname": "layout_10_section",
+      "fieldtype": "Section Break",
+      "label": "Customer notice"
+    },
+    {
+      "fieldname": "findings_notice",
+      "fieldtype": "Attach",
+      "label": "Findings Notice"
+    },
+    {
+      "fieldname": "rejection_notice_date",
+      "fieldtype": "Date",
+      "label": "Rejection Notice Date"
+    },
+    {
+      "fieldname": "layout_13_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "dispute_deadline",
+      "fieldtype": "Date",
+      "label": "Dispute Deadline",
+      "read_only": 1
+    },
+    {
+      "fieldname": "collection_deadline",
+      "fieldtype": "Date",
+      "label": "Collection Deadline",
+      "read_only": 1
+    },
+    {
+      "fieldname": "layout_16_section",
+      "fieldtype": "Section Break",
+      "label": "Dispute resolution"
+    },
+    {
+      "fieldname": "dispute_status",
+      "fieldtype": "Select",
+      "label": "Dispute Status",
+      "default": "None",
+      "options": "None\nOpen\nResolved"
+    },
+    {
+      "fieldname": "dispute_details",
+      "fieldtype": "Small Text",
+      "label": "Dispute Details"
+    },
+    {
+      "fieldname": "layout_19_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "resolved_on",
+      "fieldtype": "Date",
+      "label": "Resolved On"
+    },
+    {
+      "fieldname": "resolution",
+      "fieldtype": "Small Text",
+      "label": "Resolution"
+    },
+    {
+      "fieldname": "layout_22_section",
+      "fieldtype": "Section Break",
+      "label": "Rejected goods"
+    },
+    {
+      "fieldname": "disposition",
+      "fieldtype": "Select",
+      "label": "Disposition",
+      "default": "Pending",
+      "options": "Pending\nCollected\nReturned to Customer\nDisposed"
+    },
+    {
+      "fieldname": "disposition_date",
+      "fieldtype": "Date",
+      "label": "Disposition Date"
+    },
+    {
+      "fieldname": "disposition_evidence",
+      "fieldtype": "Attach",
+      "label": "Disposition Evidence"
+    },
+    {
+      "fieldname": "layout_26_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "customer_disposal_instruction",
+      "fieldtype": "Attach",
+      "label": "Customer Disposal Instruction"
+    },
+    {
+      "fieldname": "disposal_approved_by",
+      "fieldtype": "Link",
+      "label": "Disposal Approved By",
+      "read_only": 1,
+      "options": "User"
+    },
+    {
+      "fieldname": "layout_29_tab",
+      "fieldtype": "Tab Break",
+      "label": "Tracking"
+    },
+    {
+      "fieldname": "layout_30_section",
+      "fieldtype": "Section Break",
+      "label": "Inspection timelines"
+    },
+    {
+      "fieldname": "completed_on",
+      "fieldtype": "Date",
+      "label": "Completed On",
+      "read_only": 1
+    },
+    {
+      "fieldname": "due_date",
+      "fieldtype": "Date",
+      "label": "Due Date",
+      "read_only": 1
+    },
+    {
+      "fieldname": "layout_33_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "revised_due_date",
+      "fieldtype": "Date",
+      "label": "Revised Due Date"
+    },
+    {
+      "fieldname": "delay_reason",
+      "fieldtype": "Small Text",
+      "label": "Delay Reason"
+    }
+  ],
+  "field_order": [
+    "layout_0_tab",
+    "layout_1_section",
+    "receipt",
+    "authorization",
+    "layout_4_column",
+    "responsible_user",
+    "status",
+    "layout_7_section",
+    "items",
+    "layout_9_tab",
+    "layout_10_section",
+    "findings_notice",
+    "rejection_notice_date",
+    "layout_13_column",
+    "dispute_deadline",
+    "collection_deadline",
+    "layout_16_section",
+    "dispute_status",
+    "dispute_details",
+    "layout_19_column",
+    "resolved_on",
+    "resolution",
+    "layout_22_section",
+    "disposition",
+    "disposition_date",
+    "disposition_evidence",
+    "layout_26_column",
+    "customer_disposal_instruction",
+    "disposal_approved_by",
+    "layout_29_tab",
+    "layout_30_section",
+    "completed_on",
+    "due_date",
+    "layout_33_column",
+    "revised_due_date",
+    "delay_reason"
+  ],
+  "permissions": [
+    {
+      "role": "Sales User",
+      "read": 1,
+      "write": 0,
+      "create": 0,
+      "print": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1,
+      "delete": 0,
+      "submit": 0,
+      "cancel": 0,
+      "amend": 0
+    },
+    {
+      "role": "Sales Manager",
+      "read": 1,
+      "write": 0,
+      "create": 0,
+      "print": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1,
+      "delete": 0,
+      "submit": 0,
+      "cancel": 0,
+      "amend": 0
+    },
+    {
+      "role": "Managing Director",
+      "read": 1,
+      "write": 0,
+      "create": 0,
+      "print": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1,
+      "delete": 0,
+      "submit": 0,
+      "cancel": 0,
+      "amend": 0
+    },
+    {
+      "role": "Stock User",
+      "read": 1,
+      "write": 0,
+      "create": 0,
+      "print": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1,
+      "delete": 0,
+      "submit": 0,
+      "cancel": 0,
+      "amend": 0
+    },
+    {
+      "role": "Stock Manager",
+      "read": 1,
+      "write": 0,
+      "create": 0,
+      "print": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1,
+      "delete": 0,
+      "submit": 0,
+      "cancel": 0,
+      "amend": 0
+    },
+    {
+      "role": "Quality Manager",
+      "read": 1,
+      "write": 0,
+      "create": 0,
+      "print": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1,
+      "delete": 0,
+      "submit": 0,
+      "cancel": 0,
+      "amend": 0
+    },
+    {
+      "role": "Accounts User",
+      "read": 1,
+      "write": 0,
+      "create": 0,
+      "print": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1,
+      "delete": 0,
+      "submit": 0,
+      "cancel": 0,
+      "amend": 0
+    },
+    {
+      "role": "Accounts Manager",
+      "read": 1,
+      "write": 0,
+      "create": 0,
+      "print": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1,
+      "delete": 0,
+      "submit": 0,
+      "cancel": 0,
+      "amend": 0
+    },
+    {
+      "role": "System Manager",
+      "read": 1,
+      "write": 0,
+      "create": 0,
+      "print": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1,
+      "delete": 0,
+      "submit": 0,
+      "cancel": 0,
+      "amend": 0
+    }
+  ],
+  "autoname": "RQC-.YYYY.-.#####",
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "read_only": 1,
+  "description": "Legacy returns history. New cases use native Quality Inspection and MRA settlement."
+}

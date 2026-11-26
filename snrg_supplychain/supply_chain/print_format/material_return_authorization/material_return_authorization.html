@@ -1,0 +1,18 @@
+{% if not doc.approved_by %}
+<div class="alert alert-warning">DRAFT — NOT VALID FOR DISPATCH</div>
+{% endif %}
+{% set company = frappe.get_doc('Company', doc.company) %}
+{% if company.company_logo %}<img src="{{ company.company_logo | e }}" alt="Company logo" style="max-height:65px">{% endif %}
+<h2>{{ company.company_name | e }}</h2>
+<h3>Material Return Authorization</h3>
+<p><strong>{{ doc.name | e }}</strong> · {{ doc.request_date }}<br>
+Customer: {{ doc.customer | e }}<br>Authorized by: {{ (doc.approved_by or '') | e }}</p>
+<table class="table table-bordered"><thead><tr><th>Item</th><th>Category / reason</th><th>Approved qty</th><th>Provisional value ({{ doc.currency | e }})</th></tr></thead><tbody>
+{% for row in doc.items if row.approved_qty %}<tr><td>{{ row.item_code | e }}</td><td>{{ row.claimed_category | e }}<br>{{ row.reason | e }}</td><td>{{ row.approved_qty }} {{ row.uom | e }}</td><td>{{ frappe.format_value(row.approved_qty * row.net_rate, {'fieldtype': 'Currency', 'options': doc.currency}) }}</td></tr>{% endfor %}
+</tbody></table>
+<p><strong>Maximum provisional return value:</strong> {{ doc.approved_value }} {{ doc.currency | e }}. Final credit is subject to inspection, acceptance and reconciliation.</p>
+<p><strong>Estimated freight:</strong> {{ doc.freight_estimate or 0 }} {{ doc.currency | e }}<br>{{ (doc.freight_terms or '') | e }}</p>
+<p>Actual customer-payable transporter charges will be reconciled after receipt of the transporter bill.</p>
+{{ doc.policy_snapshot or '' }}
+<p><strong>Mention this MRA number on the item-wise packing list and transport documents.</strong></p>
+<p>Customer acknowledgment: _____________________ &nbsp; Date: __________</p>

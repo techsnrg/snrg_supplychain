@@ -1,59 +1,70 @@
 {
- "actions": [],
- "creation": "2026-03-27 12:00:00.000000",
- "doctype": "DocType",
- "engine": "InnoDB",
- "field_order": [
-  "freight_zone",
-  "from_weight_kg",
-  "to_weight_kg",
-  "rate_per_kg",
-  "minimum_billable_weight_kg"
- ],
- "fields": [
-  {
-   "fieldname": "freight_zone",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Freight Zone",
-   "options": "Freight Zone",
-   "reqd": 1
-  },
-  {
-   "fieldname": "from_weight_kg",
-   "fieldtype": "Float",
-   "in_list_view": 1,
-   "label": "From Weight (kg)",
-   "default": "0"
-  },
-  {
-   "fieldname": "to_weight_kg",
-   "fieldtype": "Float",
-   "in_list_view": 1,
-   "label": "To Weight (kg)",
-   "description": "Set to 0 for no upper limit (above all previous slabs)",
-   "default": "0"
-  },
-  {
-   "fieldname": "rate_per_kg",
-   "fieldtype": "Currency",
-   "in_list_view": 1,
-   "label": "Rate per KG (₹)",
-   "reqd": 1
-  },
-  {
-   "fieldname": "minimum_billable_weight_kg",
-   "fieldtype": "Float",
-   "label": "Min Billable Weight (kg)",
-   "description": "If actual weight is below this, bill at this minimum weight"
-  }
- ],
- "istable": 1,
- "links": [],
- "modified": "2026-03-27 12:00:00.000000",
- "modified_by": "Administrator",
- "module": "Supply Chain",
- "name": "Transporter Rate Slab",
- "owner": "Administrator",
- "track_changes": 0
+  "actions": [],
+  "creation": "2026-03-27 12:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "layout_0_section",
+    "freight_zone",
+    "from_weight_kg",
+    "to_weight_kg",
+    "layout_4_column",
+    "rate_per_kg",
+    "minimum_billable_weight_kg"
+  ],
+  "fields": [
+    {
+      "fieldname": "layout_0_section",
+      "fieldtype": "Section Break",
+      "label": "Details"
+    },
+    {
+      "fieldname": "freight_zone",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "label": "Freight Zone",
+      "options": "Freight Zone",
+      "reqd": 1
+    },
+    {
+      "fieldname": "from_weight_kg",
+      "fieldtype": "Float",
+      "in_list_view": 1,
+      "label": "From Weight (kg)",
+      "default": "0"
+    },
+    {
+      "fieldname": "to_weight_kg",
+      "fieldtype": "Float",
+      "in_list_view": 1,
+      "label": "To Weight (kg)",
+      "description": "Set to 0 for no upper limit (above all previous slabs)",
+      "default": "0"
+    },
+    {
+      "fieldname": "layout_4_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "rate_per_kg",
+      "fieldtype": "Currency",
+      "in_list_view": 1,
+      "label": "Rate per KG (\u20b9)",
+      "reqd": 1
+    },
+    {
+      "fieldname": "minimum_billable_weight_kg",
+      "fieldtype": "Float",
+      "label": "Min Billable Weight (kg)",
+      "description": "If actual weight is below this, bill at this minimum weight"
+    }
+  ],
+  "istable": 1,
+  "links": [],
+  "modified": "2026-03-27 12:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "Supply Chain",
+  "name": "Transporter Rate Slab",
+  "owner": "Administrator",
+  "track_changes": 0
 }

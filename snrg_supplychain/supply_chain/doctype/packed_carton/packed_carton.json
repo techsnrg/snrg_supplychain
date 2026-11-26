@@ -1,249 +1,260 @@
 {
- "actions": [],
- "autoname": "naming_series:",
- "creation": "2026-03-16 12:00:00.000000",
- "doctype": "DocType",
- "engine": "InnoDB",
- "field_order": [
-  "carton_details_section",
-  "naming_series",
-  "box_type",
-  "packed_by",
-  "col_break_details",
-  "packed_date",
-  "warehouse",
-  "contents_section",
-  "items",
-  "weight_summary_section",
-  "dimensions",
-  "empty_weight_g",
-  "col_break_weights",
-  "net_weight_kg",
-  "gross_weight_kg",
-  "dispatch_info_section",
-  "status",
-  "outward_shipment",
-  "delivery_note",
-  "col_break_dispatch",
-  "customer",
-  "dispatched_date",
-  "sales_invoice"
- ],
- "fields": [
-  {
-   "fieldname": "carton_details_section",
-   "fieldtype": "Section Break",
-   "label": "Carton Details"
-  },
-  {
-   "default": "CTN-.#####",
-   "fieldname": "naming_series",
-   "fieldtype": "Select",
-   "label": "Series",
-   "options": "CTN-.#####",
-   "reqd": 1,
-   "set_only_once": 1,
-   "hidden": 1
-  },
-  {
-   "fieldname": "box_type",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Box Type",
-   "options": "Carton Type",
-   "reqd": 1
-  },
-  {
-   "fieldname": "dimensions",
-   "fieldtype": "Data",
-   "label": "Dimensions",
-   "read_only": 1
-  },
-  {
-   "fieldname": "empty_weight_g",
-   "fieldtype": "Float",
-   "label": "Empty Box Weight (g)",
-   "read_only": 1,
-   "description": "Auto-filled from Box Type"
-  },
-  {
-   "fieldname": "col_break_details",
-   "fieldtype": "Column Break"
-  },
-  {
-   "default": "Today",
-   "fieldname": "packed_date",
-   "fieldtype": "Date",
-   "in_list_view": 1,
-   "label": "Packed Date",
-   "reqd": 1
-  },
-  {
-   "fieldname": "packed_by",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Packed By",
-   "options": "Employee"
-  },
-  {
-   "fieldname": "warehouse",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Warehouse",
-   "options": "Warehouse",
-   "reqd": 1
-  },
-  {
-   "fieldname": "contents_section",
-   "fieldtype": "Section Break",
-   "label": "Contents"
-  },
-  {
-   "fieldname": "items",
-   "fieldtype": "Table",
-   "in_place_edit": 1,
-   "label": "Items",
-   "options": "Packed Carton Item",
-   "reqd": 1
-  },
-  {
-   "fieldname": "weight_summary_section",
-   "fieldtype": "Section Break",
-   "label": "Dimensions & Weight"
-  },
-  {
-   "fieldname": "net_weight_kg",
-   "fieldtype": "Float",
-   "label": "Net Weight (kg)",
-   "read_only": 1
-  },
-  {
-   "fieldname": "col_break_weights",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "gross_weight_kg",
-   "fieldtype": "Float",
-   "label": "Gross Weight (kg)",
-   "read_only": 1
-  },
-  {
-   "fieldname": "dispatch_info_section",
-   "fieldtype": "Section Break",
-   "label": "Dispatch Info",
-   "collapsible": 1
-  },
-  {
-   "default": "Available",
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Status",
-   "no_copy": 1,
-   "options": "Available\nDispatched",
-   "read_only": 1,
-   "reqd": 1
-  },
-  {
-   "fieldname": "outward_shipment",
-   "fieldtype": "Link",
-   "label": "Outward Shipment",
-   "no_copy": 1,
-   "options": "Outward Shipment",
-   "read_only": 1
-  },
-  {
-   "fieldname": "delivery_note",
-   "fieldtype": "Link",
-   "label": "Delivery Note",
-   "no_copy": 1,
-   "options": "Delivery Note",
-   "read_only": 1
-  },
-  {
-   "fieldname": "col_break_dispatch",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "customer",
-   "fieldtype": "Link",
-   "label": "Customer",
-   "no_copy": 1,
-   "options": "Customer",
-   "read_only": 1
-  },
-  {
-   "fieldname": "dispatched_date",
-   "fieldtype": "Date",
-   "label": "Dispatched Date",
-   "no_copy": 1,
-   "read_only": 1
-  },
-  {
-   "fieldname": "sales_invoice",
-   "fieldtype": "Link",
-   "label": "Sales Invoice",
-   "no_copy": 1,
-   "options": "Sales Invoice",
-   "read_only": 1
-  }
- ],
- "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2026-03-28 13:00:00.000000",
- "modified_by": "Administrator",
- "module": "Supply Chain",
- "name": "Packed Carton",
- "naming_rule": "By \"Naming Series\" field",
- "owner": "Administrator",
- "permissions": [
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "System Manager",
-   "share": 1,
-   "write": 1
-  },
-  {
-   "create": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "Stock Manager",
-   "share": 1,
-   "write": 1
-  },
-  {
-   "create": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "Stock User",
-   "share": 1,
-   "write": 1
-  }
- ],
- "default_print_format": "Carton Sticker",
- "search_fields": "name,customer,outward_shipment",
- "sort_field": "modified",
- "sort_order": "DESC",
- "states": [
-  {
-   "color": "Green",
-   "title": "Available"
-  },
-  {
-   "color": "Blue",
-   "title": "Dispatched"
-  }
- ]
+  "actions": [],
+  "autoname": "naming_series:",
+  "creation": "2026-03-16 12:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "layout_0_tab",
+    "layout_1_section",
+    "naming_series",
+    "box_type",
+    "layout_5_column",
+    "packed_date",
+    "packed_by",
+    "warehouse",
+    "layout_9_section",
+    "items",
+    "layout_11_section",
+    "dimensions",
+    "empty_weight_g",
+    "layout_14_column",
+    "net_weight_kg",
+    "gross_weight_kg",
+    "layout_17_tab",
+    "layout_18_section",
+    "status",
+    "outward_shipment",
+    "customer",
+    "layout_22_column",
+    "delivery_note",
+    "sales_invoice",
+    "dispatched_date"
+  ],
+  "fields": [
+    {
+      "fieldname": "layout_0_tab",
+      "fieldtype": "Tab Break",
+      "label": "Packing"
+    },
+    {
+      "fieldname": "layout_1_section",
+      "fieldtype": "Section Break",
+      "label": "Carton and location"
+    },
+    {
+      "default": "CTN-.#####",
+      "fieldname": "naming_series",
+      "fieldtype": "Select",
+      "label": "Series",
+      "options": "CTN-.#####",
+      "reqd": 1,
+      "set_only_once": 1,
+      "hidden": 1
+    },
+    {
+      "fieldname": "box_type",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "label": "Box Type",
+      "options": "Carton Type",
+      "reqd": 1
+    },
+    {
+      "fieldname": "layout_5_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "default": "Today",
+      "fieldname": "packed_date",
+      "fieldtype": "Date",
+      "in_list_view": 1,
+      "label": "Packed Date",
+      "reqd": 1
+    },
+    {
+      "fieldname": "packed_by",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "label": "Packed By",
+      "options": "Employee"
+    },
+    {
+      "fieldname": "warehouse",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "label": "Warehouse",
+      "options": "Warehouse",
+      "reqd": 1
+    },
+    {
+      "fieldname": "layout_9_section",
+      "fieldtype": "Section Break",
+      "label": "Carton contents"
+    },
+    {
+      "fieldname": "items",
+      "fieldtype": "Table",
+      "in_place_edit": 1,
+      "label": "Items",
+      "options": "Packed Carton Item",
+      "reqd": 1
+    },
+    {
+      "fieldname": "layout_11_section",
+      "fieldtype": "Section Break",
+      "label": "Dimensions and weight"
+    },
+    {
+      "fieldname": "dimensions",
+      "fieldtype": "Data",
+      "label": "Dimensions",
+      "read_only": 1
+    },
+    {
+      "fieldname": "empty_weight_g",
+      "fieldtype": "Float",
+      "label": "Empty Box Weight (g)",
+      "read_only": 1,
+      "description": "Auto-filled from Box Type"
+    },
+    {
+      "fieldname": "layout_14_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "net_weight_kg",
+      "fieldtype": "Float",
+      "label": "Net Weight (kg)",
+      "read_only": 1
+    },
+    {
+      "fieldname": "gross_weight_kg",
+      "fieldtype": "Float",
+      "label": "Gross Weight (kg)",
+      "read_only": 1
+    },
+    {
+      "fieldname": "layout_17_tab",
+      "fieldtype": "Tab Break",
+      "label": "Dispatch"
+    },
+    {
+      "fieldname": "layout_18_section",
+      "fieldtype": "Section Break",
+      "label": "Shipment references"
+    },
+    {
+      "default": "Available",
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "label": "Status",
+      "no_copy": 1,
+      "options": "Available\nDispatched",
+      "read_only": 1,
+      "reqd": 1
+    },
+    {
+      "fieldname": "outward_shipment",
+      "fieldtype": "Link",
+      "label": "Outward Shipment",
+      "no_copy": 1,
+      "options": "Outward Shipment",
+      "read_only": 1
+    },
+    {
+      "fieldname": "customer",
+      "fieldtype": "Link",
+      "label": "Customer",
+      "no_copy": 1,
+      "options": "Customer",
+      "read_only": 1
+    },
+    {
+      "fieldname": "layout_22_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "delivery_note",
+      "fieldtype": "Link",
+      "label": "Delivery Note",
+      "no_copy": 1,
+      "options": "Delivery Note",
+      "read_only": 1
+    },
+    {
+      "fieldname": "sales_invoice",
+      "fieldtype": "Link",
+      "label": "Sales Invoice",
+      "no_copy": 1,
+      "options": "Sales Invoice",
+      "read_only": 1
+    },
+    {
+      "fieldname": "dispatched_date",
+      "fieldtype": "Date",
+      "label": "Dispatched Date",
+      "no_copy": 1,
+      "read_only": 1
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "links": [],
+  "modified": "2026-03-28 13:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "Supply Chain",
+  "name": "Packed Carton",
+  "naming_rule": "By \"Naming Series\" field",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Stock Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Stock User",
+      "share": 1,
+      "write": 1
+    }
+  ],
+  "default_print_format": "Carton Sticker",
+  "search_fields": "name,customer,outward_shipment",
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [
+    {
+      "color": "Green",
+      "title": "Available"
+    },
+    {
+      "color": "Blue",
+      "title": "Dispatched"
+    }
+  ]
 }

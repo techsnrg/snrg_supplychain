@@ -1,153 +1,177 @@
 {
- "actions": [],
- "autoname": "naming_series:",
- "creation": "2026-03-27 12:00:00.000000",
- "doctype": "DocType",
- "engine": "InnoDB",
- "field_order": [
-  "naming_series",
-  "transporter",
-  "valid_from",
-  "valid_to",
-  "column_break_1",
-  "status",
-  "total_pin_codes",
-  "upload_section",
-  "csv_upload_note",
-  "pin_codes_section",
-  "pin_codes",
-  "amended_from"
- ],
- "fields": [
-  {
-   "fieldname": "naming_series",
-   "fieldtype": "Select",
-   "label": "Series",
-   "options": "TSP-.YYYY.-.#####"
-  },
-  {
-   "fieldname": "transporter",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Transporter",
-   "options": "Supplier",
-   "reqd": 1
-  },
-  {
-   "fieldname": "valid_from",
-   "fieldtype": "Date",
-   "in_list_view": 1,
-   "label": "Valid From",
-   "reqd": 1
-  },
-  {
-   "fieldname": "valid_to",
-   "fieldtype": "Date",
-   "in_list_view": 1,
-   "label": "Valid To",
-   "description": "Leave blank if open-ended"
-  },
-  {
-   "fieldname": "column_break_1",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Status",
-   "options": "Active\nExpired",
-   "read_only": 1,
-   "default": "Active"
-  },
-  {
-   "fieldname": "total_pin_codes",
-   "fieldtype": "Int",
-   "label": "Total Pin Codes",
-   "read_only": 1
-  },
-  {
-   "fieldname": "upload_section",
-   "fieldtype": "Section Break",
-   "label": "Bulk Upload"
-  },
-  {
-   "fieldname": "csv_upload_note",
-   "fieldtype": "HTML",
-   "label": "CSV Upload Note",
-   "options": "<div class='alert alert-info'><strong>CSV Format:</strong> Columns must be in this order — <code>PIN CODE, ZONE, STATE, ODA/SERVICEABILITY, ODA CATEGORY</code><br>Serviceability values: <code>SERVICEABLE</code>, <code>ODA</code>, <code>NSZ</code> &nbsp;|&nbsp; ODA Category values: <code>S, A, B, C, D, E</code></div>"
-  },
-  {
-   "fieldname": "pin_codes_section",
-   "fieldtype": "Section Break",
-   "label": "Pin Code List"
-  },
-  {
-   "fieldname": "pin_codes",
-   "fieldtype": "Table",
-   "label": "Pin Codes",
-   "options": "Transporter Serviceability Pin"
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Transporter Serviceability",
-   "print_hide": 1,
-   "read_only": 1
-  }
- ],
- "is_submittable": 1,
- "links": [],
- "modified": "2026-03-27 12:00:00.000000",
- "modified_by": "Administrator",
- "module": "Supply Chain",
- "name": "Transporter Serviceability",
- "naming_rule": "By \"Naming Series\" field",
- "owner": "Administrator",
- "permissions": [
-  {
-   "amend": 1,
-   "cancel": 1,
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "System Manager",
-   "share": 1,
-   "submit": 1,
-   "write": 1
-  },
-  {
-   "amend": 1,
-   "cancel": 1,
-   "create": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "Stock Manager",
-   "share": 1,
-   "submit": 1,
-   "write": 1
-  },
-  {
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "Stock User",
-   "share": 1
-  }
- ],
- "search_fields": "transporter,valid_from",
- "sort_field": "valid_from",
- "sort_order": "DESC",
- "track_changes": 1
+  "actions": [],
+  "autoname": "naming_series:",
+  "creation": "2026-03-27 12:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "layout_0_tab",
+    "layout_1_section",
+    "naming_series",
+    "transporter",
+    "layout_4_column",
+    "valid_from",
+    "valid_to",
+    "status",
+    "total_pin_codes",
+    "layout_9_section",
+    "pin_codes",
+    "layout_11_tab",
+    "layout_12_section",
+    "csv_upload_note",
+    "layout_14_section",
+    "amended_from"
+  ],
+  "fields": [
+    {
+      "fieldname": "layout_0_tab",
+      "fieldtype": "Tab Break",
+      "label": "Coverage"
+    },
+    {
+      "fieldname": "layout_1_section",
+      "fieldtype": "Section Break",
+      "label": "Transporter and validity"
+    },
+    {
+      "fieldname": "naming_series",
+      "fieldtype": "Select",
+      "label": "Series",
+      "options": "TSP-.YYYY.-.#####"
+    },
+    {
+      "fieldname": "transporter",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "label": "Transporter",
+      "options": "Supplier",
+      "reqd": 1
+    },
+    {
+      "fieldname": "layout_4_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "valid_from",
+      "fieldtype": "Date",
+      "in_list_view": 1,
+      "label": "Valid From",
+      "reqd": 1
+    },
+    {
+      "fieldname": "valid_to",
+      "fieldtype": "Date",
+      "in_list_view": 1,
+      "label": "Valid To",
+      "description": "Leave blank if open-ended"
+    },
+    {
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "label": "Status",
+      "options": "Active\nExpired",
+      "read_only": 1,
+      "default": "Active"
+    },
+    {
+      "fieldname": "total_pin_codes",
+      "fieldtype": "Int",
+      "label": "Total Pin Codes",
+      "read_only": 1
+    },
+    {
+      "fieldname": "layout_9_section",
+      "fieldtype": "Section Break",
+      "label": "Serviceable PIN codes"
+    },
+    {
+      "fieldname": "pin_codes",
+      "fieldtype": "Table",
+      "label": "Pin Codes",
+      "options": "Transporter Serviceability Pin"
+    },
+    {
+      "fieldname": "layout_11_tab",
+      "fieldtype": "Tab Break",
+      "label": "Import"
+    },
+    {
+      "fieldname": "layout_12_section",
+      "fieldtype": "Section Break",
+      "label": "Bulk upload"
+    },
+    {
+      "fieldname": "csv_upload_note",
+      "fieldtype": "HTML",
+      "label": "CSV Upload Note",
+      "options": "<div class='alert alert-info'><strong>CSV Format:</strong> Columns must be in this order \u2014 <code>PIN CODE, ZONE, STATE, ODA/SERVICEABILITY, ODA CATEGORY</code><br>Serviceability values: <code>SERVICEABLE</code>, <code>ODA</code>, <code>NSZ</code> &nbsp;|&nbsp; ODA Category values: <code>S, A, B, C, D, E</code></div>"
+    },
+    {
+      "fieldname": "layout_14_section",
+      "fieldtype": "Section Break",
+      "label": "References"
+    },
+    {
+      "fieldname": "amended_from",
+      "fieldtype": "Link",
+      "label": "Amended From",
+      "no_copy": 1,
+      "options": "Transporter Serviceability",
+      "print_hide": 1,
+      "read_only": 1
+    }
+  ],
+  "is_submittable": 1,
+  "links": [],
+  "modified": "2026-03-27 12:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "Supply Chain",
+  "name": "Transporter Serviceability",
+  "naming_rule": "By \"Naming Series\" field",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "amend": 1,
+      "cancel": 1,
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "submit": 1,
+      "write": 1
+    },
+    {
+      "amend": 1,
+      "cancel": 1,
+      "create": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Stock Manager",
+      "share": 1,
+      "submit": 1,
+      "write": 1
+    },
+    {
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Stock User",
+      "share": 1
+    }
+  ],
+  "search_fields": "transporter,valid_from",
+  "sort_field": "valid_from",
+  "sort_order": "DESC",
+  "track_changes": 1
 }

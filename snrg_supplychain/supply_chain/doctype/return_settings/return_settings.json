@@ -1,0 +1,150 @@
+{
+  "doctype": "DocType",
+  "name": "Return Settings",
+  "module": "Supply Chain",
+  "engine": "InnoDB",
+  "track_changes": 1,
+  "fields": [
+    {
+      "fieldname": "layout_0_section",
+      "fieldtype": "Section Break",
+      "label": "Policy and approvals"
+    },
+    {
+      "fieldname": "enabled",
+      "fieldtype": "Check",
+      "label": "Enabled",
+      "default": "0"
+    },
+    {
+      "fieldname": "settlement_approver_role",
+      "fieldtype": "Link",
+      "label": "Settlement Approver Role",
+      "default": "Accounts Manager",
+      "reqd": 1,
+      "options": "Role"
+    },
+    {
+      "fieldname": "layout_3_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "waiver_approver",
+      "fieldtype": "Link",
+      "label": "Waiver Approver",
+      "description": "Only this user, who must also have Managing Director role, can approve concessions.",
+      "options": "User"
+    },
+    {
+      "fieldname": "restocking_percent",
+      "fieldtype": "Percent",
+      "label": "Restocking Percent",
+      "default": "25",
+      "read_only": 1
+    },
+    {
+      "fieldname": "layout_6_section",
+      "fieldtype": "Section Break",
+      "label": "Working-day targets"
+    },
+    {
+      "fieldname": "holiday_list",
+      "fieldtype": "Link",
+      "label": "Holiday List",
+      "options": "Holiday List"
+    },
+    {
+      "fieldname": "authorization_days",
+      "fieldtype": "Int",
+      "label": "Authorization Days",
+      "default": "3"
+    },
+    {
+      "fieldname": "inspection_days",
+      "fieldtype": "Int",
+      "label": "Inspection Days",
+      "default": "7"
+    },
+    {
+      "fieldname": "layout_10_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "settlement_days",
+      "fieldtype": "Int",
+      "label": "Settlement Days",
+      "default": "3"
+    },
+    {
+      "fieldname": "document_days",
+      "fieldtype": "Int",
+      "label": "Document Days",
+      "default": "5"
+    },
+    {
+      "fieldname": "layout_13_section",
+      "fieldtype": "Section Break",
+      "label": "Customer response periods"
+    },
+    {
+      "fieldname": "dispute_days",
+      "fieldtype": "Int",
+      "label": "Dispute Days",
+      "default": "15"
+    },
+    {
+      "fieldname": "layout_15_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "collection_days",
+      "fieldtype": "Int",
+      "label": "Collection Days",
+      "default": "30"
+    },
+    {
+      "fieldname": "layout_17_section",
+      "fieldtype": "Section Break",
+      "label": "Customer-facing terms"
+    },
+    {
+      "fieldname": "policy_terms",
+      "fieldtype": "Text Editor",
+      "label": "Policy Terms"
+    }
+  ],
+  "field_order": [
+    "layout_0_section",
+    "enabled",
+    "settlement_approver_role",
+    "layout_3_column",
+    "waiver_approver",
+    "restocking_percent",
+    "layout_6_section",
+    "holiday_list",
+    "authorization_days",
+    "inspection_days",
+    "layout_10_column",
+    "settlement_days",
+    "document_days",
+    "layout_13_section",
+    "dispute_days",
+    "layout_15_column",
+    "collection_days",
+    "layout_17_section",
+    "policy_terms"
+  ],
+  "permissions": [
+    {
+      "role": "System Manager",
+      "read": 1,
+      "write": 1,
+      "create": 1,
+      "print": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1
+    }
+  ],
+  "issingle": 1
+}

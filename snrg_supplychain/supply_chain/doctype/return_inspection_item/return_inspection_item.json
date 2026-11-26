@@ -1,0 +1,104 @@
+{
+  "doctype": "DocType",
+  "name": "Return Inspection Item",
+  "module": "Supply Chain",
+  "engine": "InnoDB",
+  "track_changes": 1,
+  "fields": [
+    {
+      "fieldname": "layout_0_section",
+      "fieldtype": "Section Break",
+      "label": "Finding"
+    },
+    {
+      "fieldname": "item_code",
+      "fieldtype": "Link",
+      "label": "Item Code",
+      "read_only": 1,
+      "options": "Item"
+    },
+    {
+      "fieldname": "qty",
+      "fieldtype": "Float",
+      "label": "Qty",
+      "reqd": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "finding",
+      "fieldtype": "Select",
+      "label": "Finding",
+      "reqd": 1,
+      "in_list_view": 1,
+      "options": "Manufacturing Defect\nSNRG Supply Error\nFresh / Saleable\nCustomer Damage\nUnsellable"
+    },
+    {
+      "fieldname": "decision",
+      "fieldtype": "Select",
+      "label": "Decision",
+      "reqd": 1,
+      "in_list_view": 1,
+      "options": "Accept\nReject"
+    },
+    {
+      "fieldname": "layout_5_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "notes",
+      "fieldtype": "Small Text",
+      "label": "Notes",
+      "reqd": 1
+    },
+    {
+      "fieldname": "photo",
+      "fieldtype": "Attach",
+      "label": "Photo"
+    },
+    {
+      "fieldname": "layout_8_section",
+      "fieldtype": "Section Break",
+      "label": "Exception"
+    },
+    {
+      "fieldname": "exception_reason",
+      "fieldtype": "Small Text",
+      "label": "Exception Reason"
+    },
+    {
+      "fieldname": "layout_10_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "exception_approved_by",
+      "fieldtype": "Link",
+      "label": "Exception Approved By",
+      "read_only": 1,
+      "options": "User"
+    },
+    {
+      "fieldname": "receipt_item",
+      "fieldtype": "Data",
+      "label": "Receipt Item",
+      "reqd": 1
+    }
+  ],
+  "field_order": [
+    "layout_0_section",
+    "item_code",
+    "qty",
+    "finding",
+    "decision",
+    "layout_5_column",
+    "notes",
+    "photo",
+    "layout_8_section",
+    "exception_reason",
+    "layout_10_column",
+    "exception_approved_by",
+    "receipt_item"
+  ],
+  "permissions": [],
+  "istable": 1,
+  "editable_grid": 1
+}

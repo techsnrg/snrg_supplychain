@@ -1,0 +1,503 @@
+{
+  "doctype": "DocType",
+  "name": "Return Settlement",
+  "module": "Supply Chain",
+  "engine": "InnoDB",
+  "track_changes": 1,
+  "fields": [
+    {
+      "fieldname": "layout_0_tab",
+      "fieldtype": "Tab Break",
+      "label": "Settlement"
+    },
+    {
+      "fieldname": "layout_1_section",
+      "fieldtype": "Section Break",
+      "label": "Historical settlement"
+    },
+    {
+      "fieldname": "authorization",
+      "fieldtype": "Link",
+      "label": "Authorization",
+      "reqd": 1,
+      "options": "Material Return Authorization"
+    },
+    {
+      "fieldname": "company",
+      "fieldtype": "Link",
+      "label": "Company",
+      "reqd": 1,
+      "options": "Company"
+    },
+    {
+      "fieldname": "customer",
+      "fieldtype": "Link",
+      "label": "Customer",
+      "reqd": 1,
+      "options": "Customer"
+    },
+    {
+      "fieldname": "layout_5_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "currency",
+      "fieldtype": "Link",
+      "label": "Currency",
+      "reqd": 1,
+      "options": "Currency"
+    },
+    {
+      "fieldname": "responsible_user",
+      "fieldtype": "Link",
+      "label": "Responsible User",
+      "reqd": 1,
+      "options": "User"
+    },
+    {
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "label": "Status",
+      "default": "Draft",
+      "read_only": 1,
+      "options": "Draft\nApproved\nSettled"
+    },
+    {
+      "fieldname": "route",
+      "fieldtype": "Select",
+      "label": "Route",
+      "reqd": 1,
+      "options": "SNRG Credit Note\nCustomer Invoice"
+    },
+    {
+      "fieldname": "layout_10_section",
+      "fieldtype": "Section Break",
+      "label": "Accepted goods"
+    },
+    {
+      "fieldname": "items",
+      "fieldtype": "Table",
+      "label": "Items",
+      "reqd": 1,
+      "options": "Return Settlement Item"
+    },
+    {
+      "fieldname": "layout_12_section",
+      "fieldtype": "Section Break",
+      "label": "Amounts"
+    },
+    {
+      "fieldname": "gross_value",
+      "fieldtype": "Currency",
+      "label": "Gross Value",
+      "read_only": 1,
+      "options": "currency"
+    },
+    {
+      "fieldname": "standard_restocking",
+      "fieldtype": "Currency",
+      "label": "Standard Restocking",
+      "read_only": 1,
+      "options": "currency"
+    },
+    {
+      "fieldname": "restocking_charge",
+      "fieldtype": "Currency",
+      "label": "Restocking Charge",
+      "options": "currency"
+    },
+    {
+      "fieldname": "layout_16_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "freight_charge",
+      "fieldtype": "Currency",
+      "label": "Freight Charge",
+      "read_only": 1,
+      "options": "currency"
+    },
+    {
+      "fieldname": "handling_charge",
+      "fieldtype": "Currency",
+      "label": "Handling Charge",
+      "options": "currency"
+    },
+    {
+      "fieldname": "waiver_amount",
+      "fieldtype": "Currency",
+      "label": "Waiver Amount",
+      "options": "currency"
+    },
+    {
+      "fieldname": "layout_20_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "net_value",
+      "fieldtype": "Currency",
+      "label": "Net Value",
+      "read_only": 1,
+      "options": "currency"
+    },
+    {
+      "fieldname": "waiver_approved_by",
+      "fieldtype": "Link",
+      "label": "Waiver Approved By",
+      "read_only": 1,
+      "options": "User"
+    },
+    {
+      "fieldname": "waiver_approved_on",
+      "fieldtype": "Datetime",
+      "label": "Waiver Approved On",
+      "read_only": 1
+    },
+    {
+      "fieldname": "layout_24_section",
+      "fieldtype": "Section Break",
+      "label": "Concession reason"
+    },
+    {
+      "fieldname": "waiver_reason",
+      "fieldtype": "Small Text",
+      "label": "Waiver Reason"
+    },
+    {
+      "fieldname": "layout_26_tab",
+      "fieldtype": "Tab Break",
+      "label": "Documents"
+    },
+    {
+      "fieldname": "layout_27_section",
+      "fieldtype": "Section Break",
+      "label": "Customer-issued invoice"
+    },
+    {
+      "fieldname": "supplier",
+      "fieldtype": "Link",
+      "label": "Supplier",
+      "options": "Supplier"
+    },
+    {
+      "fieldname": "customer_invoice_number",
+      "fieldtype": "Data",
+      "label": "Customer Invoice Number"
+    },
+    {
+      "fieldname": "layout_30_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "customer_invoice_date",
+      "fieldtype": "Date",
+      "label": "Customer Invoice Date"
+    },
+    {
+      "fieldname": "customer_invoice_attachment",
+      "fieldtype": "Attach",
+      "label": "Customer Invoice Attachment"
+    },
+    {
+      "fieldname": "layout_33_section",
+      "fieldtype": "Section Break",
+      "label": "Accounting documents"
+    },
+    {
+      "fieldname": "accounting_documents",
+      "fieldtype": "Table",
+      "label": "Accounting Documents",
+      "options": "Return Accounting Document"
+    },
+    {
+      "fieldname": "layout_35_section",
+      "fieldtype": "Section Break",
+      "label": "Stock documents"
+    },
+    {
+      "fieldname": "stock_references",
+      "fieldtype": "Table",
+      "label": "Stock References",
+      "options": "Return Stock Reference"
+    },
+    {
+      "fieldname": "layout_37_section",
+      "fieldtype": "Section Break",
+      "label": "Reconciliation"
+    },
+    {
+      "fieldname": "stock_reconciled",
+      "fieldtype": "Check",
+      "label": "Stock Reconciled"
+    },
+    {
+      "fieldname": "charges_reconciled",
+      "fieldtype": "Check",
+      "label": "Charges Reconciled"
+    },
+    {
+      "fieldname": "ledger_reconciled",
+      "fieldtype": "Check",
+      "label": "Ledger Reconciled"
+    },
+    {
+      "fieldname": "layout_41_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "reconciliation_notes",
+      "fieldtype": "Small Text",
+      "label": "Reconciliation Notes"
+    },
+    {
+      "fieldname": "accounting_difference",
+      "label": "Invoice / Goods Value Difference",
+      "fieldtype": "Currency",
+      "options": "currency",
+      "read_only": 1
+    },
+    {
+      "fieldname": "difference_reason",
+      "label": "Invoice Difference Explanation",
+      "fieldtype": "Small Text"
+    },
+    {
+      "fieldname": "layout_45_tab",
+      "fieldtype": "Tab Break",
+      "label": "Tracking"
+    },
+    {
+      "fieldname": "layout_46_section",
+      "fieldtype": "Section Break",
+      "label": "Approval and timelines"
+    },
+    {
+      "fieldname": "approved_by",
+      "fieldtype": "Link",
+      "label": "Approved By",
+      "read_only": 1,
+      "options": "User"
+    },
+    {
+      "fieldname": "approved_on",
+      "fieldtype": "Datetime",
+      "label": "Approved On",
+      "read_only": 1
+    },
+    {
+      "fieldname": "approved_date",
+      "fieldtype": "Date",
+      "label": "Approved Date",
+      "read_only": 1
+    },
+    {
+      "fieldname": "layout_50_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "due_date",
+      "fieldtype": "Date",
+      "label": "Due Date",
+      "read_only": 1
+    },
+    {
+      "fieldname": "revised_due_date",
+      "fieldtype": "Date",
+      "label": "Revised Due Date"
+    },
+    {
+      "fieldname": "delay_reason",
+      "fieldtype": "Small Text",
+      "label": "Delay Reason"
+    }
+  ],
+  "field_order": [
+    "layout_0_tab",
+    "layout_1_section",
+    "authorization",
+    "company",
+    "customer",
+    "layout_5_column",
+    "currency",
+    "responsible_user",
+    "status",
+    "route",
+    "layout_10_section",
+    "items",
+    "layout_12_section",
+    "gross_value",
+    "standard_restocking",
+    "restocking_charge",
+    "layout_16_column",
+    "freight_charge",
+    "handling_charge",
+    "waiver_amount",
+    "layout_20_column",
+    "net_value",
+    "waiver_approved_by",
+    "waiver_approved_on",
+    "layout_24_section",
+    "waiver_reason",
+    "layout_26_tab",
+    "layout_27_section",
+    "supplier",
+    "customer_invoice_number",
+    "layout_30_column",
+    "customer_invoice_date",
+    "customer_invoice_attachment",
+    "layout_33_section",
+    "accounting_documents",
+    "layout_35_section",
+    "stock_references",
+    "layout_37_section",
+    "stock_reconciled",
+    "charges_reconciled",
+    "ledger_reconciled",
+    "layout_41_column",
+    "reconciliation_notes",
+    "accounting_difference",
+    "difference_reason",
+    "layout_45_tab",
+    "layout_46_section",
+    "approved_by",
+    "approved_on",
+    "approved_date",
+    "layout_50_column",
+    "due_date",
+    "revised_due_date",
+    "delay_reason"
+  ],
+  "permissions": [
+    {
+      "role": "Sales User",
+      "read": 1,
+      "write": 0,
+      "create": 0,
+      "print": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1,
+      "delete": 0,
+      "submit": 0,
+      "cancel": 0,
+      "amend": 0
+    },
+    {
+      "role": "Sales Manager",
+      "read": 1,
+      "write": 0,
+      "create": 0,
+      "print": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1,
+      "delete": 0,
+      "submit": 0,
+      "cancel": 0,
+      "amend": 0
+    },
+    {
+      "role": "Managing Director",
+      "read": 1,
+      "write": 0,
+      "create": 0,
+      "print": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1,
+      "delete": 0,
+      "submit": 0,
+      "cancel": 0,
+      "amend": 0
+    },
+    {
+      "role": "Stock User",
+      "read": 1,
+      "write": 0,
+      "create": 0,
+      "print": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1,
+      "delete": 0,
+      "submit": 0,
+      "cancel": 0,
+      "amend": 0
+    },
+    {
+      "role": "Stock Manager",
+      "read": 1,
+      "write": 0,
+      "create": 0,
+      "print": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1,
+      "delete": 0,
+      "submit": 0,
+      "cancel": 0,
+      "amend": 0
+    },
+    {
+      "role": "Quality Manager",
+      "read": 1,
+      "write": 0,
+      "create": 0,
+      "print": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1,
+      "delete": 0,
+      "submit": 0,
+      "cancel": 0,
+      "amend": 0
+    },
+    {
+      "role": "Accounts User",
+      "read": 1,
+      "write": 0,
+      "create": 0,
+      "print": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1,
+      "delete": 0,
+      "submit": 0,
+      "cancel": 0,
+      "amend": 0
+    },
+    {
+      "role": "Accounts Manager",
+      "read": 1,
+      "write": 0,
+      "create": 0,
+      "print": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1,
+      "delete": 0,
+      "submit": 0,
+      "cancel": 0,
+      "amend": 0
+    },
+    {
+      "role": "System Manager",
+      "read": 1,
+      "write": 0,
+      "create": 0,
+      "print": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1,
+      "delete": 0,
+      "submit": 0,
+      "cancel": 0,
+      "amend": 0
+    }
+  ],
+  "autoname": "RST-.YYYY.-.#####",
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "read_only": 1,
+  "description": "Legacy returns history. New cases use native Quality Inspection and MRA settlement."
+}

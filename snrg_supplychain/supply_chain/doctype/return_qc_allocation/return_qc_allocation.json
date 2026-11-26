@@ -1,0 +1,100 @@
+{
+  "doctype": "DocType",
+  "name": "Return QC Allocation",
+  "module": "Supply Chain",
+  "istable": 1,
+  "editable_grid": 1,
+  "fields": [
+    {
+      "fieldname": "layout_0_section",
+      "fieldtype": "Section Break",
+      "label": "Quantity disposition"
+    },
+    {
+      "fieldname": "qty",
+      "fieldtype": "Float",
+      "label": "Qty",
+      "reqd": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "finding",
+      "fieldtype": "Select",
+      "label": "Finding",
+      "reqd": 1,
+      "in_list_view": 1,
+      "options": "Manufacturing Defect\nSNRG Supply Error\nFresh / Saleable\nCustomer Damage\nUnsellable"
+    },
+    {
+      "fieldname": "decision",
+      "fieldtype": "Select",
+      "label": "Decision",
+      "reqd": 1,
+      "in_list_view": 1,
+      "options": "Accept\nReject"
+    },
+    {
+      "fieldname": "layout_4_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "photo",
+      "fieldtype": "Attach",
+      "label": "Photo"
+    },
+    {
+      "fieldname": "notes",
+      "fieldtype": "Small Text",
+      "label": "Notes",
+      "reqd": 1
+    },
+    {
+      "fieldname": "layout_7_section",
+      "fieldtype": "Section Break",
+      "label": "Acceptance exception"
+    },
+    {
+      "fieldname": "exception_reason",
+      "fieldtype": "Small Text",
+      "label": "Exception Reason"
+    },
+    {
+      "fieldname": "layout_9_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "sales_invoice",
+      "fieldtype": "Link",
+      "label": "Sales Invoice",
+      "options": "Sales Invoice"
+    },
+    {
+      "fieldname": "sales_invoice_item",
+      "fieldtype": "Data",
+      "label": "Sales Invoice Item"
+    },
+    {
+      "fieldname": "legacy_row",
+      "fieldtype": "Data",
+      "label": "Legacy Row",
+      "hidden": 1,
+      "read_only": 1
+    }
+  ],
+  "field_order": [
+    "layout_0_section",
+    "qty",
+    "finding",
+    "decision",
+    "layout_4_column",
+    "photo",
+    "notes",
+    "layout_7_section",
+    "exception_reason",
+    "layout_9_column",
+    "sales_invoice",
+    "sales_invoice_item",
+    "legacy_row"
+  ],
+  "permissions": []
+}

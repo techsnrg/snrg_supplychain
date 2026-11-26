@@ -1,0 +1,114 @@
+{
+  "doctype": "DocType",
+  "name": "Return Receipt Item",
+  "module": "Supply Chain",
+  "engine": "InnoDB",
+  "track_changes": 1,
+  "fields": [
+    {
+      "fieldname": "layout_0_section",
+      "fieldtype": "Section Break",
+      "label": "Received item"
+    },
+    {
+      "fieldname": "item_code",
+      "fieldtype": "Link",
+      "label": "Item Code",
+      "reqd": 1,
+      "in_list_view": 1,
+      "options": "Item"
+    },
+    {
+      "fieldname": "uom",
+      "fieldtype": "Link",
+      "label": "Uom",
+      "reqd": 1,
+      "options": "UOM"
+    },
+    {
+      "fieldname": "received_qty",
+      "fieldtype": "Float",
+      "label": "Received Qty",
+      "reqd": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "layout_4_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "quality_inspection",
+      "fieldtype": "Link",
+      "label": "Quality Inspection",
+      "read_only": 1,
+      "options": "Quality Inspection"
+    },
+    {
+      "fieldname": "unauthorized",
+      "fieldtype": "Check",
+      "label": "Unauthorized",
+      "read_only": 1
+    },
+    {
+      "fieldname": "unauthorized_qty",
+      "fieldtype": "Float",
+      "label": "Unauthorized Quantity",
+      "read_only": 1
+    },
+    {
+      "fieldname": "layout_8_section",
+      "fieldtype": "Section Break",
+      "label": "Condition and traceability"
+    },
+    {
+      "fieldname": "condition_notes",
+      "fieldtype": "Small Text",
+      "label": "Condition Notes"
+    },
+    {
+      "fieldname": "photo",
+      "fieldtype": "Attach",
+      "label": "Photo"
+    },
+    {
+      "fieldname": "layout_11_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "batch_no",
+      "fieldtype": "Link",
+      "label": "Batch No",
+      "options": "Batch"
+    },
+    {
+      "fieldname": "serial_no",
+      "fieldtype": "Small Text",
+      "label": "Serial No"
+    },
+    {
+      "fieldname": "mra_item",
+      "fieldtype": "Data",
+      "label": "Mra Item"
+    }
+  ],
+  "field_order": [
+    "layout_0_section",
+    "item_code",
+    "uom",
+    "received_qty",
+    "layout_4_column",
+    "quality_inspection",
+    "unauthorized",
+    "unauthorized_qty",
+    "layout_8_section",
+    "condition_notes",
+    "photo",
+    "layout_11_column",
+    "batch_no",
+    "serial_no",
+    "mra_item"
+  ],
+  "permissions": [],
+  "istable": 1,
+  "editable_grid": 1
+}

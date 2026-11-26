@@ -4,19 +4,39 @@
   "module": "Supply Chain",
   "engine": "InnoDB",
   "field_order": [
+    "layout_0_tab",
+    "layout_1_section",
     "station",
     "company",
-    "source_warehouse",
-    "target_warehouse",
+    "layout_4_column",
     "posting_date",
     "posting_time",
     "shift",
-    "status",
-    "settings_snapshot",
+    "layout_8_section",
+    "source_warehouse",
+    "layout_10_column",
+    "target_warehouse",
+    "layout_12_section",
     "items",
-    "notes"
+    "layout_14_section",
+    "notes",
+    "layout_16_tab",
+    "layout_17_section",
+    "status",
+    "layout_19_column",
+    "settings_snapshot"
   ],
   "fields": [
+    {
+      "fieldname": "layout_0_tab",
+      "fieldtype": "Tab Break",
+      "label": "Entry"
+    },
+    {
+      "fieldname": "layout_1_section",
+      "fieldtype": "Section Break",
+      "label": "Station and posting"
+    },
     {
       "fieldname": "station",
       "fieldtype": "Link",
@@ -32,6 +52,10 @@
       "options": "Company",
       "read_only": 1,
       "reqd": 1
+    },
+    {
+      "fieldname": "layout_4_column",
+      "fieldtype": "Column Break"
     },
     {
       "fieldname": "posting_date",
@@ -53,32 +77,9 @@
       "label": "Shift"
     },
     {
-      "fieldname": "status",
-      "fieldtype": "Select",
-      "label": "Status",
-      "options": "Draft\nQueued\nPosted\nPartially Posted\nFailed",
-      "default": "Draft",
-      "read_only": 1,
-      "in_list_view": 1
-    },
-    {
-      "fieldname": "settings_snapshot",
-      "fieldtype": "Long Text",
-      "label": "Settings Snapshot",
-      "hidden": 1,
-      "read_only": 1
-    },
-    {
-      "fieldname": "items",
-      "fieldtype": "Table",
-      "label": "Items",
-      "options": "Daily Production Item",
-      "reqd": 1
-    },
-    {
-      "fieldname": "notes",
-      "fieldtype": "Small Text",
-      "label": "Notes"
+      "fieldname": "layout_8_section",
+      "fieldtype": "Section Break",
+      "label": "Warehouses"
     },
     {
       "fieldname": "source_warehouse",
@@ -88,11 +89,67 @@
       "reqd": 1
     },
     {
+      "fieldname": "layout_10_column",
+      "fieldtype": "Column Break"
+    },
+    {
       "fieldname": "target_warehouse",
       "label": "Target Warehouse",
       "fieldtype": "Link",
       "options": "Warehouse",
       "reqd": 1
+    },
+    {
+      "fieldname": "layout_12_section",
+      "fieldtype": "Section Break",
+      "label": "Items"
+    },
+    {
+      "fieldname": "items",
+      "fieldtype": "Table",
+      "label": "Items",
+      "options": "Daily Production Item",
+      "reqd": 1
+    },
+    {
+      "fieldname": "layout_14_section",
+      "fieldtype": "Section Break",
+      "label": "Notes"
+    },
+    {
+      "fieldname": "notes",
+      "fieldtype": "Small Text",
+      "label": "Notes"
+    },
+    {
+      "fieldname": "layout_16_tab",
+      "fieldtype": "Tab Break",
+      "label": "Posting record"
+    },
+    {
+      "fieldname": "layout_17_section",
+      "fieldtype": "Section Break",
+      "label": "Processing status"
+    },
+    {
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "label": "Status",
+      "options": "Draft\nQueued\nPosted\nPartially Posted\nFailed",
+      "default": "Draft",
+      "read_only": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "layout_19_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "settings_snapshot",
+      "fieldtype": "Long Text",
+      "label": "Settings Snapshot",
+      "hidden": 1,
+      "read_only": 1
     }
   ],
   "autoname": "DPROD-.YYYY.-.#####",

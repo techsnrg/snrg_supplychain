@@ -1,0 +1,183 @@
+{
+  "doctype": "DocType",
+  "name": "MRA Item",
+  "module": "Supply Chain",
+  "engine": "InnoDB",
+  "track_changes": 1,
+  "fields": [
+    {
+      "fieldname": "layout_0_section",
+      "fieldtype": "Section Break",
+      "label": "Item and quantities"
+    },
+    {
+      "fieldname": "item_code",
+      "fieldtype": "Link",
+      "label": "Item Code",
+      "reqd": 1,
+      "in_list_view": 1,
+      "options": "Item"
+    },
+    {
+      "fieldname": "uom",
+      "fieldtype": "Link",
+      "label": "Uom",
+      "reqd": 1,
+      "options": "UOM"
+    },
+    {
+      "fieldname": "claimed_category",
+      "fieldtype": "Select",
+      "label": "Claimed Category",
+      "reqd": 1,
+      "in_list_view": 1,
+      "options": "Suspected Manufacturing Defect\nSNRG Supply Error\nCommercial Return"
+    },
+    {
+      "fieldname": "layout_4_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "claimed_qty",
+      "fieldtype": "Float",
+      "label": "Claimed Qty",
+      "reqd": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "approved_qty",
+      "fieldtype": "Float",
+      "label": "Approved Qty",
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "condition",
+      "fieldtype": "Select",
+      "label": "Condition",
+      "reqd": 1,
+      "options": "Current Saleable\nPackaging Issue\nDiscontinued\nCustomer Specific\nUsed / Incomplete / Unsellable"
+    },
+    {
+      "fieldname": "layout_8_section",
+      "fieldtype": "Section Break",
+      "label": "Request evidence"
+    },
+    {
+      "fieldname": "reason",
+      "fieldtype": "Small Text",
+      "label": "Reason",
+      "reqd": 1
+    },
+    {
+      "fieldname": "evidence",
+      "fieldtype": "Attach",
+      "label": "Evidence"
+    },
+    {
+      "fieldname": "layout_11_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "exception_reason",
+      "fieldtype": "Small Text",
+      "label": "Exception Reason"
+    },
+    {
+      "fieldname": "layout_13_section",
+      "fieldtype": "Section Break",
+      "label": "Original invoice"
+    },
+    {
+      "fieldname": "sales_invoice",
+      "fieldtype": "Link",
+      "label": "Sales Invoice",
+      "options": "Sales Invoice"
+    },
+    {
+      "fieldname": "sales_invoice_item",
+      "fieldtype": "Data",
+      "label": "Sales Invoice Item",
+      "read_only": 1
+    },
+    {
+      "fieldname": "invoice_date",
+      "fieldtype": "Date",
+      "label": "Invoice Date",
+      "read_only": 1
+    },
+    {
+      "fieldname": "layout_17_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "net_rate",
+      "fieldtype": "Currency",
+      "label": "Net Rate",
+      "read_only": 1,
+      "options": "currency"
+    },
+    {
+      "fieldname": "remaining_qty",
+      "fieldtype": "Float",
+      "label": "Remaining Qty",
+      "read_only": 1
+    },
+    {
+      "fieldname": "invoice_source",
+      "fieldtype": "Select",
+      "label": "Invoice Source",
+      "read_only": 1,
+      "options": "\nManually Selected\nLatest Sale Suggestion"
+    },
+    {
+      "fieldname": "invoice_confirmed",
+      "fieldtype": "Check",
+      "label": "Invoice Confirmed"
+    },
+    {
+      "fieldname": "layout_22_section",
+      "fieldtype": "Section Break",
+      "label": "Invoice lookup"
+    },
+    {
+      "fieldname": "find_latest_sale",
+      "label": "Find latest sale",
+      "fieldtype": "Button"
+    },
+    {
+      "fieldname": "view_earlier_sales",
+      "label": "View earlier sales",
+      "fieldtype": "Button"
+    }
+  ],
+  "field_order": [
+    "layout_0_section",
+    "item_code",
+    "uom",
+    "claimed_category",
+    "layout_4_column",
+    "claimed_qty",
+    "approved_qty",
+    "condition",
+    "layout_8_section",
+    "reason",
+    "evidence",
+    "layout_11_column",
+    "exception_reason",
+    "layout_13_section",
+    "sales_invoice",
+    "sales_invoice_item",
+    "invoice_date",
+    "layout_17_column",
+    "net_rate",
+    "remaining_qty",
+    "invoice_source",
+    "invoice_confirmed",
+    "layout_22_section",
+    "find_latest_sale",
+    "view_earlier_sales"
+  ],
+  "permissions": [],
+  "istable": 1,
+  "editable_grid": 1
+}

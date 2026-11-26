@@ -1,135 +1,168 @@
 {
- "actions": [],
- "creation": "2026-03-27 12:00:00.000000",
- "doctype": "DocType",
- "engine": "InnoDB",
- "field_order": [
-  "is_selected",
-  "transporter",
-  "pin_status",
-  "oda_category",
-  "extra_tat_days",
-  "matched_zone",
-  "billable_weight_kg",
-  "basic_freight",
-  "oda_charge",
-  "fov_charge",
-  "docket_charge",
-  "fuel_surcharge",
-  "total_freight",
-  "remarks",
-  "rate_card"
- ],
- "fields": [
-  {
-   "fieldname": "is_selected",
-   "fieldtype": "Check",
-   "in_list_view": 1,
-   "label": "Select"
-  },
-  {
-   "fieldname": "transporter",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Transporter",
-   "options": "Supplier",
-   "read_only": 1
-  },
-  {
-   "fieldname": "pin_status",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Pin Status",
-   "options": "Serviceable\nODA\nNSZ\nNot Listed",
-   "read_only": 1
-  },
-  {
-   "fieldname": "oda_category",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "ODA Category",
-   "read_only": 1
-  },
-  {
-   "fieldname": "extra_tat_days",
-   "fieldtype": "Int",
-   "label": "Extra TAT (Days)",
-   "read_only": 1
-  },
-  {
-   "fieldname": "matched_zone",
-   "fieldtype": "Link",
-   "label": "Zone",
-   "options": "Freight Zone",
-   "read_only": 1
-  },
-  {
-   "fieldname": "billable_weight_kg",
-   "fieldtype": "Float",
-   "label": "Billable Wt (kg)",
-   "read_only": 1
-  },
-  {
-   "fieldname": "basic_freight",
-   "fieldtype": "Currency",
-   "in_list_view": 1,
-   "label": "Basic Freight (₹)",
-   "read_only": 1
-  },
-  {
-   "fieldname": "oda_charge",
-   "fieldtype": "Currency",
-   "label": "ODA Charge (₹)",
-   "read_only": 1
-  },
-  {
-   "fieldname": "fov_charge",
-   "fieldtype": "Currency",
-   "label": "FOV (₹)",
-   "read_only": 1
-  },
-  {
-   "fieldname": "docket_charge",
-   "fieldtype": "Currency",
-   "label": "Docket (₹)",
-   "read_only": 1
-  },
-  {
-   "fieldname": "fuel_surcharge",
-   "fieldtype": "Currency",
-   "label": "Fuel Surcharge (₹)",
-   "read_only": 1
-  },
-  {
-   "fieldname": "total_freight",
-   "fieldtype": "Currency",
-   "in_list_view": 1,
-   "label": "Total Freight (₹)",
-   "read_only": 1,
-   "bold": 1
-  },
-  {
-   "fieldname": "remarks",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Remarks",
-   "read_only": 1
-  },
-  {
-   "fieldname": "rate_card",
-   "fieldtype": "Link",
-   "label": "Rate Card",
-   "options": "Transporter Rate Card",
-   "read_only": 1,
-   "hidden": 1
-  }
- ],
- "istable": 1,
- "links": [],
- "modified": "2026-03-27 12:00:00.000000",
- "modified_by": "Administrator",
- "module": "Supply Chain",
- "name": "Freight Quotation Option",
- "owner": "Administrator",
- "track_changes": 0
+  "actions": [],
+  "creation": "2026-03-27 12:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "layout_0_section",
+    "is_selected",
+    "transporter",
+    "pin_status",
+    "layout_4_column",
+    "matched_zone",
+    "oda_category",
+    "extra_tat_days",
+    "layout_8_section",
+    "billable_weight_kg",
+    "basic_freight",
+    "oda_charge",
+    "layout_12_column",
+    "fov_charge",
+    "docket_charge",
+    "fuel_surcharge",
+    "total_freight",
+    "layout_17_section",
+    "rate_card",
+    "layout_19_column",
+    "remarks"
+  ],
+  "fields": [
+    {
+      "fieldname": "layout_0_section",
+      "fieldtype": "Section Break",
+      "label": "Service"
+    },
+    {
+      "fieldname": "is_selected",
+      "fieldtype": "Check",
+      "in_list_view": 1,
+      "label": "Select"
+    },
+    {
+      "fieldname": "transporter",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "label": "Transporter",
+      "options": "Supplier",
+      "read_only": 1
+    },
+    {
+      "fieldname": "pin_status",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "label": "Pin Status",
+      "options": "Serviceable\nODA\nNSZ\nNot Listed",
+      "read_only": 1
+    },
+    {
+      "fieldname": "layout_4_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "matched_zone",
+      "fieldtype": "Link",
+      "label": "Zone",
+      "options": "Freight Zone",
+      "read_only": 1
+    },
+    {
+      "fieldname": "oda_category",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "ODA Category",
+      "read_only": 1
+    },
+    {
+      "fieldname": "extra_tat_days",
+      "fieldtype": "Int",
+      "label": "Extra TAT (Days)",
+      "read_only": 1
+    },
+    {
+      "fieldname": "layout_8_section",
+      "fieldtype": "Section Break",
+      "label": "Freight calculation"
+    },
+    {
+      "fieldname": "billable_weight_kg",
+      "fieldtype": "Float",
+      "label": "Billable Wt (kg)",
+      "read_only": 1
+    },
+    {
+      "fieldname": "basic_freight",
+      "fieldtype": "Currency",
+      "in_list_view": 1,
+      "label": "Basic Freight (\u20b9)",
+      "read_only": 1
+    },
+    {
+      "fieldname": "oda_charge",
+      "fieldtype": "Currency",
+      "label": "ODA Charge (\u20b9)",
+      "read_only": 1
+    },
+    {
+      "fieldname": "layout_12_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "fov_charge",
+      "fieldtype": "Currency",
+      "label": "FOV (\u20b9)",
+      "read_only": 1
+    },
+    {
+      "fieldname": "docket_charge",
+      "fieldtype": "Currency",
+      "label": "Docket (\u20b9)",
+      "read_only": 1
+    },
+    {
+      "fieldname": "fuel_surcharge",
+      "fieldtype": "Currency",
+      "label": "Fuel Surcharge (\u20b9)",
+      "read_only": 1
+    },
+    {
+      "fieldname": "total_freight",
+      "fieldtype": "Currency",
+      "in_list_view": 1,
+      "label": "Total Freight (\u20b9)",
+      "read_only": 1,
+      "bold": 1
+    },
+    {
+      "fieldname": "layout_17_section",
+      "fieldtype": "Section Break",
+      "label": "Supporting information"
+    },
+    {
+      "fieldname": "rate_card",
+      "fieldtype": "Link",
+      "label": "Rate Card",
+      "options": "Transporter Rate Card",
+      "read_only": 1,
+      "hidden": 1
+    },
+    {
+      "fieldname": "layout_19_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "remarks",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Remarks",
+      "read_only": 1
+    }
+  ],
+  "istable": 1,
+  "links": [],
+  "modified": "2026-03-27 12:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "Supply Chain",
+  "name": "Freight Quotation Option",
+  "owner": "Administrator",
+  "track_changes": 0
 }

@@ -1,192 +1,216 @@
 {
- "actions": [],
- "autoname": "naming_series:",
- "creation": "2026-03-27 12:00:00.000000",
- "doctype": "DocType",
- "engine": "InnoDB",
- "field_order": [
-  "naming_series",
-  "transporter",
-  "valid_from",
-  "valid_to",
-  "column_break_1",
-  "is_active",
-  "charges_section",
-  "docket_charge",
-  "fov_percentage",
-  "column_break_charges",
-  "fuel_surcharge_percentage",
-  "volumetric_divisor",
-  "minimum_freight",
-  "rate_slabs_section",
-  "rate_slabs",
-  "oda_rates_section",
-  "oda_rates",
-  "amended_from"
- ],
- "fields": [
-  {
-   "fieldname": "naming_series",
-   "fieldtype": "Select",
-   "label": "Series",
-   "options": "TRC-.YYYY.-.#####"
-  },
-  {
-   "fieldname": "transporter",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Transporter",
-   "options": "Supplier",
-   "reqd": 1
-  },
-  {
-   "fieldname": "valid_from",
-   "fieldtype": "Date",
-   "in_list_view": 1,
-   "label": "Valid From",
-   "reqd": 1
-  },
-  {
-   "fieldname": "valid_to",
-   "fieldtype": "Date",
-   "in_list_view": 1,
-   "label": "Valid To",
-   "description": "Leave blank if the contract is open-ended (currently active)"
-  },
-  {
-   "fieldname": "column_break_1",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "is_active",
-   "fieldtype": "Check",
-   "label": "Is Active",
-   "read_only": 1,
-   "description": "Auto-computed: valid_from ≤ today ≤ valid_to (or blank)"
-  },
-  {
-   "fieldname": "charges_section",
-   "fieldtype": "Section Break",
-   "label": "Charge Parameters"
-  },
-  {
-   "fieldname": "docket_charge",
-   "fieldtype": "Currency",
-   "label": "Docket / Handling Charge (₹)",
-   "description": "Fixed per-shipment charge"
-  },
-  {
-   "fieldname": "fov_percentage",
-   "fieldtype": "Percent",
-   "label": "FOV %",
-   "default": "0.1",
-   "description": "Freight on Value — applied on invoice value"
-  },
-  {
-   "fieldname": "column_break_charges",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "fuel_surcharge_percentage",
-   "fieldtype": "Percent",
-   "label": "Fuel Surcharge %",
-   "description": "Applied on basic freight amount"
-  },
-  {
-   "fieldname": "volumetric_divisor",
-   "fieldtype": "Float",
-   "label": "Volumetric Divisor",
-   "default": "1728",
-   "description": "L×W×H (cm³) ÷ this divisor = dimensional weight in kg"
-  },
-  {
-   "fieldname": "minimum_freight",
-   "fieldtype": "Currency",
-   "label": "Minimum Total Freight (₹)",
-   "description": "Floor amount — total freight will not go below this"
-  },
-  {
-   "fieldname": "rate_slabs_section",
-   "fieldtype": "Section Break",
-   "label": "Basic Freight Rate Slabs (per Zone × Weight)"
-  },
-  {
-   "fieldname": "rate_slabs",
-   "fieldtype": "Table",
-   "label": "Rate Slabs",
-   "options": "Transporter Rate Slab"
-  },
-  {
-   "fieldname": "oda_rates_section",
-   "fieldtype": "Section Break",
-   "label": "ODA Surcharge Matrix (per Category × Weight)"
-  },
-  {
-   "fieldname": "oda_rates",
-   "fieldtype": "Table",
-   "label": "ODA Rates",
-   "options": "Transporter ODA Rate"
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Transporter Rate Card",
-   "print_hide": 1,
-   "read_only": 1
-  }
- ],
- "is_submittable": 1,
- "links": [],
- "modified": "2026-03-27 12:00:00.000000",
- "modified_by": "Administrator",
- "module": "Supply Chain",
- "name": "Transporter Rate Card",
- "naming_rule": "By \"Naming Series\" field",
- "owner": "Administrator",
- "permissions": [
-  {
-   "amend": 1,
-   "cancel": 1,
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "System Manager",
-   "share": 1,
-   "submit": 1,
-   "write": 1
-  },
-  {
-   "amend": 1,
-   "cancel": 1,
-   "create": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "Stock Manager",
-   "share": 1,
-   "submit": 1,
-   "write": 1
-  },
-  {
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "Stock User",
-   "share": 1
-  }
- ],
- "search_fields": "transporter,valid_from",
- "sort_field": "valid_from",
- "sort_order": "DESC",
- "track_changes": 1
+  "actions": [],
+  "autoname": "naming_series:",
+  "creation": "2026-03-27 12:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "layout_0_tab",
+    "layout_1_section",
+    "naming_series",
+    "transporter",
+    "layout_4_column",
+    "valid_from",
+    "valid_to",
+    "is_active",
+    "layout_8_section",
+    "rate_slabs",
+    "layout_10_section",
+    "oda_rates",
+    "layout_12_tab",
+    "layout_13_section",
+    "docket_charge",
+    "fov_percentage",
+    "fuel_surcharge_percentage",
+    "layout_17_column",
+    "volumetric_divisor",
+    "minimum_freight",
+    "layout_20_section",
+    "amended_from"
+  ],
+  "fields": [
+    {
+      "fieldname": "layout_0_tab",
+      "fieldtype": "Tab Break",
+      "label": "Rates"
+    },
+    {
+      "fieldname": "layout_1_section",
+      "fieldtype": "Section Break",
+      "label": "Transporter and validity"
+    },
+    {
+      "fieldname": "naming_series",
+      "fieldtype": "Select",
+      "label": "Series",
+      "options": "TRC-.YYYY.-.#####"
+    },
+    {
+      "fieldname": "transporter",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "label": "Transporter",
+      "options": "Supplier",
+      "reqd": 1
+    },
+    {
+      "fieldname": "layout_4_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "valid_from",
+      "fieldtype": "Date",
+      "in_list_view": 1,
+      "label": "Valid From",
+      "reqd": 1
+    },
+    {
+      "fieldname": "valid_to",
+      "fieldtype": "Date",
+      "in_list_view": 1,
+      "label": "Valid To",
+      "description": "Leave blank if the contract is open-ended (currently active)"
+    },
+    {
+      "fieldname": "is_active",
+      "fieldtype": "Check",
+      "label": "Is Active",
+      "read_only": 1,
+      "description": "Auto-computed: valid_from \u2264 today \u2264 valid_to (or blank)"
+    },
+    {
+      "fieldname": "layout_8_section",
+      "fieldtype": "Section Break",
+      "label": "Freight by zone and weight"
+    },
+    {
+      "fieldname": "rate_slabs",
+      "fieldtype": "Table",
+      "label": "Rate Slabs",
+      "options": "Transporter Rate Slab"
+    },
+    {
+      "fieldname": "layout_10_section",
+      "fieldtype": "Section Break",
+      "label": "ODA surcharges"
+    },
+    {
+      "fieldname": "oda_rates",
+      "fieldtype": "Table",
+      "label": "ODA Rates",
+      "options": "Transporter ODA Rate"
+    },
+    {
+      "fieldname": "layout_12_tab",
+      "fieldtype": "Tab Break",
+      "label": "Charges"
+    },
+    {
+      "fieldname": "layout_13_section",
+      "fieldtype": "Section Break",
+      "label": "Charges and weight basis"
+    },
+    {
+      "fieldname": "docket_charge",
+      "fieldtype": "Currency",
+      "label": "Docket / Handling Charge (\u20b9)",
+      "description": "Fixed per-shipment charge"
+    },
+    {
+      "fieldname": "fov_percentage",
+      "fieldtype": "Percent",
+      "label": "FOV %",
+      "default": "0.1",
+      "description": "Freight on Value \u2014 applied on invoice value"
+    },
+    {
+      "fieldname": "fuel_surcharge_percentage",
+      "fieldtype": "Percent",
+      "label": "Fuel Surcharge %",
+      "description": "Applied on basic freight amount"
+    },
+    {
+      "fieldname": "layout_17_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "volumetric_divisor",
+      "fieldtype": "Float",
+      "label": "Volumetric Divisor",
+      "default": "1728",
+      "description": "L\u00d7W\u00d7H (cm\u00b3) \u00f7 this divisor = dimensional weight in kg"
+    },
+    {
+      "fieldname": "minimum_freight",
+      "fieldtype": "Currency",
+      "label": "Minimum Total Freight (\u20b9)",
+      "description": "Floor amount \u2014 total freight will not go below this"
+    },
+    {
+      "fieldname": "layout_20_section",
+      "fieldtype": "Section Break",
+      "label": "References"
+    },
+    {
+      "fieldname": "amended_from",
+      "fieldtype": "Link",
+      "label": "Amended From",
+      "no_copy": 1,
+      "options": "Transporter Rate Card",
+      "print_hide": 1,
+      "read_only": 1
+    }
+  ],
+  "is_submittable": 1,
+  "links": [],
+  "modified": "2026-03-27 12:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "Supply Chain",
+  "name": "Transporter Rate Card",
+  "naming_rule": "By \"Naming Series\" field",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "amend": 1,
+      "cancel": 1,
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "submit": 1,
+      "write": 1
+    },
+    {
+      "amend": 1,
+      "cancel": 1,
+      "create": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Stock Manager",
+      "share": 1,
+      "submit": 1,
+      "write": 1
+    },
+    {
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Stock User",
+      "share": 1
+    }
+  ],
+  "search_fields": "transporter,valid_from",
+  "sort_field": "valid_from",
+  "sort_order": "DESC",
+  "track_changes": 1
 }

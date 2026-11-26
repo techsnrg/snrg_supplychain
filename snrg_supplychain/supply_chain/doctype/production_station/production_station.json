@@ -4,15 +4,24 @@
   "module": "Supply Chain",
   "engine": "InnoDB",
   "field_order": [
+    "layout_0_section",
     "station_name",
     "enabled",
+    "layout_3_column",
     "company",
+    "cost_center",
+    "layout_6_section",
     "source_warehouse",
+    "layout_8_column",
     "target_warehouse",
-    "consumption_method",
-    "cost_center"
+    "consumption_method"
   ],
   "fields": [
+    {
+      "fieldname": "layout_0_section",
+      "fieldtype": "Section Break",
+      "label": "Station"
+    },
     {
       "fieldname": "station_name",
       "fieldtype": "Data",
@@ -26,6 +35,10 @@
       "default": "1"
     },
     {
+      "fieldname": "layout_3_column",
+      "fieldtype": "Column Break"
+    },
+    {
       "fieldname": "company",
       "fieldtype": "Link",
       "label": "Company",
@@ -33,11 +46,26 @@
       "reqd": 1
     },
     {
+      "fieldname": "cost_center",
+      "fieldtype": "Link",
+      "label": "Cost Center",
+      "options": "Cost Center"
+    },
+    {
+      "fieldname": "layout_6_section",
+      "fieldtype": "Section Break",
+      "label": "Stock movement"
+    },
+    {
       "fieldname": "source_warehouse",
       "fieldtype": "Link",
       "label": "Source Warehouse",
       "options": "Warehouse",
       "reqd": 1
+    },
+    {
+      "fieldname": "layout_8_column",
+      "fieldtype": "Column Break"
     },
     {
       "fieldname": "target_warehouse",
@@ -52,12 +80,6 @@
       "label": "Consumption Method",
       "options": "Stocked components\nExpanded raw materials",
       "reqd": 1
-    },
-    {
-      "fieldname": "cost_center",
-      "fieldtype": "Link",
-      "label": "Cost Center",
-      "options": "Cost Center"
     }
   ],
   "autoname": "field:station_name",

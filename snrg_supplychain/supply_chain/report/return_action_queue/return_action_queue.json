@@ -1,0 +1,28 @@
+{
+  "doctype": "Report",
+  "name": "Return Action Queue",
+  "ref_doctype": "Material Return Authorization",
+  "report_type": "Script Report",
+  "is_standard": "Yes",
+  "module": "Supply Chain",
+  "roles": [
+    {
+      "role": "Sales User"
+    },
+    {
+      "role": "Managing Director"
+    },
+    {
+      "role": "Stock Manager"
+    },
+    {
+      "role": "Quality Manager"
+    },
+    {
+      "role": "Accounts Manager"
+    },
+    {
+      "role": "Accounts User"
+    }
+  ]
+}

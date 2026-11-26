@@ -1,64 +1,75 @@
 {
- "actions": [],
- "creation": "2026-03-16 12:00:00.000000",
- "doctype": "DocType",
- "editable_grid": 1,
- "engine": "InnoDB",
- "field_order": [
-  "carton_id",
-  "box_type",
-  "packed_date",
-  "items_summary",
-  "gross_weight_kg"
- ],
- "fields": [
-  {
-   "fieldname": "carton_id",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Carton ID",
-   "options": "Packed Carton",
-   "reqd": 1
-  },
-  {
-   "fieldname": "box_type",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Box type",
-   "read_only": 0
-  },
-  {
-   "fieldname": "packed_date",
-   "fieldtype": "Date",
-   "in_list_view": 1,
-   "label": "Packed date",
-   "read_only": 0
-  },
-  {
-   "fieldname": "items_summary",
-   "fieldtype": "Small Text",
-   "label": "Items summary",
-   "read_only": 1,
-   "hidden": 1
-  },
-  {
-   "fieldname": "gross_weight_kg",
-   "fieldtype": "Float",
-   "in_list_view": 1,
-   "label": "Gross weight (kg)",
-   "read_only": 1
-  }
- ],
- "index_web_pages_for_search": 1,
- "istable": 1,
- "links": [],
- "modified": "2026-03-16 12:00:00.000000",
- "modified_by": "Administrator",
- "module": "Supply Chain",
- "name": "Outward Shipment Carton",
- "owner": "Administrator",
- "permissions": [],
- "sort_field": "modified",
- "sort_order": "DESC",
- "states": []
+  "actions": [],
+  "creation": "2026-03-16 12:00:00.000000",
+  "doctype": "DocType",
+  "editable_grid": 1,
+  "engine": "InnoDB",
+  "field_order": [
+    "layout_0_section",
+    "carton_id",
+    "box_type",
+    "layout_3_column",
+    "packed_date",
+    "gross_weight_kg",
+    "items_summary"
+  ],
+  "fields": [
+    {
+      "fieldname": "layout_0_section",
+      "fieldtype": "Section Break",
+      "label": "Details"
+    },
+    {
+      "fieldname": "carton_id",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "label": "Carton ID",
+      "options": "Packed Carton",
+      "reqd": 1
+    },
+    {
+      "fieldname": "box_type",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Box type",
+      "read_only": 0
+    },
+    {
+      "fieldname": "layout_3_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "packed_date",
+      "fieldtype": "Date",
+      "in_list_view": 1,
+      "label": "Packed date",
+      "read_only": 0
+    },
+    {
+      "fieldname": "gross_weight_kg",
+      "fieldtype": "Float",
+      "in_list_view": 1,
+      "label": "Gross weight (kg)",
+      "read_only": 1
+    },
+    {
+      "fieldname": "items_summary",
+      "fieldtype": "Small Text",
+      "label": "Items summary",
+      "read_only": 1,
+      "hidden": 1
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "istable": 1,
+  "links": [],
+  "modified": "2026-03-16 12:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "Supply Chain",
+  "name": "Outward Shipment Carton",
+  "owner": "Administrator",
+  "permissions": [],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": []
 }

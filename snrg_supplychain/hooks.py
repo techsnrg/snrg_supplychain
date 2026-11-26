@@ -211,5 +211,36 @@ doctype_list_js = {
 # ]
 
 # Bulk Production schema and Stock Entry traceability links.
-after_migrate = ["snrg_supplychain.supply_chain.production_setup.after_migrate"]
-after_install = ["snrg_supplychain.supply_chain.production_setup.after_migrate"]
+after_migrate = ["snrg_supplychain.returns.native_setup.after_migrate", "snrg_supplychain.supply_chain.production_setup.after_migrate"]
+after_install = ["snrg_supplychain.returns.native_setup.after_migrate", "snrg_supplychain.supply_chain.production_setup.after_migrate"]
+
+# Returns: native stock/accounts/QC with commercial case guards.
+app_include_js = ["/assets/snrg_supplychain/js/returns.js"]
+app_include_css = ["/assets/snrg_supplychain/css/supply_chain_layout.css?v=20261126-layout"]
+doc_events = {"Supplier": {"validate": "snrg_supplychain.returns.setup.validate_supplier"}}
+for _return in ("Material Return Authorization", "Return Receipt", "Return Inspection", "Return Settlement"):
+    doc_events[_return] = {"on_trash": "snrg_supplychain.returns.native_service.prevent_delete"}
+doc_events["Quality Inspection"] = {
+    "before_validate": "snrg_supplychain.returns.native_service.validate_quality_inspection",
+    "validate": "snrg_supplychain.returns.native_service.validate_quality_inspection",
+    "on_submit": "snrg_supplychain.returns.native_service.quality_updated",
+    "before_cancel": "snrg_supplychain.returns.native_service.quality_before_cancel",
+    "on_cancel": "snrg_supplychain.returns.native_service.quality_updated",
+}
+for _native in ("Delivery Note", "Sales Invoice", "Purchase Receipt", "Purchase Invoice", "Journal Entry", "Payment Entry", "Stock Entry"):
+    doc_events[_native] = {
+        "validate": "snrg_supplychain.returns.native_stock.validate_return_document",
+        "before_cancel": "snrg_supplychain.returns.native_stock.before_cancel",
+    }
+doc_events["Shipment"] = {"validate": "snrg_supplychain.returns.native_service.validate_shipment"}
+extend_doctype_class = {_native: ["snrg_supplychain.returns.native_stock.ReturnInspectionAdapter"]
+    for _native in ("Delivery Note", "Sales Invoice", "Purchase Receipt", "Purchase Invoice", "Stock Entry")}
+extend_doctype_class["Quality Inspection"] = ["snrg_supplychain.returns.stock_first.ReturnQualityAdapter"]
+permission_query_conditions = {"Quality Inspection": "snrg_supplychain.returns.permissions.qi_query"}
+has_permission = {"Quality Inspection": "snrg_supplychain.returns.permissions.qi_permission"}
+for _arrival, _query in (("Stock Entry","stock_entry_query"),("Delivery Note","delivery_note_query"),("Purchase Receipt","purchase_receipt_query")):
+    permission_query_conditions[_arrival] = "snrg_supplychain.returns.permissions." + _query
+    has_permission[_arrival] = "snrg_supplychain.returns.permissions.arrival_permission"
+    doc_events[_arrival]["before_update_after_submit"] = "snrg_supplychain.returns.stock_first.update_after_submit"
+for _guarded in ("Delivery Note", "Sales Invoice", "Purchase Receipt", "Purchase Invoice", "Stock Entry"):
+    doc_events[_guarded]["validate"] = [doc_events[_guarded]["validate"], "snrg_supplychain.returns.stock_first.guard_quarantine"]

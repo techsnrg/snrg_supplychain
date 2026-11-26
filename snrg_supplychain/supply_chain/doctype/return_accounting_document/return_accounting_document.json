@@ -1,0 +1,63 @@
+{
+  "doctype": "DocType",
+  "name": "Return Accounting Document",
+  "module": "Supply Chain",
+  "engine": "InnoDB",
+  "track_changes": 1,
+  "fields": [
+    {
+      "fieldname": "layout_0_section",
+      "fieldtype": "Section Break",
+      "label": "Details"
+    },
+    {
+      "fieldname": "document_type",
+      "fieldtype": "Select",
+      "label": "Document Type",
+      "reqd": 1,
+      "options": "Sales Invoice\nPurchase Invoice\nJournal Entry\nPayment Entry"
+    },
+    {
+      "fieldname": "document_name",
+      "fieldtype": "Dynamic Link",
+      "label": "Document Name",
+      "reqd": 1,
+      "in_list_view": 1,
+      "options": "document_type"
+    },
+    {
+      "fieldname": "layout_3_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "purpose",
+      "fieldtype": "Select",
+      "label": "Purpose",
+      "reqd": 1,
+      "in_list_view": 1,
+      "options": "Settlement\nCharge\nOffset / Payment"
+    },
+    {
+      "fieldname": "layout_5_section",
+      "fieldtype": "Section Break",
+      "label": "Notes"
+    },
+    {
+      "fieldname": "notes",
+      "fieldtype": "Small Text",
+      "label": "Notes"
+    }
+  ],
+  "field_order": [
+    "layout_0_section",
+    "document_type",
+    "document_name",
+    "layout_3_column",
+    "purpose",
+    "layout_5_section",
+    "notes"
+  ],
+  "permissions": [],
+  "istable": 1,
+  "editable_grid": 1
+}

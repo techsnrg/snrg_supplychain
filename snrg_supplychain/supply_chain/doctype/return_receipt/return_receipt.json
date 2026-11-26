@@ -1,0 +1,531 @@
+{
+  "doctype": "DocType",
+  "name": "Return Receipt",
+  "module": "Supply Chain",
+  "engine": "InnoDB",
+  "track_changes": 1,
+  "fields": [
+    {
+      "fieldname": "layout_0_tab",
+      "fieldtype": "Tab Break",
+      "label": "Receipt"
+    },
+    {
+      "fieldname": "layout_1_section",
+      "fieldtype": "Section Break",
+      "label": "Historical custody record"
+    },
+    {
+      "fieldname": "authorization",
+      "fieldtype": "Link",
+      "label": "Authorization",
+      "reqd": 1,
+      "options": "Material Return Authorization"
+    },
+    {
+      "fieldname": "company",
+      "fieldtype": "Link",
+      "label": "Company",
+      "reqd": 1,
+      "options": "Company"
+    },
+    {
+      "fieldname": "customer",
+      "fieldtype": "Link",
+      "label": "Customer",
+      "reqd": 1,
+      "options": "Customer"
+    },
+    {
+      "fieldname": "layout_5_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "received_on",
+      "fieldtype": "Date",
+      "label": "Received On",
+      "default": "Today",
+      "reqd": 1
+    },
+    {
+      "fieldname": "currency",
+      "fieldtype": "Link",
+      "label": "Currency",
+      "reqd": 1,
+      "options": "Currency"
+    },
+    {
+      "fieldname": "responsible_user",
+      "fieldtype": "Link",
+      "label": "Responsible User",
+      "reqd": 1,
+      "options": "User"
+    },
+    {
+      "fieldname": "documents_complete",
+      "fieldtype": "Check",
+      "label": "Documents Complete"
+    },
+    {
+      "fieldname": "layout_10_section",
+      "fieldtype": "Section Break",
+      "label": "Received material"
+    },
+    {
+      "fieldname": "items",
+      "fieldtype": "Table",
+      "label": "Items",
+      "reqd": 1,
+      "options": "Return Receipt Item"
+    },
+    {
+      "fieldname": "layout_12_tab",
+      "fieldtype": "Tab Break",
+      "label": "Transport"
+    },
+    {
+      "fieldname": "layout_13_section",
+      "fieldtype": "Section Break",
+      "label": "Transport arrangement"
+    },
+    {
+      "fieldname": "arranged_by",
+      "fieldtype": "Select",
+      "label": "Arranged By",
+      "default": "SNRG",
+      "reqd": 1,
+      "options": "SNRG\nCustomer"
+    },
+    {
+      "fieldname": "paid_by",
+      "fieldtype": "Select",
+      "label": "Paid By",
+      "default": "SNRG",
+      "reqd": 1,
+      "options": "SNRG\nCustomer"
+    },
+    {
+      "fieldname": "transporter",
+      "fieldtype": "Link",
+      "label": "Transporter",
+      "options": "Supplier"
+    },
+    {
+      "fieldname": "shipment",
+      "fieldtype": "Link",
+      "label": "Shipment",
+      "options": "Shipment"
+    },
+    {
+      "fieldname": "layout_18_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "consignment_number",
+      "fieldtype": "Data",
+      "label": "Consignment Number"
+    },
+    {
+      "fieldname": "consignment_date",
+      "fieldtype": "Date",
+      "label": "Consignment Date"
+    },
+    {
+      "fieldname": "consignment_attachment",
+      "fieldtype": "Attach",
+      "label": "Consignment Attachment"
+    },
+    {
+      "fieldname": "layout_22_section",
+      "fieldtype": "Section Break",
+      "label": "Actual freight"
+    },
+    {
+      "fieldname": "freight_estimate",
+      "fieldtype": "Currency",
+      "label": "Freight Estimate",
+      "options": "currency"
+    },
+    {
+      "fieldname": "actual_freight",
+      "fieldtype": "Currency",
+      "label": "Actual Freight",
+      "options": "currency"
+    },
+    {
+      "fieldname": "freight_responsibility",
+      "fieldtype": "Select",
+      "label": "Freight Responsibility",
+      "default": "Pending QC",
+      "reqd": 1,
+      "options": "Pending QC\nSNRG\nCustomer\nShared"
+    },
+    {
+      "fieldname": "layout_26_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "customer_freight",
+      "fieldtype": "Currency",
+      "label": "Customer Freight",
+      "options": "currency"
+    },
+    {
+      "fieldname": "freight_bill",
+      "fieldtype": "Link",
+      "label": "Freight Bill",
+      "options": "Purchase Invoice"
+    },
+    {
+      "fieldname": "freight_finalized",
+      "fieldtype": "Check",
+      "label": "Freight Finalized",
+      "description": "Finance has reconciled actual freight and the customer allocation."
+    },
+    {
+      "fieldname": "layout_30_section",
+      "fieldtype": "Section Break",
+      "label": "Allocation explanation"
+    },
+    {
+      "fieldname": "allocation_reason",
+      "fieldtype": "Small Text",
+      "label": "Allocation Reason"
+    },
+    {
+      "fieldname": "layout_32_tab",
+      "fieldtype": "Tab Break",
+      "label": "Rejection"
+    },
+    {
+      "fieldname": "layout_33_section",
+      "fieldtype": "Section Break",
+      "label": "Customer notice"
+    },
+    {
+      "fieldname": "findings_notice",
+      "fieldtype": "Attach",
+      "label": "Findings Notice"
+    },
+    {
+      "fieldname": "rejection_notice_date",
+      "fieldtype": "Date",
+      "label": "Rejection Notice Date"
+    },
+    {
+      "fieldname": "layout_36_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "dispute_deadline",
+      "fieldtype": "Date",
+      "label": "Dispute Deadline",
+      "read_only": 1
+    },
+    {
+      "fieldname": "collection_deadline",
+      "fieldtype": "Date",
+      "label": "Collection Deadline",
+      "read_only": 1
+    },
+    {
+      "fieldname": "layout_39_section",
+      "fieldtype": "Section Break",
+      "label": "Dispute"
+    },
+    {
+      "fieldname": "dispute_status",
+      "fieldtype": "Select",
+      "label": "Dispute Status",
+      "default": "None",
+      "options": "None\nOpen\nResolved"
+    },
+    {
+      "fieldname": "dispute_details",
+      "fieldtype": "Small Text",
+      "label": "Dispute Details"
+    },
+    {
+      "fieldname": "layout_42_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "resolved_on",
+      "fieldtype": "Date",
+      "label": "Resolved On"
+    },
+    {
+      "fieldname": "resolution",
+      "fieldtype": "Small Text",
+      "label": "Resolution"
+    },
+    {
+      "fieldname": "layout_45_section",
+      "fieldtype": "Section Break",
+      "label": "Disposition"
+    },
+    {
+      "fieldname": "disposition",
+      "fieldtype": "Select",
+      "label": "Disposition",
+      "default": "Pending",
+      "options": "Pending\nCollected\nReturned to Customer\nDisposed"
+    },
+    {
+      "fieldname": "disposition_date",
+      "fieldtype": "Date",
+      "label": "Disposition Date"
+    },
+    {
+      "fieldname": "disposition_evidence",
+      "fieldtype": "Attach",
+      "label": "Disposition Evidence"
+    },
+    {
+      "fieldname": "layout_49_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "customer_disposal_instruction",
+      "fieldtype": "Attach",
+      "label": "Customer Disposal Instruction"
+    },
+    {
+      "fieldname": "disposal_approved_by",
+      "fieldtype": "Link",
+      "label": "Disposal Approved By",
+      "read_only": 1,
+      "options": "User"
+    },
+    {
+      "fieldname": "disposal_approved_on",
+      "fieldtype": "Datetime",
+      "label": "Disposal Approved On",
+      "read_only": 1
+    },
+    {
+      "fieldname": "layout_53_tab",
+      "fieldtype": "Tab Break",
+      "label": "Tracking"
+    },
+    {
+      "fieldname": "layout_54_section",
+      "fieldtype": "Section Break",
+      "label": "Timelines"
+    },
+    {
+      "fieldname": "complete_on",
+      "fieldtype": "Date",
+      "label": "Complete On",
+      "read_only": 1
+    },
+    {
+      "fieldname": "due_date",
+      "fieldtype": "Date",
+      "label": "Due Date",
+      "read_only": 1
+    },
+    {
+      "fieldname": "layout_57_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "revised_due_date",
+      "fieldtype": "Date",
+      "label": "Revised Due Date"
+    },
+    {
+      "fieldname": "delay_reason",
+      "fieldtype": "Small Text",
+      "label": "Delay Reason"
+    },
+    {
+      "fieldname": "layout_60_section",
+      "fieldtype": "Section Break",
+      "label": "Receipt status"
+    },
+    {
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "label": "Status",
+      "default": "Draft",
+      "read_only": 1,
+      "options": "Draft\nReceived\nDisposal Approved"
+    },
+    {
+      "fieldname": "workflow_state",
+      "fieldtype": "Link",
+      "label": "Workflow State",
+      "default": "Draft",
+      "read_only": 1,
+      "options": "Workflow State"
+    },
+    {
+      "fieldname": "quality_complete",
+      "fieldtype": "Check",
+      "label": "Quality Complete",
+      "read_only": 1
+    }
+  ],
+  "field_order": [
+    "layout_0_tab",
+    "layout_1_section",
+    "authorization",
+    "company",
+    "customer",
+    "layout_5_column",
+    "received_on",
+    "currency",
+    "responsible_user",
+    "documents_complete",
+    "layout_10_section",
+    "items",
+    "layout_12_tab",
+    "layout_13_section",
+    "arranged_by",
+    "paid_by",
+    "transporter",
+    "shipment",
+    "layout_18_column",
+    "consignment_number",
+    "consignment_date",
+    "consignment_attachment",
+    "layout_22_section",
+    "freight_estimate",
+    "actual_freight",
+    "freight_responsibility",
+    "layout_26_column",
+    "customer_freight",
+    "freight_bill",
+    "freight_finalized",
+    "layout_30_section",
+    "allocation_reason",
+    "layout_32_tab",
+    "layout_33_section",
+    "findings_notice",
+    "rejection_notice_date",
+    "layout_36_column",
+    "dispute_deadline",
+    "collection_deadline",
+    "layout_39_section",
+    "dispute_status",
+    "dispute_details",
+    "layout_42_column",
+    "resolved_on",
+    "resolution",
+    "layout_45_section",
+    "disposition",
+    "disposition_date",
+    "disposition_evidence",
+    "layout_49_column",
+    "customer_disposal_instruction",
+    "disposal_approved_by",
+    "disposal_approved_on",
+    "layout_53_tab",
+    "layout_54_section",
+    "complete_on",
+    "due_date",
+    "layout_57_column",
+    "revised_due_date",
+    "delay_reason",
+    "layout_60_section",
+    "status",
+    "workflow_state",
+    "quality_complete"
+  ],
+  "permissions": [
+    {
+      "role": "Sales User",
+      "read": 1,
+      "write": 1,
+      "create": 1,
+      "print": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1
+    },
+    {
+      "role": "Sales Manager",
+      "read": 1,
+      "write": 1,
+      "create": 1,
+      "print": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1
+    },
+    {
+      "role": "Managing Director",
+      "read": 1,
+      "write": 1,
+      "create": 1,
+      "print": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1
+    },
+    {
+      "role": "Stock User",
+      "read": 1,
+      "write": 1,
+      "create": 1,
+      "print": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1
+    },
+    {
+      "role": "Stock Manager",
+      "read": 1,
+      "write": 1,
+      "create": 1,
+      "print": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1
+    },
+    {
+      "role": "Quality Manager",
+      "read": 1,
+      "write": 1,
+      "create": 1,
+      "print": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1
+    },
+    {
+      "role": "Accounts User",
+      "read": 1,
+      "write": 1,
+      "create": 1,
+      "print": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1
+    },
+    {
+      "role": "Accounts Manager",
+      "read": 1,
+      "write": 1,
+      "create": 1,
+      "print": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1
+    },
+    {
+      "role": "System Manager",
+      "read": 1,
+      "write": 1,
+      "create": 1,
+      "print": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1
+    }
+  ],
+  "autoname": "RRC-.YYYY.-.#####",
+  "sort_field": "modified",
+  "sort_order": "DESC"
+}

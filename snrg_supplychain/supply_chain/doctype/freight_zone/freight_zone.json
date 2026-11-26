@@ -1,113 +1,124 @@
 {
- "actions": [],
- "autoname": "field:zone_name",
- "creation": "2026-03-27 12:00:00.000000",
- "doctype": "DocType",
- "engine": "InnoDB",
- "field_order": [
-  "zone_name",
-  "zone_type",
-  "column_break_1",
-  "city",
-  "state",
-  "section_break_flags",
-  "is_fallback",
-  "is_active"
- ],
- "fields": [
-  {
-   "fieldname": "zone_name",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Zone Name",
-   "reqd": 1,
-   "unique": 1
-  },
-  {
-   "fieldname": "zone_type",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Zone Type",
-   "options": "Metro City\nState\nRegion\nSpecial"
-  },
-  {
-   "fieldname": "column_break_1",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "city",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "City (for matching)",
-   "description": "Enter city name exactly as it appears in the Address master. Used for metro zone matching."
-  },
-  {
-   "fieldname": "state",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "State"
-  },
-  {
-   "fieldname": "section_break_flags",
-   "fieldtype": "Section Break",
-   "label": "Flags"
-  },
-  {
-   "fieldname": "is_fallback",
-   "fieldtype": "Check",
-   "label": "Is State Fallback",
-   "description": "Mark this as the fallback zone for the above state (e.g., 'Rest of West Bengal'). Used when delivery city is not a known metro."
-  },
-  {
-   "fieldname": "is_active",
-   "fieldtype": "Check",
-   "default": "1",
-   "label": "Is Active"
-  }
- ],
- "links": [],
- "modified": "2026-03-27 12:00:00.000000",
- "modified_by": "Administrator",
- "module": "Supply Chain",
- "name": "Freight Zone",
- "naming_rule": "By fieldname",
- "owner": "Administrator",
- "permissions": [
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "System Manager",
-   "share": 1,
-   "write": 1
-  },
-  {
-   "create": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "Stock Manager",
-   "share": 1,
-   "write": 1
-  },
-  {
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "Stock User",
-   "share": 1
-  }
- ],
- "search_fields": "zone_name,city,state",
- "sort_field": "zone_name",
- "sort_order": "ASC",
- "track_changes": 0
+  "actions": [],
+  "autoname": "field:zone_name",
+  "creation": "2026-03-27 12:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "layout_0_section",
+    "zone_name",
+    "zone_type",
+    "layout_3_column",
+    "city",
+    "state",
+    "layout_6_section",
+    "is_active",
+    "layout_8_column",
+    "is_fallback"
+  ],
+  "fields": [
+    {
+      "fieldname": "layout_0_section",
+      "fieldtype": "Section Break",
+      "label": "Zone"
+    },
+    {
+      "fieldname": "zone_name",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Zone Name",
+      "reqd": 1,
+      "unique": 1
+    },
+    {
+      "fieldname": "zone_type",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "label": "Zone Type",
+      "options": "Metro City\nState\nRegion\nSpecial"
+    },
+    {
+      "fieldname": "layout_3_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "city",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "City (for matching)",
+      "description": "Enter city name exactly as it appears in the Address master. Used for metro zone matching."
+    },
+    {
+      "fieldname": "state",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "State"
+    },
+    {
+      "fieldname": "layout_6_section",
+      "fieldtype": "Section Break",
+      "label": "Availability"
+    },
+    {
+      "fieldname": "is_active",
+      "fieldtype": "Check",
+      "default": "1",
+      "label": "Is Active"
+    },
+    {
+      "fieldname": "layout_8_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "is_fallback",
+      "fieldtype": "Check",
+      "label": "Is State Fallback",
+      "description": "Mark this as the fallback zone for the above state (e.g., 'Rest of West Bengal'). Used when delivery city is not a known metro."
+    }
+  ],
+  "links": [],
+  "modified": "2026-03-27 12:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "Supply Chain",
+  "name": "Freight Zone",
+  "naming_rule": "By fieldname",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Stock Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Stock User",
+      "share": 1
+    }
+  ],
+  "search_fields": "zone_name,city,state",
+  "sort_field": "zone_name",
+  "sort_order": "ASC",
+  "track_changes": 0
 }

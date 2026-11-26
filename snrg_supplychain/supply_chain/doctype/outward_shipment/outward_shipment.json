@@ -1,247 +1,298 @@
 {
- "actions": [],
- "autoname": "naming_series:",
- "creation": "2026-03-16 12:00:00.000000",
- "doctype": "DocType",
- "engine": "InnoDB",
- "field_order": [
-  "order_details_section",
-  "naming_series",
-  "sales_order",
-  "customer",
-  "column_break_order",
-  "dispatch_date",
-  "create_delivery_note",
-  "cartons_section",
-  "cartons",
-  "items_summary_section",
-  "dispatch_items",
-  "summary_section",
-  "total_cartons",
-  "total_pieces",
-  "total_gross_weight",
-  "linked_documents_section",
-  "status",
-  "delivery_note",
-  "freight_section",
-  "freight_quotation",
-  "selected_transporter",
-  "freight_amount",
-  "amended_from"
- ],
- "fields": [
-  {
-   "fieldname": "order_details_section",
-   "fieldtype": "Section Break",
-   "label": "Order details"
-  },
-  {
-   "default": "DL-.YYYY.-.#####",
-   "fieldname": "naming_series",
-   "fieldtype": "Select",
-   "label": "Series",
-   "options": "DL-.YYYY.-.#####",
-   "reqd": 1,
-   "set_only_once": 1
-  },
-  {
-   "fieldname": "sales_order",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Sales order",
-   "options": "Sales Order",
-   "reqd": 1
-  },
-  {
-   "fetch_from": "sales_order.customer",
-   "fieldname": "customer",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Customer",
-   "options": "Customer",
-   "read_only": 1,
-   "reqd": 1
-  },
-  {
-   "fieldname": "column_break_order",
-   "fieldtype": "Column Break"
-  },
-  {
-   "default": "Today",
-   "fieldname": "dispatch_date",
-   "fieldtype": "Date",
-   "in_list_view": 1,
-   "label": "Dispatch date",
-   "reqd": 1
-  },
-  {
-   "default": 0,
-   "fieldname": "create_delivery_note",
-   "fieldtype": "Check",
-   "label": "Create Delivery Note on Submit"
-  },
-  {
-   "fieldname": "cartons_section",
-   "fieldtype": "Section Break",
-   "label": "Cartons"
-  },
-  {
-   "fieldname": "cartons",
-   "fieldtype": "Table",
-   "in_place_edit": 1,
-   "label": "Cartons",
-   "options": "Outward Shipment Carton",
-   "reqd": 1
-  },
-  {
-   "fieldname": "items_summary_section",
-   "fieldtype": "Section Break",
-   "label": "Items Summary (from Cartons)"
-  },
-  {
-   "fieldname": "dispatch_items",
-   "fieldtype": "Table",
-   "in_place_edit": 1,
-   "label": "Items",
-   "options": "Outward Shipment Item",
-   "read_only": 1
-  },
-  {
-   "fieldname": "summary_section",
-   "fieldtype": "Section Break",
-   "label": "Summary"
-  },
-  {
-   "fieldname": "total_cartons",
-   "fieldtype": "Int",
-   "in_list_view": 1,
-   "label": "Total cartons",
-   "read_only": 1
-  },
-  {
-   "fieldname": "total_pieces",
-   "fieldtype": "Float",
-   "label": "Total pieces",
-   "read_only": 1
-  },
-  {
-   "fieldname": "total_gross_weight",
-   "fieldtype": "Float",
-   "label": "Total gross weight (kg)",
-   "read_only": 1
-  },
-  {
-   "fieldname": "linked_documents_section",
-   "fieldtype": "Section Break",
-   "label": "Linked documents"
-  },
-  {
-   "default": "Draft",
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Status",
-   "options": "Draft\nSubmitted\nCancelled",
-   "read_only": 1,
-   "reqd": 1
-  },
-  {
-   "fieldname": "delivery_note",
-   "fieldtype": "Link",
-   "label": "Delivery note",
-   "options": "Delivery Note",
-   "read_only": 1
-  },
-  {
-   "fieldname": "freight_section",
-   "fieldtype": "Section Break",
-   "label": "Freight"
-  },
-  {
-   "fieldname": "freight_quotation",
-   "fieldtype": "Link",
-   "label": "Freight Quotation",
-   "options": "Freight Quotation",
-   "read_only": 1,
-   "no_copy": 1
-  },
-  {
-   "fieldname": "selected_transporter",
-   "fieldtype": "Link",
-   "label": "Selected Transporter",
-   "options": "Supplier",
-   "read_only": 1,
-   "no_copy": 1
-  },
-  {
-   "fieldname": "freight_amount",
-   "fieldtype": "Currency",
-   "label": "Freight Amount (₹)",
-   "read_only": 1,
-   "no_copy": 1
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Outward Shipment",
-   "print_hide": 1,
-   "read_only": 1
-  }
- ],
- "index_web_pages_for_search": 1,
- "is_submittable": 1,
- "links": [],
- "modified": "2026-03-18 00:50:00.000000",
- "modified_by": "Administrator",
- "module": "Supply Chain",
- "name": "Outward Shipment",
- "naming_rule": "By \"Naming Series\" field",
- "owner": "Administrator",
- "permissions": [
-  {
-   "amend": 1,
-   "cancel": 1,
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "System Manager",
-   "share": 1,
-   "submit": 1,
-   "write": 1
-  },
-  {
-   "amend": 1,
-   "cancel": 1,
-   "create": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "Stock Manager",
-   "share": 1,
-   "submit": 1,
-   "write": 1
-  },
-  {
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "Stock User",
-   "share": 1
-  }
- ],
- "default_print_format": "Dispatch Packing List",
- "search_fields": "name,sales_order,customer",
- "sort_field": "modified",
- "sort_order": "DESC",
- "states": []
+  "actions": [],
+  "autoname": "naming_series:",
+  "creation": "2026-03-16 12:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "layout_0_tab",
+    "layout_1_section",
+    "naming_series",
+    "dispatch_date",
+    "layout_5_column",
+    "customer",
+    "create_delivery_note",
+    "layout_9_section",
+    "sales_order",
+    "layout_12_section",
+    "cartons",
+    "layout_14_section",
+    "total_cartons",
+    "layout_16_column",
+    "total_pieces",
+    "layout_18_column",
+    "total_gross_weight",
+    "layout_20_tab",
+    "layout_21_section",
+    "dispatch_items",
+    "layout_26_tab",
+    "layout_27_section",
+    "selected_transporter",
+    "freight_quotation",
+    "layout_30_column",
+    "freight_amount",
+    "layout_32_tab",
+    "layout_33_section",
+    "status",
+    "delivery_note",
+    "layout_40_section",
+    "amended_from"
+  ],
+  "fields": [
+    {
+      "fieldname": "layout_0_tab",
+      "fieldtype": "Tab Break",
+      "label": "Shipment"
+    },
+    {
+      "fieldname": "layout_1_section",
+      "fieldtype": "Section Break",
+      "label": "Dispatch details"
+    },
+    {
+      "default": "DL-.YYYY.-.#####",
+      "fieldname": "naming_series",
+      "fieldtype": "Select",
+      "label": "Series",
+      "options": "DL-.YYYY.-.#####",
+      "reqd": 1,
+      "set_only_once": 1
+    },
+    {
+      "default": "Today",
+      "fieldname": "dispatch_date",
+      "fieldtype": "Date",
+      "in_list_view": 1,
+      "label": "Dispatch date",
+      "reqd": 1
+    },
+    {
+      "fieldname": "layout_5_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fetch_from": "sales_order.customer",
+      "fieldname": "customer",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "label": "Customer",
+      "options": "Customer",
+      "read_only": 1,
+      "reqd": 1
+    },
+    {
+      "default": 0,
+      "fieldname": "create_delivery_note",
+      "fieldtype": "Check",
+      "label": "Create Delivery Note on Submit"
+    },
+    {
+      "fieldname": "layout_9_section",
+      "fieldtype": "Section Break",
+      "label": "Sales orders"
+    },
+    {
+      "fieldname": "sales_order",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "label": "Sales order",
+      "options": "Sales Order",
+      "reqd": 1
+    },
+    {
+      "fieldname": "layout_12_section",
+      "fieldtype": "Section Break",
+      "label": "Packed cartons"
+    },
+    {
+      "fieldname": "cartons",
+      "fieldtype": "Table",
+      "in_place_edit": 1,
+      "label": "Cartons",
+      "options": "Outward Shipment Carton",
+      "reqd": 1
+    },
+    {
+      "fieldname": "layout_14_section",
+      "fieldtype": "Section Break",
+      "label": "Shipment totals"
+    },
+    {
+      "fieldname": "total_cartons",
+      "fieldtype": "Int",
+      "in_list_view": 1,
+      "label": "Total cartons",
+      "read_only": 1
+    },
+    {
+      "fieldname": "layout_16_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "total_pieces",
+      "fieldtype": "Float",
+      "label": "Total pieces",
+      "read_only": 1
+    },
+    {
+      "fieldname": "layout_18_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "total_gross_weight",
+      "fieldtype": "Float",
+      "label": "Total gross weight (kg)",
+      "read_only": 1
+    },
+    {
+      "fieldname": "layout_20_tab",
+      "fieldtype": "Tab Break",
+      "label": "Item allocation"
+    },
+    {
+      "fieldname": "layout_21_section",
+      "fieldtype": "Section Break",
+      "label": "Items in cartons"
+    },
+    {
+      "fieldname": "dispatch_items",
+      "fieldtype": "Table",
+      "in_place_edit": 1,
+      "label": "Items",
+      "options": "Outward Shipment Item",
+      "read_only": 1
+    },
+    {
+      "fieldname": "layout_26_tab",
+      "fieldtype": "Tab Break",
+      "label": "Freight"
+    },
+    {
+      "fieldname": "layout_27_section",
+      "fieldtype": "Section Break",
+      "label": "Transport"
+    },
+    {
+      "fieldname": "selected_transporter",
+      "fieldtype": "Link",
+      "label": "Selected Transporter",
+      "options": "Supplier",
+      "read_only": 1,
+      "no_copy": 1
+    },
+    {
+      "fieldname": "freight_quotation",
+      "fieldtype": "Link",
+      "label": "Freight Quotation",
+      "options": "Freight Quotation",
+      "read_only": 1,
+      "no_copy": 1
+    },
+    {
+      "fieldname": "layout_30_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "freight_amount",
+      "fieldtype": "Currency",
+      "label": "Freight Amount (\u20b9)",
+      "read_only": 1,
+      "no_copy": 1
+    },
+    {
+      "fieldname": "layout_32_tab",
+      "fieldtype": "Tab Break",
+      "label": "Documents"
+    },
+    {
+      "fieldname": "layout_33_section",
+      "fieldtype": "Section Break",
+      "label": "Posting references"
+    },
+    {
+      "default": "Draft",
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "label": "Status",
+      "options": "Draft\nSubmitted\nCancelled",
+      "read_only": 1,
+      "reqd": 1
+    },
+    {
+      "fieldname": "delivery_note",
+      "fieldtype": "Link",
+      "label": "Delivery note",
+      "options": "Delivery Note",
+      "read_only": 1
+    },
+    {
+      "fieldname": "layout_40_section",
+      "fieldtype": "Section Break",
+      "label": "References"
+    },
+    {
+      "fieldname": "amended_from",
+      "fieldtype": "Link",
+      "label": "Amended From",
+      "no_copy": 1,
+      "options": "Outward Shipment",
+      "print_hide": 1,
+      "read_only": 1
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "is_submittable": 1,
+  "links": [],
+  "modified": "2026-03-18 00:50:00.000000",
+  "modified_by": "Administrator",
+  "module": "Supply Chain",
+  "name": "Outward Shipment",
+  "naming_rule": "By \"Naming Series\" field",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "amend": 1,
+      "cancel": 1,
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "submit": 1,
+      "write": 1
+    },
+    {
+      "amend": 1,
+      "cancel": 1,
+      "create": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Stock Manager",
+      "share": 1,
+      "submit": 1,
+      "write": 1
+    },
+    {
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Stock User",
+      "share": 1
+    }
+  ],
+  "default_print_format": "Dispatch Packing List",
+  "search_fields": "name,sales_order,customer",
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": []
 }

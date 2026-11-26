@@ -1,216 +1,246 @@
 {
- "actions": [],
- "autoname": "naming_series:",
- "creation": "2026-03-27 12:00:00.000000",
- "doctype": "DocType",
- "engine": "InnoDB",
- "field_order": [
-  "naming_series",
-  "dispatch_log",
-  "customer",
-  "status",
-  "column_break_1",
-  "selected_transporter",
-  "selected_freight_amount",
-  "shipment_details_section",
-  "delivery_address",
-  "pin_code",
-  "matched_city",
-  "column_break_2",
-  "matched_freight_zone",
-  "total_weight_kg",
-  "total_volume_cm3",
-  "column_break_3",
-  "dimensional_weight_kg",
-  "invoice_value",
-  "freight_options_section",
-  "freight_options",
-  "amended_from"
- ],
- "fields": [
-  {
-   "fieldname": "naming_series",
-   "fieldtype": "Select",
-   "label": "Series",
-   "options": "FQ-.YYYY.-.#####"
-  },
-  {
-   "fieldname": "dispatch_log",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Outward Shipment",
-   "options": "Outward Shipment",
-   "reqd": 1
-  },
-  {
-   "fieldname": "customer",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Customer",
-   "read_only": 1
-  },
-  {
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Status",
-   "options": "Draft\nFinalized",
-   "default": "Draft",
-   "read_only": 1
-  },
-  {
-   "fieldname": "column_break_1",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "selected_transporter",
-   "fieldtype": "Link",
-   "label": "Selected Transporter",
-   "options": "Supplier",
-   "read_only": 1
-  },
-  {
-   "fieldname": "selected_freight_amount",
-   "fieldtype": "Currency",
-   "label": "Selected Freight Amount (₹)",
-   "read_only": 1
-  },
-  {
-   "fieldname": "shipment_details_section",
-   "fieldtype": "Section Break",
-   "label": "Shipment & Address Details"
-  },
-  {
-   "fieldname": "delivery_address",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Delivery Address",
-   "options": "Address"
-  },
-  {
-   "fieldname": "pin_code",
-   "fieldtype": "Data",
-   "label": "Pin Code",
-   "read_only": 1
-  },
-  {
-   "fieldname": "matched_city",
-   "fieldtype": "Data",
-   "label": "City",
-   "read_only": 1
-  },
-  {
-   "fieldname": "column_break_2",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "matched_freight_zone",
-   "fieldtype": "Link",
-   "label": "Resolved Freight Zone",
-   "options": "Freight Zone",
-   "read_only": 1
-  },
-  {
-   "fieldname": "total_weight_kg",
-   "fieldtype": "Float",
-   "label": "Actual Weight (kg)",
-   "read_only": 1
-  },
-  {
-   "fieldname": "total_volume_cm3",
-   "fieldtype": "Float",
-   "label": "Total Volume (in³)",
-   "read_only": 1
-  },
-  {
-   "fieldname": "column_break_3",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "dimensional_weight_kg",
-   "fieldtype": "Float",
-   "label": "Dimensional Weight (kg)",
-   "read_only": 1,
-   "description": "Calculated as Volume ÷ divisor. Billing uses whichever is higher."
-  },
-  {
-   "fieldname": "invoice_value",
-   "fieldtype": "Currency",
-   "label": "Invoice Value (₹)",
-   "read_only": 1,
-   "description": "Taken from Sales Order grand total for FOV calculation"
-  },
-  {
-   "fieldname": "freight_options_section",
-   "fieldtype": "Section Break",
-   "label": "Transporter Comparison"
-  },
-  {
-   "fieldname": "freight_options",
-   "fieldtype": "Table",
-   "label": "Freight Options",
-   "options": "Freight Quotation Option"
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Freight Quotation",
-   "print_hide": 1,
-   "read_only": 1
-  }
- ],
- "is_submittable": 1,
- "links": [],
- "modified": "2026-03-27 12:00:00.000000",
- "modified_by": "Administrator",
- "module": "Supply Chain",
- "name": "Freight Quotation",
- "naming_rule": "By \"Naming Series\" field",
- "owner": "Administrator",
- "permissions": [
-  {
-   "amend": 1,
-   "cancel": 1,
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "System Manager",
-   "share": 1,
-   "submit": 1,
-   "write": 1
-  },
-  {
-   "amend": 1,
-   "cancel": 1,
-   "create": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "Stock Manager",
-   "share": 1,
-   "submit": 1,
-   "write": 1
-  },
-  {
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "Stock User",
-   "share": 1
-  }
- ],
- "search_fields": "dispatch_log,customer",
- "sort_field": "creation",
- "sort_order": "DESC",
- "track_changes": 1
+  "actions": [],
+  "autoname": "naming_series:",
+  "creation": "2026-03-27 12:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "layout_0_tab",
+    "layout_1_section",
+    "naming_series",
+    "dispatch_log",
+    "customer",
+    "layout_5_column",
+    "status",
+    "selected_transporter",
+    "selected_freight_amount",
+    "layout_9_section",
+    "delivery_address",
+    "pin_code",
+    "layout_12_column",
+    "matched_city",
+    "matched_freight_zone",
+    "layout_15_section",
+    "total_weight_kg",
+    "total_volume_cm3",
+    "layout_18_column",
+    "dimensional_weight_kg",
+    "invoice_value",
+    "layout_21_tab",
+    "layout_22_section",
+    "freight_options",
+    "layout_24_section",
+    "amended_from"
+  ],
+  "fields": [
+    {
+      "fieldname": "layout_0_tab",
+      "fieldtype": "Tab Break",
+      "label": "Quotation"
+    },
+    {
+      "fieldname": "layout_1_section",
+      "fieldtype": "Section Break",
+      "label": "Shipment"
+    },
+    {
+      "fieldname": "naming_series",
+      "fieldtype": "Select",
+      "label": "Series",
+      "options": "FQ-.YYYY.-.#####"
+    },
+    {
+      "fieldname": "dispatch_log",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "label": "Outward Shipment",
+      "options": "Outward Shipment",
+      "reqd": 1
+    },
+    {
+      "fieldname": "customer",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Customer",
+      "read_only": 1
+    },
+    {
+      "fieldname": "layout_5_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "label": "Status",
+      "options": "Draft\nFinalized",
+      "default": "Draft",
+      "read_only": 1
+    },
+    {
+      "fieldname": "selected_transporter",
+      "fieldtype": "Link",
+      "label": "Selected Transporter",
+      "options": "Supplier",
+      "read_only": 1
+    },
+    {
+      "fieldname": "selected_freight_amount",
+      "fieldtype": "Currency",
+      "label": "Selected Freight Amount (\u20b9)",
+      "read_only": 1
+    },
+    {
+      "fieldname": "layout_9_section",
+      "fieldtype": "Section Break",
+      "label": "Delivery destination"
+    },
+    {
+      "fieldname": "delivery_address",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "label": "Delivery Address",
+      "options": "Address"
+    },
+    {
+      "fieldname": "pin_code",
+      "fieldtype": "Data",
+      "label": "Pin Code",
+      "read_only": 1
+    },
+    {
+      "fieldname": "layout_12_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "matched_city",
+      "fieldtype": "Data",
+      "label": "City",
+      "read_only": 1
+    },
+    {
+      "fieldname": "matched_freight_zone",
+      "fieldtype": "Link",
+      "label": "Resolved Freight Zone",
+      "options": "Freight Zone",
+      "read_only": 1
+    },
+    {
+      "fieldname": "layout_15_section",
+      "fieldtype": "Section Break",
+      "label": "Shipment measurements"
+    },
+    {
+      "fieldname": "total_weight_kg",
+      "fieldtype": "Float",
+      "label": "Actual Weight (kg)",
+      "read_only": 1
+    },
+    {
+      "fieldname": "total_volume_cm3",
+      "fieldtype": "Float",
+      "label": "Total Volume (in\u00b3)",
+      "read_only": 1
+    },
+    {
+      "fieldname": "layout_18_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "dimensional_weight_kg",
+      "fieldtype": "Float",
+      "label": "Dimensional Weight (kg)",
+      "read_only": 1,
+      "description": "Calculated as Volume \u00f7 divisor. Billing uses whichever is higher."
+    },
+    {
+      "fieldname": "invoice_value",
+      "fieldtype": "Currency",
+      "label": "Invoice Value (\u20b9)",
+      "read_only": 1,
+      "description": "Taken from Sales Order grand total for FOV calculation"
+    },
+    {
+      "fieldname": "layout_21_tab",
+      "fieldtype": "Tab Break",
+      "label": "Comparison"
+    },
+    {
+      "fieldname": "layout_22_section",
+      "fieldtype": "Section Break",
+      "label": "Transporter options"
+    },
+    {
+      "fieldname": "freight_options",
+      "fieldtype": "Table",
+      "label": "Freight Options",
+      "options": "Freight Quotation Option"
+    },
+    {
+      "fieldname": "layout_24_section",
+      "fieldtype": "Section Break",
+      "label": "References"
+    },
+    {
+      "fieldname": "amended_from",
+      "fieldtype": "Link",
+      "label": "Amended From",
+      "no_copy": 1,
+      "options": "Freight Quotation",
+      "print_hide": 1,
+      "read_only": 1
+    }
+  ],
+  "is_submittable": 1,
+  "links": [],
+  "modified": "2026-03-27 12:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "Supply Chain",
+  "name": "Freight Quotation",
+  "naming_rule": "By \"Naming Series\" field",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "amend": 1,
+      "cancel": 1,
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "submit": 1,
+      "write": 1
+    },
+    {
+      "amend": 1,
+      "cancel": 1,
+      "create": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Stock Manager",
+      "share": 1,
+      "submit": 1,
+      "write": 1
+    },
+    {
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Stock User",
+      "share": 1
+    }
+  ],
+  "search_fields": "dispatch_log,customer",
+  "sort_field": "creation",
+  "sort_order": "DESC",
+  "track_changes": 1
 }

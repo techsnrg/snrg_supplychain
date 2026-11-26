@@ -1,0 +1,55 @@
+{
+  "doctype": "DocType",
+  "name": "Return Stock Reference",
+  "module": "Supply Chain",
+  "engine": "InnoDB",
+  "track_changes": 1,
+  "fields": [
+    {
+      "fieldname": "layout_0_section",
+      "fieldtype": "Section Break",
+      "label": "Details"
+    },
+    {
+      "fieldname": "document_type",
+      "fieldtype": "Select",
+      "label": "Document Type",
+      "reqd": 1,
+      "options": "Delivery Note\nSales Invoice\nPurchase Receipt\nPurchase Invoice\nStock Entry"
+    },
+    {
+      "fieldname": "layout_2_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "document_name",
+      "fieldtype": "Dynamic Link",
+      "label": "Document Name",
+      "reqd": 1,
+      "in_list_view": 1,
+      "options": "document_type"
+    },
+    {
+      "fieldname": "layout_4_section",
+      "fieldtype": "Section Break",
+      "label": "Notes"
+    },
+    {
+      "fieldname": "notes",
+      "fieldtype": "Small Text",
+      "label": "Notes",
+      "reqd": 1
+    }
+  ],
+  "field_order": [
+    "layout_0_section",
+    "document_type",
+    "layout_2_column",
+    "document_name",
+    "layout_4_section",
+    "notes"
+  ],
+  "permissions": [],
+  "istable": 1,
+  "editable_grid": 1
+}

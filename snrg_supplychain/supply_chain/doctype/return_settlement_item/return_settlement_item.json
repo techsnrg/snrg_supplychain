@@ -1,0 +1,173 @@
+{
+  "doctype": "DocType",
+  "name": "Return Settlement Item",
+  "module": "Supply Chain",
+  "engine": "InnoDB",
+  "track_changes": 1,
+  "fields": [
+    {
+      "fieldname": "layout_0_section",
+      "fieldtype": "Section Break",
+      "label": "Valuation"
+    },
+    {
+      "fieldname": "item_code",
+      "fieldtype": "Link",
+      "label": "Item Code",
+      "read_only": 1,
+      "options": "Item"
+    },
+    {
+      "fieldname": "qty",
+      "fieldtype": "Float",
+      "label": "Qty",
+      "read_only": 1
+    },
+    {
+      "fieldname": "net_rate",
+      "fieldtype": "Currency",
+      "label": "Net Rate",
+      "read_only": 1,
+      "options": "currency"
+    },
+    {
+      "fieldname": "layout_4_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "amount",
+      "fieldtype": "Currency",
+      "label": "Amount",
+      "read_only": 1,
+      "options": "currency"
+    },
+    {
+      "fieldname": "restocking_amount",
+      "fieldtype": "Currency",
+      "label": "Restocking Amount",
+      "read_only": 1,
+      "options": "currency"
+    },
+    {
+      "fieldname": "finding",
+      "fieldtype": "Data",
+      "label": "Finding",
+      "read_only": 1
+    },
+    {
+      "fieldname": "layout_8_section",
+      "fieldtype": "Section Break",
+      "label": "Native evidence"
+    },
+    {
+      "fieldname": "quality_inspection",
+      "fieldtype": "Link",
+      "label": "Quality Inspection",
+      "reqd": 1,
+      "options": "Quality Inspection"
+    },
+    {
+      "fieldname": "allocation_row",
+      "fieldtype": "Data",
+      "label": "Allocation Row",
+      "reqd": 1
+    },
+    {
+      "fieldname": "layout_11_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "native_receipt_type",
+      "fieldtype": "Select",
+      "label": "Native Receipt Type",
+      "read_only": 1,
+      "options": "Delivery Note\nPurchase Receipt\nStock Entry"
+    },
+    {
+      "fieldname": "native_receipt",
+      "fieldtype": "Dynamic Link",
+      "label": "Native Stock Receipt",
+      "read_only": 1,
+      "options": "native_receipt_type"
+    },
+    {
+      "fieldname": "native_receipt_item",
+      "fieldtype": "Data",
+      "label": "Native Receipt Row",
+      "read_only": 1
+    },
+    {
+      "fieldname": "layout_15_section",
+      "fieldtype": "Section Break",
+      "label": "Invoice evidence"
+    },
+    {
+      "fieldname": "sales_invoice",
+      "label": "Original Invoice (unexpected goods)",
+      "fieldtype": "Link",
+      "options": "Sales Invoice"
+    },
+    {
+      "fieldname": "sales_invoice_item",
+      "label": "Original Invoice Item Row",
+      "fieldtype": "Data"
+    },
+    {
+      "fieldname": "valuation_reason",
+      "fieldtype": "Small Text",
+      "label": "Valuation Reason"
+    },
+    {
+      "fieldname": "layout_19_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "receipt",
+      "fieldtype": "Link",
+      "label": "Receipt",
+      "read_only": 1,
+      "options": "Return Receipt"
+    },
+    {
+      "fieldname": "inspection",
+      "fieldtype": "Link",
+      "label": "Inspection",
+      "options": "Return Inspection",
+      "hidden": 1
+    },
+    {
+      "fieldname": "inspection_item",
+      "fieldtype": "Data",
+      "label": "Inspection Item",
+      "hidden": 1
+    }
+  ],
+  "field_order": [
+    "layout_0_section",
+    "item_code",
+    "qty",
+    "net_rate",
+    "layout_4_column",
+    "amount",
+    "restocking_amount",
+    "finding",
+    "layout_8_section",
+    "quality_inspection",
+    "allocation_row",
+    "layout_11_column",
+    "native_receipt_type",
+    "native_receipt",
+    "native_receipt_item",
+    "layout_15_section",
+    "sales_invoice",
+    "sales_invoice_item",
+    "valuation_reason",
+    "layout_19_column",
+    "receipt",
+    "inspection",
+    "inspection_item"
+  ],
+  "permissions": [],
+  "istable": 1,
+  "editable_grid": 1
+}

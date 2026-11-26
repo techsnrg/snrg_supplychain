@@ -1,0 +1,837 @@
+{
+  "doctype": "DocType",
+  "name": "Material Return Authorization",
+  "module": "Supply Chain",
+  "engine": "InnoDB",
+  "track_changes": 1,
+  "fields": [
+    {
+      "fieldname": "layout_0_tab",
+      "fieldtype": "Tab Break",
+      "label": "Request"
+    },
+    {
+      "fieldname": "layout_1_section",
+      "fieldtype": "Section Break",
+      "label": "Request details"
+    },
+    {
+      "fieldname": "company",
+      "fieldtype": "Link",
+      "label": "Company",
+      "reqd": 1,
+      "options": "Company"
+    },
+    {
+      "fieldname": "customer",
+      "fieldtype": "Link",
+      "label": "Customer",
+      "reqd": 1,
+      "options": "Customer"
+    },
+    {
+      "fieldname": "layout_4_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "request_date",
+      "fieldtype": "Date",
+      "label": "Request Date",
+      "default": "Today",
+      "reqd": 1
+    },
+    {
+      "fieldname": "currency",
+      "fieldtype": "Link",
+      "label": "Currency",
+      "reqd": 1,
+      "options": "Currency"
+    },
+    {
+      "fieldname": "layout_7_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "responsible_user",
+      "fieldtype": "Link",
+      "label": "Responsible User",
+      "reqd": 1,
+      "options": "User"
+    },
+    {
+      "fieldname": "information_complete",
+      "fieldtype": "Check",
+      "label": "Information Complete"
+    },
+    {
+      "fieldname": "layout_10_section",
+      "fieldtype": "Section Break",
+      "label": "Return items"
+    },
+    {
+      "fieldname": "items",
+      "fieldtype": "Table",
+      "label": "Items",
+      "reqd": 1,
+      "options": "MRA Item"
+    },
+    {
+      "fieldname": "layout_12_section",
+      "fieldtype": "Section Break",
+      "label": "Requested and approved value"
+    },
+    {
+      "fieldname": "claimed_value",
+      "fieldtype": "Currency",
+      "label": "Claimed Value",
+      "read_only": 1,
+      "options": "currency"
+    },
+    {
+      "fieldname": "layout_14_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "approved_value",
+      "fieldtype": "Currency",
+      "label": "Approved Value",
+      "read_only": 1,
+      "options": "currency"
+    },
+    {
+      "fieldname": "category_summary",
+      "fieldtype": "Data",
+      "label": "Category Summary",
+      "read_only": 1
+    },
+    {
+      "fieldname": "layout_17_section",
+      "fieldtype": "Section Break",
+      "label": "Customer communication"
+    },
+    {
+      "fieldname": "freight_estimate",
+      "fieldtype": "Currency",
+      "label": "Freight Estimate",
+      "description": "Estimate communicated before dispatch.",
+      "options": "currency"
+    },
+    {
+      "fieldname": "customer_acceptance",
+      "fieldtype": "Attach",
+      "label": "Customer Acceptance",
+      "description": "Customer acceptance / correspondence."
+    },
+    {
+      "fieldname": "layout_20_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "freight_terms",
+      "fieldtype": "Small Text",
+      "label": "Freight Terms",
+      "reqd": 1
+    },
+    {
+      "fieldname": "layout_22_tab",
+      "fieldtype": "Tab Break",
+      "label": "Approval"
+    },
+    {
+      "fieldname": "layout_23_section",
+      "fieldtype": "Section Break",
+      "label": "Authorization"
+    },
+    {
+      "fieldname": "approval_reason",
+      "fieldtype": "Small Text",
+      "label": "Approval Reason"
+    },
+    {
+      "fieldname": "revision_of",
+      "fieldtype": "Link",
+      "label": "Revision Of",
+      "options": "Material Return Authorization"
+    },
+    {
+      "fieldname": "layout_26_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "approved_by",
+      "fieldtype": "Link",
+      "label": "Approved By",
+      "read_only": 1,
+      "options": "User"
+    },
+    {
+      "fieldname": "approved_on",
+      "fieldtype": "Datetime",
+      "label": "Approved On",
+      "read_only": 1
+    },
+    {
+      "fieldname": "layout_29_section",
+      "fieldtype": "Section Break",
+      "label": "Acceptance exceptions"
+    },
+    {
+      "fieldname": "exception_reason",
+      "fieldtype": "Small Text",
+      "label": "Exception Reason"
+    },
+    {
+      "fieldname": "layout_31_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "has_return_exceptions",
+      "fieldtype": "Check",
+      "label": "Has Return Exceptions",
+      "read_only": 1
+    },
+    {
+      "fieldname": "exceptions_approved",
+      "fieldtype": "Check",
+      "label": "Exceptions Approved",
+      "read_only": 1
+    },
+    {
+      "fieldname": "exception_approved_by",
+      "fieldtype": "Link",
+      "label": "Exception Approved By",
+      "read_only": 1,
+      "options": "User"
+    },
+    {
+      "fieldname": "exception_approved_on",
+      "fieldtype": "Datetime",
+      "label": "Exception Approved On",
+      "read_only": 1
+    },
+    {
+      "fieldname": "layout_36_section",
+      "fieldtype": "Section Break",
+      "label": "Agreed return policy"
+    },
+    {
+      "fieldname": "policy_snapshot",
+      "fieldtype": "Text Editor",
+      "label": "Policy Snapshot",
+      "read_only": 1
+    },
+    {
+      "fieldname": "layout_38_tab",
+      "fieldtype": "Tab Break",
+      "label": "Settlement"
+    },
+    {
+      "fieldname": "layout_39_section",
+      "fieldtype": "Section Break",
+      "label": "Receiving and settlement route"
+    },
+    {
+      "fieldname": "route",
+      "fieldtype": "Select",
+      "label": "Route",
+      "default": "SNRG Credit Note",
+      "options": "SNRG Credit Note\nCustomer Invoice"
+    },
+    {
+      "fieldname": "supplier",
+      "fieldtype": "Link",
+      "label": "Supplier",
+      "options": "Supplier"
+    },
+    {
+      "fieldname": "layout_42_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "return_warehouse",
+      "fieldtype": "Link",
+      "options": "Warehouse",
+      "label": "Returns / Quarantine Warehouse",
+      "description": "Flagged Returns quarantine warehouse. Arrival posts stock here before QC."
+    },
+    {
+      "fieldname": "layout_44_section",
+      "fieldtype": "Section Break",
+      "label": "Accepted quantities"
+    },
+    {
+      "fieldname": "settlement_items",
+      "fieldtype": "Table",
+      "label": "Settlement Items",
+      "options": "Return Settlement Item"
+    },
+    {
+      "fieldname": "layout_46_section",
+      "fieldtype": "Section Break",
+      "label": "Settlement amounts"
+    },
+    {
+      "fieldname": "gross_value",
+      "fieldtype": "Currency",
+      "label": "Gross Value",
+      "read_only": 1,
+      "options": "currency"
+    },
+    {
+      "fieldname": "standard_restocking",
+      "fieldtype": "Currency",
+      "label": "Standard Restocking",
+      "read_only": 1,
+      "options": "currency"
+    },
+    {
+      "fieldname": "restocking_charge",
+      "fieldtype": "Currency",
+      "label": "Restocking Charge",
+      "options": "currency"
+    },
+    {
+      "fieldname": "layout_50_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "freight_charge",
+      "fieldtype": "Currency",
+      "label": "Freight Charge",
+      "read_only": 1,
+      "options": "currency"
+    },
+    {
+      "fieldname": "handling_charge",
+      "fieldtype": "Currency",
+      "label": "Handling Charge",
+      "options": "currency"
+    },
+    {
+      "fieldname": "waiver_amount",
+      "fieldtype": "Currency",
+      "label": "Waiver Amount",
+      "options": "currency"
+    },
+    {
+      "fieldname": "layout_54_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "net_value",
+      "fieldtype": "Currency",
+      "label": "Net Value",
+      "read_only": 1,
+      "options": "currency"
+    },
+    {
+      "fieldname": "concession_required",
+      "fieldtype": "Currency",
+      "label": "Concession Required",
+      "read_only": 1,
+      "options": "currency"
+    },
+    {
+      "fieldname": "concession_approved",
+      "fieldtype": "Check",
+      "label": "Concession Approved",
+      "read_only": 1
+    },
+    {
+      "fieldname": "layout_58_section",
+      "fieldtype": "Section Break",
+      "label": "Concession approval"
+    },
+    {
+      "fieldname": "waiver_reason",
+      "fieldtype": "Small Text",
+      "label": "Waiver Reason"
+    },
+    {
+      "fieldname": "layout_60_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "designated_md_user",
+      "fieldtype": "Link",
+      "label": "Designated Md User",
+      "read_only": 1,
+      "options": "User"
+    },
+    {
+      "fieldname": "waiver_approved_by",
+      "fieldtype": "Link",
+      "label": "Waiver Approved By",
+      "read_only": 1,
+      "options": "User"
+    },
+    {
+      "fieldname": "waiver_approved_on",
+      "fieldtype": "Datetime",
+      "label": "Waiver Approved On",
+      "read_only": 1
+    },
+    {
+      "fieldname": "layout_64_section",
+      "fieldtype": "Section Break",
+      "label": "Customer-issued invoice"
+    },
+    {
+      "fieldname": "customer_invoice_number",
+      "fieldtype": "Data",
+      "label": "Customer Invoice Number"
+    },
+    {
+      "fieldname": "customer_invoice_date",
+      "fieldtype": "Date",
+      "label": "Customer Invoice Date"
+    },
+    {
+      "fieldname": "layout_67_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "customer_invoice_attachment",
+      "fieldtype": "Attach",
+      "label": "Customer Invoice Attachment"
+    },
+    {
+      "fieldname": "layout_69_tab",
+      "fieldtype": "Tab Break",
+      "label": "Reconciliation"
+    },
+    {
+      "fieldname": "layout_70_section",
+      "fieldtype": "Section Break",
+      "label": "Accounting documents"
+    },
+    {
+      "fieldname": "accounting_documents",
+      "fieldtype": "Table",
+      "label": "Accounting Documents",
+      "options": "Return Accounting Document"
+    },
+    {
+      "fieldname": "layout_72_section",
+      "fieldtype": "Section Break",
+      "label": "Stock documents"
+    },
+    {
+      "fieldname": "stock_references",
+      "fieldtype": "Table",
+      "label": "Stock References",
+      "options": "Return Stock Reference"
+    },
+    {
+      "fieldname": "layout_74_section",
+      "fieldtype": "Section Break",
+      "label": "Finance checks"
+    },
+    {
+      "fieldname": "stock_reconciled",
+      "fieldtype": "Check",
+      "label": "Stock Reconciled"
+    },
+    {
+      "fieldname": "charges_reconciled",
+      "fieldtype": "Check",
+      "label": "Charges Reconciled"
+    },
+    {
+      "fieldname": "ledger_reconciled",
+      "fieldtype": "Check",
+      "label": "Ledger Reconciled"
+    },
+    {
+      "fieldname": "layout_78_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "reconciliation_notes",
+      "fieldtype": "Small Text",
+      "label": "Reconciliation Notes"
+    },
+    {
+      "fieldname": "layout_80_section",
+      "fieldtype": "Section Break",
+      "label": "Value differences"
+    },
+    {
+      "fieldname": "accounting_difference",
+      "fieldtype": "Currency",
+      "label": "Accounting Difference",
+      "read_only": 1,
+      "options": "currency"
+    },
+    {
+      "fieldname": "layout_82_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "difference_reason",
+      "fieldtype": "Small Text",
+      "label": "Difference Reason"
+    },
+    {
+      "fieldname": "layout_84_tab",
+      "fieldtype": "Tab Break",
+      "label": "Tracking"
+    },
+    {
+      "fieldname": "layout_85_section",
+      "fieldtype": "Section Break",
+      "label": "Timelines"
+    },
+    {
+      "fieldname": "complete_on",
+      "fieldtype": "Date",
+      "label": "Complete On",
+      "read_only": 1
+    },
+    {
+      "fieldname": "due_date",
+      "fieldtype": "Date",
+      "label": "Due Date",
+      "read_only": 1
+    },
+    {
+      "fieldname": "layout_88_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "revised_due_date",
+      "fieldtype": "Date",
+      "label": "Revised Due Date"
+    },
+    {
+      "fieldname": "delay_reason",
+      "fieldtype": "Small Text",
+      "label": "Delay Reason"
+    },
+    {
+      "fieldname": "layout_91_section",
+      "fieldtype": "Section Break",
+      "label": "Closure"
+    },
+    {
+      "fieldname": "closure_reason",
+      "fieldtype": "Small Text",
+      "label": "Closure Reason"
+    },
+    {
+      "fieldname": "layout_93_section",
+      "fieldtype": "Section Break",
+      "label": "Approval record"
+    },
+    {
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "label": "Status",
+      "default": "Draft",
+      "read_only": 1,
+      "options": "Draft\nPending Approval\nAuthorized\nExceptions Approved\nFinance Review\nPending Concession\nConcession Approved\nSettlement Approved\nSettled\nClosed\nRejected\nLegacy Review"
+    },
+    {
+      "fieldname": "workflow_state",
+      "fieldtype": "Link",
+      "label": "Workflow State",
+      "default": "Draft",
+      "read_only": 1,
+      "options": "Workflow State"
+    },
+    {
+      "fieldname": "settlement_approved_by",
+      "fieldtype": "Link",
+      "label": "Settlement Approved By",
+      "read_only": 1,
+      "options": "User"
+    },
+    {
+      "fieldname": "settlement_approved_on",
+      "fieldtype": "Datetime",
+      "label": "Settlement Approved On",
+      "read_only": 1
+    },
+    {
+      "fieldname": "layout_98_column",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "legacy_migrated",
+      "fieldtype": "Check",
+      "label": "Legacy Migrated",
+      "read_only": 1
+    },
+    {
+      "fieldname": "legacy_review_required",
+      "fieldtype": "Check",
+      "label": "Legacy Review Required",
+      "read_only": 1
+    },
+    {
+      "fieldname": "legacy_review_notes",
+      "fieldtype": "Small Text",
+      "label": "Legacy Reconciliation Review"
+    },
+    {
+      "fieldname": "native_returns_version",
+      "fieldtype": "Int",
+      "label": "Native Returns Version",
+      "default": "3",
+      "read_only": 1
+    },
+    {
+      "fieldname": "layout_103_section",
+      "fieldtype": "Section Break",
+      "label": "References"
+    },
+    {
+      "fieldname": "legacy_inspections",
+      "fieldtype": "Small Text",
+      "label": "Legacy Inspections",
+      "read_only": 1
+    },
+    {
+      "fieldname": "legacy_settlements",
+      "fieldtype": "Small Text",
+      "label": "Legacy Settlements",
+      "read_only": 1
+    },
+    {
+      "fieldname": "waiver_fingerprint",
+      "fieldtype": "Data",
+      "label": "Waiver Fingerprint",
+      "hidden": 1,
+      "read_only": 1
+    },
+    {
+      "fieldname": "exception_fingerprint",
+      "fieldtype": "Data",
+      "label": "Exception Fingerprint",
+      "hidden": 1,
+      "read_only": 1
+    },
+    {
+      "fieldname": "settlement_fingerprint",
+      "fieldtype": "Data",
+      "label": "Settlement Fingerprint",
+      "hidden": 1,
+      "read_only": 1
+    },
+    {
+      "fieldname": "native_migration_complete",
+      "fieldtype": "Check",
+      "label": "Native Migration Complete",
+      "hidden": 1,
+      "read_only": 1
+    }
+  ],
+  "field_order": [
+    "layout_0_tab",
+    "layout_1_section",
+    "company",
+    "customer",
+    "layout_4_column",
+    "request_date",
+    "currency",
+    "layout_7_column",
+    "responsible_user",
+    "information_complete",
+    "layout_10_section",
+    "items",
+    "layout_12_section",
+    "claimed_value",
+    "layout_14_column",
+    "approved_value",
+    "category_summary",
+    "layout_17_section",
+    "freight_estimate",
+    "customer_acceptance",
+    "layout_20_column",
+    "freight_terms",
+    "layout_22_tab",
+    "layout_23_section",
+    "approval_reason",
+    "revision_of",
+    "layout_26_column",
+    "approved_by",
+    "approved_on",
+    "layout_29_section",
+    "exception_reason",
+    "layout_31_column",
+    "has_return_exceptions",
+    "exceptions_approved",
+    "exception_approved_by",
+    "exception_approved_on",
+    "layout_36_section",
+    "policy_snapshot",
+    "layout_38_tab",
+    "layout_39_section",
+    "route",
+    "supplier",
+    "layout_42_column",
+    "return_warehouse",
+    "layout_44_section",
+    "settlement_items",
+    "layout_46_section",
+    "gross_value",
+    "standard_restocking",
+    "restocking_charge",
+    "layout_50_column",
+    "freight_charge",
+    "handling_charge",
+    "waiver_amount",
+    "layout_54_column",
+    "net_value",
+    "concession_required",
+    "concession_approved",
+    "layout_58_section",
+    "waiver_reason",
+    "layout_60_column",
+    "designated_md_user",
+    "waiver_approved_by",
+    "waiver_approved_on",
+    "layout_64_section",
+    "customer_invoice_number",
+    "customer_invoice_date",
+    "layout_67_column",
+    "customer_invoice_attachment",
+    "layout_69_tab",
+    "layout_70_section",
+    "accounting_documents",
+    "layout_72_section",
+    "stock_references",
+    "layout_74_section",
+    "stock_reconciled",
+    "charges_reconciled",
+    "ledger_reconciled",
+    "layout_78_column",
+    "reconciliation_notes",
+    "layout_80_section",
+    "accounting_difference",
+    "layout_82_column",
+    "difference_reason",
+    "layout_84_tab",
+    "layout_85_section",
+    "complete_on",
+    "due_date",
+    "layout_88_column",
+    "revised_due_date",
+    "delay_reason",
+    "layout_91_section",
+    "closure_reason",
+    "layout_93_section",
+    "status",
+    "workflow_state",
+    "settlement_approved_by",
+    "settlement_approved_on",
+    "layout_98_column",
+    "legacy_migrated",
+    "legacy_review_required",
+    "legacy_review_notes",
+    "native_returns_version",
+    "layout_103_section",
+    "legacy_inspections",
+    "legacy_settlements",
+    "waiver_fingerprint",
+    "exception_fingerprint",
+    "settlement_fingerprint",
+    "native_migration_complete"
+  ],
+  "permissions": [
+    {
+      "role": "Sales User",
+      "read": 1,
+      "write": 1,
+      "create": 1,
+      "print": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1
+    },
+    {
+      "role": "Sales Manager",
+      "read": 1,
+      "write": 1,
+      "create": 1,
+      "print": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1
+    },
+    {
+      "role": "Managing Director",
+      "read": 1,
+      "write": 1,
+      "create": 1,
+      "print": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1
+    },
+    {
+      "role": "Stock User",
+      "read": 1,
+      "write": 1,
+      "create": 1,
+      "print": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1
+    },
+    {
+      "role": "Stock Manager",
+      "read": 1,
+      "write": 1,
+      "create": 1,
+      "print": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1
+    },
+    {
+      "role": "Quality Manager",
+      "read": 1,
+      "write": 1,
+      "create": 1,
+      "print": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1
+    },
+    {
+      "role": "Accounts User",
+      "read": 1,
+      "write": 1,
+      "create": 1,
+      "print": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1
+    },
+    {
+      "role": "Accounts Manager",
+      "read": 1,
+      "write": 1,
+      "create": 1,
+      "print": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1
+    },
+    {
+      "role": "System Manager",
+      "read": 1,
+      "write": 1,
+      "create": 1,
+      "print": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1
+    }
+  ],
+  "autoname": "MRA-.YYYY.-.#####",
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "default_print_format": "Material Return Authorization"
+}

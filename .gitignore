@@ -1,2 +1,7 @@
 __pycache__/
 *.py[cod]
+
+inspection/
+staging/*.log
+staging/*.json
+staging/*.pdf

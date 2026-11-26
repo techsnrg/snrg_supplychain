@@ -1,0 +1,10 @@
+{
+  "doctype": "Print Format",
+  "name": "Material Return Authorization",
+  "doc_type": "Material Return Authorization",
+  "module": "Supply Chain",
+  "standard": "Yes",
+  "custom_format": 1,
+  "print_format_type": "Jinja",
+  "html": "{% if not doc.approved_by %}\n<div class=\"alert alert-warning\">DRAFT \u2014 NOT VALID FOR DISPATCH</div>\n{% endif %}\n{% set company = frappe.get_doc('Company', doc.company) %}\n{% if company.company_logo %}<img src=\"{{ company.company_logo | e }}\" alt=\"Company logo\" style=\"max-height:65px\">{% endif %}\n<h2>{{ company.company_name | e }}</h2>\n<h3>Material Return Authorization</h3>\n<p><strong>{{ doc.name | e }}</strong> \u00b7 {{ doc.request_date }}<br>\nCustomer: {{ doc.customer | e }}<br>Authorized by: {{ (doc.approved_by or '') | e }}</p>\n<table class=\"table table-bordered\"><thead><tr><th>Item</th><th>Category / reason</th><th>Approved qty</th><th>Provisional value ({{ doc.currency | e }})</th></tr></thead><tbody>\n{% for row in doc.items if row.approved_qty %}<tr><td>{{ row.item_code | e }}</td><td>{{ row.claimed_category | e }}<br>{{ row.reason | e }}</td><td>{{ row.approved_qty }} {{ row.uom | e }}</td><td>{{ frappe.format_value(row.approved_qty * row.net_rate, {'fieldtype': 'Currency', 'options': doc.currency}) }}</td></tr>{% endfor %}\n</tbody></table>\n<p><strong>Maximum provisional return value:</strong> {{ doc.approved_value }} {{ doc.currency | e }}. Final credit is subject to inspection, acceptance and reconciliation.</p>\n<p><strong>Estimated freight:</strong> {{ doc.freight_estimate or 0 }} {{ doc.currency | e }}<br>{{ (doc.freight_terms or '') | e }}</p>\n<p>Actual customer-payable transporter charges will be reconciled after receipt of the transporter bill.</p>\n{{ doc.policy_snapshot or '' }}\n<p><strong>Mention this MRA number on the item-wise packing list and transport documents.</strong></p>\n<p>Customer acknowledgment: _____________________ &nbsp; Date: __________</p>\n"
+}

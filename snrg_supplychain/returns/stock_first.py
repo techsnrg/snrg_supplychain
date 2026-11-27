@@ -28,6 +28,7 @@ def receipt_view(doc):
     for row in doc.items:
         qi=frappe.db.get_value('Quality Inspection',dict(reference_type=doc.doctype,reference_name=doc.name,child_row_reference=row.name,docstatus=1),'name')
         result['items'].append(frappe._dict(name=row.name,item_code=row.item_code,uom=row.uom,received_qty=abs(flt(row.qty)),
+            stock_uom=row.stock_uom,conversion_factor=flt(row.conversion_factor),
             mra_item=row.custom_return_mra_item,batch_no=row.get('batch_no'),serial_no=row.get('serial_no'),
             quality_inspection=qi,unauthorized=0,source_invoice=row.custom_return_source_invoice,source_invoice_item=row.custom_return_source_invoice_item))
     return result
@@ -279,6 +280,11 @@ def validate_disposition(doc,mra):
     for row in doc.items:
         key=(row.custom_return_qi,row.custom_return_allocation);entry=lookup.get(key)
         if not entry or (not purchase_return and flt(row.qty)<=0) or (purchase_return and flt(row.qty)>=0):frappe.throw(_('Every movement requires its submitted QC allocation and correct quantity sign.'))
+        received=entry['received']
+        if (row.item_code,row.uom,row.stock_uom)!=(received.item_code,received.uom,received.stock_uom):
+            frappe.throw(_('Disposition item and units of measure must match the inspected arrival row.'))
+        if flt(row.conversion_factor)!=received.conversion_factor:
+            frappe.throw(_('Disposition conversion factor must match the inspected arrival row.'))
         totals[key]+=abs(flt(row.qty))
         if totals[key]>flt(entry['allocation'].qty)+0.000001:frappe.throw(_('QC allocation has already been moved or this movement exceeds it.'))
         if (row.warehouse if purchase_return else row.s_warehouse)!=mra.return_warehouse:frappe.throw(_('Disposition must leave this case’s Returns quarantine warehouse.'))

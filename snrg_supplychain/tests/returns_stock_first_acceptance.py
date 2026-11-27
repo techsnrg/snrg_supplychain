@@ -56,7 +56,8 @@ def post_arrival(mra,split=True):
 def inspect(arrival,split=True):
     user('qc');values=api.arrival_inspection(arrival.doctype,arrival.name,arrival.items[0].name)
     doc=frappe.get_doc(values);doc.manual_inspection=1;doc.status='Rejected'
-    doc.custom_return_allocations[0].update(dict(qty=3 if split else 4,decision='Accept',finding='Manufacturing Defect',notes='Warranty acceptance despite failed product test'))
+    accepted=abs(flt(arrival.items[0].qty))-(1 if split else 0)
+    doc.custom_return_allocations[0].update(dict(qty=accepted,decision='Accept',finding='Manufacturing Defect',notes='Warranty acceptance despite failed product test'))
     if split:doc.append('custom_return_allocations',dict(qty=1,decision='Reject',finding='Customer Damage',notes='Customer-caused damage'))
     doc.insert();doc.submit();check(doc.docstatus==1 and doc.status=='Rejected','Native QC runs after posted receipt and preserves failed product-test status')
     return doc
@@ -73,6 +74,53 @@ def move(mra,qi,target,arrival):
         doc=frappe.get_doc(values);doc.insert();doc.submit()
         check(doc.docstatus==1,'Native '+doc.doctype+' posts '+row.decision+' QC disposition once')
         reject(lambda:api.stock_disposition(mra.name,qi.name,row.name,target if row.decision=='Accept' else None),'Already moved QC allocation cannot be moved twice')
+
+
+def verify_disposition_uom(customer,item,warehouse,quarantine):
+    admin()
+    savepoint='returns_pack_uom'
+    frappe.db.savepoint(savepoint)
+    try:
+        item.reload()
+        box=next((row for row in item.uoms if row.uom=='Box'),None)
+        if not box:
+            box=item.append('uoms',dict(uom='Box',conversion_factor=5))
+        elif flt(box.conversion_factor)<=1:
+            box.conversion_factor=5
+        item.save()
+        factor=flt(box.conversion_factor)
+        sale=frappe.get_doc(dict(doctype='Sales Invoice',company=COMPANY,customer=customer.name,
+            posting_date=today(),due_date=today(),currency='INR',selling_price_list='Standard Selling',
+            price_list_currency='INR',plc_conversion_rate=1,update_stock=1,
+            items=[dict(item_code=item.name,uom='Box',qty=4,rate=500,warehouse=warehouse)]))
+        sale.insert();sale.submit()
+        mra=new_case(sale,quarantine,qty=2)
+        user('stock')
+        arrival=frappe.get_doc(api.stock_arrival(mra.name,'Stock Entry',sale.name))
+        arrival.custom_return_documents_complete=1
+        arrival.insert();arrival.submit()
+        qi=inspect(arrival,split=False)
+        user('stock')
+        allocation=qi.custom_return_allocations[0].name
+        values=api.stock_disposition(mra.name,qi.name,allocation,warehouse)
+        row=values['items'][0]
+        check((row['item_code'],row['uom'],row['stock_uom'],flt(row['conversion_factor']))==(item.name,'Box','Nos',factor),
+            'Disposition draft preserves the inspected item and Box-to-Nos conversion')
+        for field,value in (('item_code','10132-WH'),('uom','Nos'),('stock_uom','Box'),('conversion_factor',factor+1)):
+            changed=frappe.get_doc(values)
+            changed.items[0].set(field,value)
+            reject(lambda:stock_first.validate_disposition(changed,mra),f'Disposition rejects a changed {field}')
+        disposition=frappe.get_doc(values)
+        disposition.insert();disposition.submit()
+        quantities=frappe.get_all('Stock Ledger Entry',filters=dict(
+            voucher_type='Stock Entry',voucher_no=disposition.name,is_cancelled=0,item_code=item.name),
+            fields=['warehouse','actual_qty'])
+        check({row.warehouse:flt(row.actual_qty) for row in quantities}=={quarantine:-2*factor,warehouse:2*factor},
+            'Two inspected boxes move the exact converted stock quantity between warehouses')
+    finally:
+        admin()
+        frappe.db.rollback(save_point=savepoint)
+        frappe.clear_cache(doctype='Item')
 
 
 def run():
@@ -145,6 +193,7 @@ def run():
     for receipt in (arrival,arrival2,arrival3):
         gl=frappe.get_all('GL Entry',filters=dict(voucher_type=receipt.doctype,voucher_no=receipt.name,is_cancelled=0),fields=['debit','credit'])
         check(abs(sum(flt(x.debit)-flt(x.credit) for x in gl))<0.01,'Native arrival '+receipt.name+' has balanced valuation GL')
+    verify_disposition_uom(customer,item,warehouse,quarantine)
     frappe.db.commit()
     result=dict(passed=True,checks=CHECKS,site=frappe.local.site,records=dict(credit_mra=mra.name,delivery_mra=second.name,purchase_mra=third.name,
         arrival=arrival.name,arrival_type=arrival.doctype,delivery_arrival=arrival2.name,purchase_arrival=arrival3.name,credit_note=credit.name,purchase_invoice=pi.name,qi=qi.name,quarantine=quarantine,original_sale=original.name))

@@ -123,14 +123,16 @@ def disposition(name,qi,allocation,target=None):
     qty=flt(entry['allocation'].qty)-movement_totals(mra)[(qi,allocation)]
     if qty<=0:frappe.throw(_('This QC quantity has already been moved.'))
     if not target and entry['allocation'].decision!='Reject':frappe.throw(_('Choose a destination warehouse for accepted goods.'))
+    received=entry['received']
+    item_details=dict(item_code=received.item_code,uom=received.uom,stock_uom=received.stock_uom,
+        conversion_factor=received.conversion_factor,custom_return_qi=qi,custom_return_allocation=allocation)
     if not target and mra.route=='Customer Invoice':
         from erpnext.stock.doctype.purchase_receipt.purchase_receipt import make_purchase_return
-        doc=make_purchase_return(entry['receipt'].name);mapped=next(x.as_dict() for x in doc.items if x.purchase_receipt_item==entry['received'].name);doc.set('items',[])
-        mapped.pop('name',None);mapped.update(qty=-qty,received_qty=-qty,rejected_qty=0,warehouse=mra.return_warehouse,custom_return_qi=qi,custom_return_allocation=allocation)
+        doc=make_purchase_return(entry['receipt'].name);mapped=next(x.as_dict() for x in doc.items if x.purchase_receipt_item==received.name);doc.set('items',[])
+        mapped.pop('name',None);mapped.update(item_details,qty=-qty,received_qty=-qty,rejected_qty=0,warehouse=mra.return_warehouse)
         doc.append('items',mapped);doc.custom_return_mra=name;doc.custom_return_purpose='Disposition'
         return doc.as_dict()
     doc=frappe.new_doc('Stock Entry');doc.company=mra.company;doc.stock_entry_type=doc.purpose='Material Transfer' if target else 'Material Issue'
     doc.custom_return_mra=name;doc.custom_return_purpose='Disposition'
-    doc.append('items',dict(item_code=entry['received'].item_code,uom=entry['received'].uom,qty=qty,s_warehouse=mra.return_warehouse,t_warehouse=target,
-        custom_return_qi=qi,custom_return_allocation=allocation))
+    doc.append('items',dict(item_details,qty=qty,s_warehouse=mra.return_warehouse,t_warehouse=target))
     return doc.as_dict()
